@@ -19,10 +19,8 @@
     top: 0;
     width: 100vw;
     height: 100vh;
-    background: url('./sunset.jpg');
-    background-repeat: no-repeat;
     /* background-position; */
-    background: url(sunset.jpg) no-repeat center center fixed; 
+    background: url('./sunset.jpg') no-repeat center center fixed; 
     -webkit-background-size: cover;
     -moz-background-size: cover;
     -o-background-size: cover;
