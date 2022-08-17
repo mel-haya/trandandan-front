@@ -1,7 +1,10 @@
+import { createPinia } from 'pinia'
 import { createApp } from 'vue'
 import App from './App.vue'
-var script = require('./p5script.js')
-const P5 = require('p5')
+import createRouter from './router'
+// var script = require('./p5script.js')
+// const P5 = require('p5')
+const pinia = createPinia()
+createApp(App).use(createRouter()).use(pinia).mount('#app')
 
-createApp(App).mount('#app')
-new P5(script.main, document.getElementById("p5Canvas"))
+// new P5(script.main, document.getElementById("p5Canvas"))

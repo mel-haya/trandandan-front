@@ -1,17 +1,21 @@
-<template>
-  <div>{{message}}</div>
-  
+<template> 
+  <router-view />
 </template>
 
 <script>
-
+import { reactive, toRefs } from '@vue/reactivity'
+// import HomeView from './views/Home.vue'
 
 
 export default {
   name: 'App',
-  data() {
+
+  setup() {
+    const state = reactive({
+      name: ""
+    })
     return {
-      message: "hello world"
+      ...toRefs(state)
     }
   }
 }
@@ -23,7 +27,13 @@ export default {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
+  color: #fff;
+  font-size: 2vw;
+  font-weight: bold;
+  grid-column: 2/3;
+  grid-row: 2/3;
+  background: #2c3e50;
+  opacity: 80%;
+  border-radius: 20px;
 }
 </style>
