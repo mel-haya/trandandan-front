@@ -35,5 +35,7 @@ export default {
   background: #2c3e50;
   opacity: 80%;
   border-radius: 20px;
+  position: relative;
+  overflow: hidden;
 }
 </style>

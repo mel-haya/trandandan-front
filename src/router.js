@@ -5,13 +5,11 @@ export default () => createRouter({
   routes: [
     {
       path: '/',
-      name: 'HomeView',
-      component: () => import('./views/Home.vue')
+      component: () => import('./views/HomeView.vue')
     },
     {
       path: '/login',
-      name: 'LoginView',
-      component: () => import('./views/Login.vue')
+      component: () => import('./views/LoginView.vue')
     },
   ]
 })

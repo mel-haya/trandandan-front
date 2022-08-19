@@ -12,11 +12,7 @@
     
 </script>
 
-<script>
-  export default {
-    name: 'LoginView'
-  }
-</script>
+
 
 <template>
     <div>login</div>
@@ -27,6 +23,8 @@
     <p v-if="password"> {{password}} </p>
     <br>
     <button @click="auth(a,b)">submit</button>
+    <br>
+    <router-link to="/">Go to Home</router-link>
     
 </template>
 
