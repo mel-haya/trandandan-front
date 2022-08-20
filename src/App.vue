@@ -32,8 +32,7 @@ export default {
   font-weight: bold;
   grid-column: 2/3;
   grid-row: 2/3;
-  background: #2c3e50;
-  opacity: 80%;
+  background: rgba(123, 51, 125, 0.7);
   border-radius: 20px;
   position: relative;
   overflow: hidden;

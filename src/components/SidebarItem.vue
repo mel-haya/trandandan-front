@@ -21,7 +21,7 @@
     #sidebg{
         position: absolute;
         top: 0;
-        background-color: black;
+        background-color: rgba(33, 5, 53, 0.85);
         width: 30%;
         height: 100%;
         transition: all 0.7s ease;
