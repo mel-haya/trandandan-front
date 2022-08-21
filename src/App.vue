@@ -30,10 +30,7 @@ export default {
   color: #fff;
   font-size: 2vw;
   font-weight: bold;
-  grid-column: 2/3;
-  grid-row: 2/3;
-  background: rgba(123, 51, 125, 0.7);
-  border-radius: 20px;
+  background: rgba(123, 51, 125, 0.3);
   position: relative;
   overflow: hidden;
 }

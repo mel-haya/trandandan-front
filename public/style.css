@@ -7,10 +7,6 @@
     display: grid;
 
     height: 100vh;
-    grid-template-columns: 10vw auto 10vw;
-    grid-template-rows: 10vh auto 10vh;
-
-
 }
 
 #bg{
@@ -19,6 +15,7 @@
     top: 0;
     width: 100vw;
     height: 100vh;
+    overflow: hidden;
     /* background-position; */
     background: url('./sunset.jpg') no-repeat center center fixed; 
     -webkit-background-size: cover;

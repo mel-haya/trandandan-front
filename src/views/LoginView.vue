@@ -3,12 +3,19 @@
     import { ref } from 'vue'
     import { useUserStore } from '@/stores/user'
     import { storeToRefs } from 'pinia'
+    import { useRouter } from 'vue-router'
 
+    
     const a = ref("")
     const b = ref("")
     const store = useUserStore()
     const { username, password } = storeToRefs(store)
     const { auth } = store
+    const router = useRouter()
+    function submit(){
+        auth(a.value,b.value)
+        router.push("/")
+    }
     
 </script>
 
@@ -22,10 +29,8 @@
     <p v-if="username"> {{username}} </p>
     <p v-if="password"> {{password}} </p>
     <br>
-    <button @click="auth(a,b)">submit</button>
+    <button @click="submit">submit</button>
     <br>
-    <router-link to="/">Go to Home</router-link>
-    
 </template>
 
 

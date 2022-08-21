@@ -8,12 +8,12 @@
 
 <script setup>
     import {ref} from 'vue'
-    let a = ref(">")
+    let a = ref("<")
     let state= ref(true)
     function toggleSide(){
         console.log(state.value)
         state.value = !state.value
-        a.value = state.value ? '>' : '<'
+        a.value = state.value ? '<' : '>'
     }
 </script>
 
@@ -21,26 +21,28 @@
     #sidebg{
         position: absolute;
         top: 0;
+        right: 0;
         background-color: rgba(33, 5, 53, 0.85);
-        width: 30%;
+        width: 25%;
         height: 100%;
         transition: all 0.7s ease;
     }
 
     .active{
-        transform: translateX(-85%);
+        transform: translateX(100%);
     }
 
     #sidebg>#slidebutton{
         border: 3px solid green;
         width: 15%;
-        text-align: center;
-        line-height: 100%;
-        vertical-align: middle;
-        aspect-ratio : 1/1;
+        aspect-ratio : 1/2;
         position: absolute;
-        bottom: 0;
-        right: 0;
+        top: 50%;
+        transform: translate(-100%,-50%);
+        left: 0;
         font-size: 50%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
     }
 </style>

@@ -4,12 +4,15 @@ export default () => createRouter({
   history: createWebHistory(),
   routes: [
     {
+      name: 'home',
       path: '/',
       component: () => import('./views/HomeView.vue')
     },
     {
+      name: 'login',
       path: '/login',
       component: () => import('./views/LoginView.vue')
+      
     },
   ]
 })

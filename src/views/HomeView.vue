@@ -7,11 +7,12 @@
     const { username } = storeToRefs(store)
 </script>
 
+
 <template>
     <h1>Home</h1>
     <SidebareItem></SidebareItem>
     <router-link to="/login">Go to Login</router-link>
-    <h3>{{username}}</h3>
+    <h3>Welcome {{username}}</h3>
 </template>
 
 <style  scoped>
