@@ -3,7 +3,7 @@ export const s = p => {
         constructor(){
             this.x = p.random(-p.width, p.width);
             this.y = p.random(-p.height, p.height);
-            this.z = p.random(0, p.width);
+            this.z = p.random(p.width);
         }
         show(){
             p.fill(255);
@@ -27,22 +27,23 @@ export const s = p => {
     p.setup = function() {
       p.createCanvas(p.windowWidth, p.windowHeight);
         for(let i = 0; i < 400; i++){
-            stars.push(new star());
+            stars[i] = new star();
         }
     };
   
     p.draw = function() {
-      p.background(0);
-      p.fill(255);
-      p.translate(p.width/2, p.height/2);
-      for(let i = 0; i < 400; i++){
-        stars[i].update();
-        stars[i].show();
-    }
+        p.background(0);
+        // p.fill(255);
+        p.translate(p.width/2, p.height/2);
+        for(let i = 0; i < 400; i++){
+            stars[i].update();
+            stars[i].show();
+        }
 
     };
 
     p.windowResized = function() {
         p.resizeCanvas(p.windowWidth, p.windowHeight);
+        
     };
   };

@@ -24,11 +24,10 @@
 <template>
     <div>login</div>
     <input type="text" v-model="a"> 
-    <br><br>
+    <br>
     <input type="password" v-model="b">
     <p v-if="username"> {{username}} </p>
-    <p v-if="password"> {{password}} </p>
-    <br>
+    <p v-if="password"> {{password}} </p><br>
     <button @click="submit">submit</button>
     <br>
 </template>

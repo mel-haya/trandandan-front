@@ -1,28 +1,31 @@
 <template>
     
     <div id="sidebg" :class="[state ? 'active' : '']">
+        <div @click="toggleSide" id="closebutton">x</div>
         Chat
-        <div @click="toggleSide" id="slidebutton">{{a}}</div>
+        <div @click="toggleSide" id="slidebutton">
+            <fa v-if="state" icon="angle-left"/>
+            <fa v-else icon="angle-right"/>
+        </div>
     </div>
 </template>
 
 <script setup>
     import {ref} from 'vue'
-    let a = ref("<")
     let state= ref(true)
     function toggleSide(){
         console.log(state.value)
         state.value = !state.value
-        a.value = state.value ? '<' : '>'
     }
 </script>
 
 <style scoped>
     #sidebg{
+        min-width: 400px;
         position: absolute;
         top: 0;
         right: 0;
-        background-color: rgba(33, 5, 53, 0.85);
+        background-color: rgba(73, 92, 131, 0.8);
         width: 25%;
         height: 100%;
         transition: all 0.7s ease;
@@ -33,7 +36,7 @@
     }
 
     #sidebg>#slidebutton{
-        border: 3px solid green;
+        /* border: 3px solid green; */
         width: 15%;
         aspect-ratio : 1/2;
         position: absolute;
@@ -44,5 +47,17 @@
         display: flex;
         justify-content: center;
         align-items: center;
+        background-color: rgba(73, 92, 131, 0.8);
+        border-radius: 20px 0 0 20px;
     }
+
+    #sidebg>#closebutton{
+       width: 10%;
+       position: absolute;
+       top: 0;
+       right: 0;
+       cursor: pointer;
+    }
+    
+
 </style>

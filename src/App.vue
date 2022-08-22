@@ -1,4 +1,4 @@
-<template> 
+<template>
   <router-view />
 </template>
 
@@ -28,7 +28,7 @@ export default {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #fff;
-  font-size: 2vw;
+  font-size: 2.5rem;
   font-weight: bold;
   background: rgba(123, 51, 125, 0.3);
   position: relative;

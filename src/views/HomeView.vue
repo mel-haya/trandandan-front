@@ -9,7 +9,8 @@
 
 
 <template>
-    <h1>Home</h1>
+    <img src="../assets/pong-online.png" alt="" style="width: 40%;">
+    <br>
     <SidebareItem></SidebareItem>
     <router-link to="/login">Go to Login</router-link>
     <h3>Welcome {{username}}</h3>
