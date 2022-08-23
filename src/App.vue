@@ -30,7 +30,7 @@ export default {
   color: #fff;
   font-size: 2.5rem;
   font-weight: bold;
-  background: rgba(123, 51, 125, 0.3);
+  /* background: rgba(123, 51, 125, 0.3); */
   position: relative;
   overflow: hidden;
 }

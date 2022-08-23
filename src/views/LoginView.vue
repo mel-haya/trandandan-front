@@ -1,19 +1,19 @@
 
 <script setup>
-    import { ref } from 'vue'
+    // import { ref } from 'vue'
     import { useUserStore } from '@/stores/user'
-    import { storeToRefs } from 'pinia'
+    // import { storeToRefs } from 'pinia'
     import { useRouter } from 'vue-router'
 
     
-    const a = ref("")
-    const b = ref("")
+    // const a = ref("")
+    // const b = ref("")
     const store = useUserStore()
-    const { username, password } = storeToRefs(store)
+    // const { username, password } = storeToRefs(store)
     const { auth } = store
     const router = useRouter()
     function submit(){
-        auth(a.value,b.value)
+        auth("Mourad","")
         router.push("/")
     }
     
@@ -22,14 +22,17 @@
 
 
 <template>
-    <div>login</div>
+    <img src="../assets/pong-online.png" alt="" style="width: 40%;">
+    <br>
+    <div @click="submit" id="loginButton">Sign up with 42</div>
+    <!-- <br>
     <input type="text" v-model="a"> 
     <br>
     <input type="password" v-model="b">
     <p v-if="username"> {{username}} </p>
     <p v-if="password"> {{password}} </p><br>
     <button @click="submit">submit</button>
-    <br>
+    <br> -->
 </template>
 
 
@@ -49,14 +52,27 @@
 
 
 <style scoped>
-*{
-    font-size: 2vw;
-}
-button{
-    padding: 5px 10px;
-    border-radius: 15px;
 
-    border: 5px solid red;
+:root{
+    --clear-neon: #57003E
+}
+
+#loginButton{
+    
+    border-radius: 0.4em;
+    color: #FF0FBB;
+    font-size: 3rem;
+    /* height: 4rem; */
+    line-height: 5rem;
+    border: 0.125em solid currentColor;
+    display: inline-block;
+    padding: 0.25em 1em;
+    cursor: pointer;
+}
+
+#loginButton:hover{
+    background: #FF0FBB;
+    color: #000;
 }
 
 </style>

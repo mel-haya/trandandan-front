@@ -21,11 +21,11 @@
 
 <style scoped>
     #sidebg{
-        min-width: 400px;
+        min-width: 350px;
         position: absolute;
         top: 0;
         right: 0;
-        background-color: rgba(73, 92, 131, 0.8);
+        background-color: rgba(123,51,125, 0.5);
         width: 25%;
         height: 100%;
         transition: all 0.7s ease;
@@ -47,7 +47,7 @@
         display: flex;
         justify-content: center;
         align-items: center;
-        background-color: rgba(73, 92, 131, 0.8);
+        background-color: rgba(123,51,125, 0.5);
         border-radius: 20px 0 0 20px;
     }
 
