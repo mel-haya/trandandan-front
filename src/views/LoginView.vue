@@ -1,9 +1,11 @@
 
 <script setup>
+    /* eslint-disable */
     // import { ref } from 'vue'
     import { useUserStore } from '@/stores/user'
     // import { storeToRefs } from 'pinia'
-    import { useRouter } from 'vue-router'
+    // import { useRouter } from 'vue-router'
+    import axios from 'axios';
 
     
     // const a = ref("")
@@ -11,10 +13,15 @@
     const store = useUserStore()
     // const { username, password } = storeToRefs(store)
     const { auth } = store
-    const router = useRouter()
-    function submit(){
-        auth("Mourad","")
-        router.push("/")
+    // const router = useRouter()
+    
+    async function submit(){
+        
+        const res = await axios.get(`http://0.0.0.0:3000/auth/42`).catch((err) => console.log(err)) 
+        console.log(res)
+
+        // auth("Mourad","")
+        // router.push("/")
     }
     
 </script>
@@ -24,38 +31,13 @@
 <template>
     <img src="../assets/pong-online.png" alt="" style="width: 40%;">
     <br>
-    <div @click="submit" id="loginButton">Sign up with 42</div>
-    <!-- <br>
-    <input type="text" v-model="a"> 
-    <br>
-    <input type="password" v-model="b">
-    <p v-if="username"> {{username}} </p>
-    <p v-if="password"> {{password}} </p><br>
-    <button @click="submit">submit</button>
-    <br> -->
+    <div id="loginButton">
+        <a @click="submit" href="http://0.0.0.0:3000/auth/42">Sign up with 42</a>
+    </div>
+
 </template>
-
-
-
-<!--
-<template>
-    <div>login</div>
-    <input type="text" v-model="username"> 
-    <br>
-    <input type="password" v-model="password">
-    <p v-if="userStore.username"> {{userStore.username}} </p>
-    <p v-if="userStore.password"> {{userStore.password}} </p>
-    <br>
-    <button @click="submitForm">submit</button>
-</template>
--->
-
 
 <style scoped>
-
-:root{
-    --clear-neon: #57003E
-}
 
 #loginButton{
     
@@ -64,7 +46,7 @@
     font-size: 3rem;
     /* height: 4rem; */
     line-height: 5rem;
-    border: 0.125em solid currentColor;
+    border: 0.125em solid #FF0FBB;
     display: inline-block;
     padding: 0.25em 1em;
     cursor: pointer;

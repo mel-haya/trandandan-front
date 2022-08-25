@@ -3,8 +3,11 @@
     import { useUserStore } from '@/stores/user'
     import { storeToRefs } from 'pinia'
     import SidebareItem from '@/components/SidebarItem.vue'
+
     const store = useUserStore()
     const { username } = storeToRefs(store)
+    // console.log(this.$cookies.isKey('test'))
+    
 </script>
 
 
