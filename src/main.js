@@ -15,6 +15,7 @@ import createRouter from './router'
 
 const router = createRouter()
 const pinia = createPinia()
+
 import { useUserStore } from '@/stores/user'
 library.add(fas)
 // router.beforeEach((to, from) => {
