@@ -6,6 +6,7 @@
 
     const store = useUserStore()
     const { username } = storeToRefs(store)
+    console.log(store.imgUrl);
     // console.log(this.$cookies.isKey('test'))
     
 </script>

@@ -1,22 +1,25 @@
 <template>
     <div id="registerForm">
         <h2>Register</h2>
-        <img :src="user.imageUrl" alt="bruh" >
-        change avatar
-        <input type="file" name="file" @change="changeImage">
-        <br>
-        change username
-        <input type="text" name="username" v-model="user.username">
-        <br>
+        <div id="imageCont">
+            <img :src="user.imageUrl" alt="bruh">
+            <label for="file"><fa icon="file-arrow-up"/></label>
+            <input type="file"  name="file" id="file" @change="changeImage">
+        </div>
+        <input type="text" placeholder="change your name" id="usernameInput" name="username" v-model="user.username">
+        <button id="faBtn" @click="redirectHome">activate 2FA</button>
         <button @click="submitForm" id="saveBtn">save</button>
-        <button id="faBtn">activate 2FA</button>
+        
     </div>
 </template>
 
 <script setup>
+    /*eslint-disable*/
     import { onMounted, reactive } from 'vue'
     import Cookies from 'js-cookie'
     import axios from 'axios'
+    import { useUserStore } from '@/stores/user'
+import { useRouter } from 'vue-router';
 
     const user = reactive({
         id: 0,
@@ -24,6 +27,9 @@
         imageUrl: '',
     });
     let img;
+    const store = useUserStore()
+    const { update } = store
+    let router = useRouter()
 
     let token = Cookies.get('accessToken')
     onMounted(() => {
@@ -45,7 +51,11 @@
     function changeImage(e)
     {
       img = e.target.files[0];
-      console.log(img);
+      user.imageUrl = URL.createObjectURL(img);
+    }
+
+    function redirectHome() {
+        router.push('/')
     }
 
     function submitForm()
@@ -63,37 +73,86 @@
                     },
                 })
                 .then(function (response) {
-                    console.log(response);
+                    user.imageUrl = response.data.imageUrl;
+                    user.username = response.data.username;
+                    update(user.username, user.imageUrl)
+
+                    // console.log(response);
                 })
                 .catch(function (response) {
-                    console.log(response);
         });
     }
 </script>
 
 <style scoped>
-    img{
-        width: 100px;
-        height: 100px;
-        border-radius: 50%;
+    #file {
+        display: none;
+    }
+    #registerForm{
+        width: 30%;
+        padding: 2em 1em;
+        border-radius: 0.5em;
+        position: relative;
+        background: rgba(124, 26, 137, 0.703);
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+    
+
+    button{
+        background-color: #4CAF50;
+        color: white;
+        padding: 14px 20px; 
+        margin: 8px 8px;
+        border: none;
+        cursor: pointer;
+        width: 30%;
+        min-width: 200px;
+    }
+    
+
+    #usernameInput{
+        
+        padding: 12px 20px;
+        margin: 8px 0;
+        display: inline-block;
+        /* border: 1px solid #ccc; */
+        border-radius: 4px;
+        box-sizing: border-box;
+        font-size: 0.5em;
+        border: none;
+        border-bottom: 2px solid #4CAF50;
+        background-color: transparent;
+        resize: none;
+        outline: none;
+        color : white;
+    }
+    label
+    {
+        font-size: 0.7em;
+        color: white;
+    }
+    #imageCont{
+        position: relative;
+        width: 150px;
+        height: 150px;
+    }
+    #imageCont label{
+        position: absolute;
+        bottom: 0px;
+        right: 0px;
+        color: white;
+        cursor: pointer;
     }
 
-    #saveBtn{
-        background-color: #4CAF50;
-        color: white;
-        padding: 14px 20px;
-        margin: 8px 0;
-        border: none;
-        cursor: pointer;
-        width: 100%;
-    }
-    #faBtn{
-        background-color: #4CAF50;
-        color: white;
-        padding: 14px 20px;
-        margin: 8px 0;
-        border: none;
-        cursor: pointer;
-        width: 100%;
+    #imageCont img{
+        width: 150px;
+        height: 150px;
+        border-radius: 50%;
     }
 </style>

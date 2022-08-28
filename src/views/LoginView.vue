@@ -40,9 +40,8 @@
 <style scoped>
 
 #loginButton{
-    
+    text-decoration: none;
     border-radius: 0.4em;
-    color: #FF0FBB;
     font-size: 3rem;
     /* height: 4rem; */
     line-height: 5rem;
@@ -54,7 +53,15 @@
 
 #loginButton:hover{
     background: #FF0FBB;
-    color: #000;
+}
+
+#loginButton a{
+    text-decoration: none;
+    color: #FF0FBB;
+}
+
+#loginButton:hover a{ 
+    color: black;
 }
 
 </style>

@@ -8,10 +8,11 @@ import { ref } from "vue"
 export const useUserStore = defineStore('user', () =>
 {
     let username = ref("")
-    let password = ref("")
-    function auth(u,p){
+    let imgUrl = ref("")
+    function update(u,p){
         username.value = u
-        password.value = p
+        imgUrl.value = p
     }
-    return({username, password, auth})
+
+    return({username, imgUrl, update})
 })
