@@ -3,7 +3,7 @@
         <p><fa icon="lock"/> Two-factor authentication</p>
         <div id="twofaForm">
             <img :src="qrimg" alt="bruh">
-            <input type="text" placeholder="enter code" id="usernameInput" name="code" v-model="code">
+            <input type="text" @keyup.enter="validate" placeholder="enter code" id="usernameInput" name="code" v-model="code">
             <p v-if="invalid" id="invalidErr">Invalid code</p>
             <div>
                 <button @click="validate">Save</button>
@@ -23,7 +23,7 @@ import { useRouter } from 'vue-router';
     let code = ref('');
     let router = useRouter();
 
-    toDataURL('10',function(err,data)
+    toDataURL('bruh',function(err,data)
     {
         qrimg.value = data;
     });
