@@ -1,16 +1,19 @@
 <template>
-    <div id="registerForm">
+    <div id="registercontainer">
         <h2>Register</h2>
-        <div id="imageCont">
-            <img :src="user.imageUrl" alt="bruh">
-            <label for="file"><fa icon="file-arrow-up"/></label>
-            <input type="file"  name="file" id="file" @change="changeImage">
+        <div id="registerForm">
+            <div id="imageCont">
+                <img :src="user.imageUrl" alt="bruh">
+                <label for="file"><fa icon="file-arrow-up"/></label>
+                <input type="file"  name="file" id="file" @change="changeImage">
+            </div>
+            <input type="text" placeholder="change your name" id="usernameInput" name="username" v-model="user.username">
+            <button id="faBtn" @click="redirectHome">activate 2FA</button>
+            <button @click="submitForm" id="saveBtn">save</button>
+            
         </div>
-        <input type="text" placeholder="change your name" id="usernameInput" name="username" v-model="user.username">
-        <button id="faBtn" @click="redirectHome">activate 2FA</button>
-        <button @click="submitForm" id="saveBtn">save</button>
-        
     </div>
+    
 </template>
 
 <script setup>
@@ -55,6 +58,7 @@ import { useRouter } from 'vue-router';
     }
 
     function redirectHome() {
+        console.log('redirecting');
         router.push('/')
     }
 
@@ -80,27 +84,42 @@ import { useRouter } from 'vue-router';
                     // console.log(response);
                 })
                 .catch(function (response) {
-        });
+                    console.log(response);
+                });
     }
 </script>
 
 <style scoped>
+    h2{
+        /* text-decoration: solid underline; */
+        background: rgba(124, 26, 137, 0.787);
+        border-radius: 0.5em 0.5em 0 0;
+        padding: 0.25em 0;
+        /* text-align: left; */
+    }
     #file {
         display: none;
     }
-    #registerForm{
-        width: 30%;
-        padding: 2em 1em;
-        border-radius: 0.5em;
+
+    #registercontainer{
         position: relative;
-        background: rgba(124, 26, 137, 0.703);
+        width: 30%;
+        padding: 1em 0.5em;
         top: 50%;
         left: 50%;
         transform: translate(-50%, -50%);
+
+    }
+
+    #registerForm{     
+        
+        background: rgba(158, 78, 169, 0.703);
         display: flex;
         flex-direction: column;
         justify-content: center;
         align-items: center;
+        border-radius: 0 0 0.5em 0.5em;
+        padding: 1em;
     }
     
 

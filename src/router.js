@@ -19,6 +19,11 @@ export default () => createRouter({
       path: '/register',
       component: () => import('./views/RegisterView.vue')
       
+    },
+    {
+      name: 'twofa',
+      path: '/twofa',
+      component: () => import('./views/twofaView.vue')
     }
   ]
 })
