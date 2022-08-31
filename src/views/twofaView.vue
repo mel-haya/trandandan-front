@@ -33,23 +33,27 @@
             headers: { "Authorization": `Bearer ${token}` }
         };
         let res = await axios.get("http://localhost:3000/2fa/generate", config)
-        .then(function (response){ return response.data;})
+        .then(function (response){ 
+            return response.data;
+        })
         .catch((err) => console.log(err));
-        console.log(res)
         qrimg.value = res;
     })
 
     async function validate()
     {
-
         const config = {
-            headers: { "Authorization": `Bearer ${token}` }
+            headers: { "Authorization": `Bearer ${token}`,
+            "Content-Type": "application/json" 
+        }
         };
         console.log(code.value)
         let res = await axios.post("http://localhost:3000/2fa/authenticate", {code: code.value} ,config)
-        .then((response) => { return response.data;})
+        .then((response) => { 
+            console.log(response);
+            return response.data;})
         .catch((err) => console.log(err));
-        console.log(res);
+        console.log("-------",res);
         if(code.value == res)
         {
             invalid.value = false;
