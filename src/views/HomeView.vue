@@ -23,9 +23,6 @@
                 console.log(error)
             })
     }
-    console.log(username.value);
-    // console.log(this.$cookies.isKey('test'))
-    
 </script>
 
 

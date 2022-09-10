@@ -3,7 +3,7 @@
         <h2>Register</h2>
         <div id="registerForm">
             <div id="imageCont">
-                <img src="user.imageUrl" alt="bruh">
+                <img :src="user.imageUrl" alt="bruh">
                 <label for="file"><fa icon="file-arrow-up"/></label>
                 <input type="file"  name="file" id="file" @change="changeImage">
             </div>
