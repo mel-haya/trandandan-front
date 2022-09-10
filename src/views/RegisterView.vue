@@ -53,8 +53,7 @@ import { useRouter } from 'vue-router';
 
     function changeImage(e)
     {
-      img = e.target.files[0];
-      user.imageUrl = URL.createObjectURL(img);
+      user.imageUrl = URL.createObjectURL(e.target.files[0]);
     }
 
     function redirectHome() {
@@ -80,7 +79,7 @@ import { useRouter } from 'vue-router';
                     user.imageUrl = response.data.imageUrl;
                     user.username = response.data.username;
                     update(user.username, user.imageUrl)
-
+                    router.push('/')
                     // console.log(response);
                 })
                 .catch(function (response) {
