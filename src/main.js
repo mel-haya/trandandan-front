@@ -8,6 +8,7 @@ import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import App from './App.vue'
 import P5 from 'p5'
 import createRouter from './router'
+import QrcodeVue from 'qrcode.vue'
 // import VueCookies from 'vue3-cookies'
 
 // var script = require('./p5script.js')
@@ -28,6 +29,7 @@ library.add(fas)
 createApp(App)
 .use(router)
 .use(pinia)
+.component('qrcode', QrcodeVue)
 .component('fa', FontAwesomeIcon)
 .mount('#app')
 

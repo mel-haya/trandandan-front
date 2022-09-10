@@ -3,14 +3,13 @@
         <h2>Register</h2>
         <div id="registerForm">
             <div id="imageCont">
-                <img :src="user.imageUrl" alt="bruh">
+                <img src="user.imageUrl" alt="bruh">
                 <label for="file"><fa icon="file-arrow-up"/></label>
                 <input type="file"  name="file" id="file" @change="changeImage">
             </div>
             <input type="text" placeholder="change your name" id="usernameInput" name="username" v-model="user.username">
             <button id="faBtn" @click="redirectHome">activate 2FA</button>
             <button @click="submitForm" id="saveBtn">save</button>
-            
         </div>
     </div>
     
@@ -57,8 +56,7 @@ import { useRouter } from 'vue-router';
     }
 
     function redirectHome() {
-        console.log('redirecting');
-        router.push('/')
+        router.push('/twofa')
     }
 
     function submitForm()
@@ -131,6 +129,7 @@ import { useRouter } from 'vue-router';
         cursor: pointer;
         width: 30%;
         min-width: 200px;
+        font-size: 0.5em;
     }
     
 

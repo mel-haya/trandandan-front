@@ -15,22 +15,46 @@
 
 
 <script setup>
-    import {toDataURL} from 'qrcode';
-    import {ref} from 'vue'
-import { useRouter } from 'vue-router';
+    // import {toDataURL} from 'qrcode';
+    import {onMounted, ref} from 'vue'
+    import { useRouter } from 'vue-router';
+    import Cookies from 'js-cookie'
+    import axios from 'axios'
+
     let qrimg = ref('');
     let invalid = ref(false);
     let code = ref('');
     let router = useRouter();
+    let token = Cookies.get('accessToken')
+    
 
-    toDataURL('bruh',function(err,data)
-    {
-        qrimg.value = data;
-    });
+    onMounted( async () => {
+        const config = {
+            headers: { "Authorization": `Bearer ${token}` }
+        };
+        let res = await axios.get("http://localhost:3000/2fa/generate", config)
+        .then(function (response){ 
+            return response.data;
+        })
+        .catch((err) => console.log(err));
+        qrimg.value = res;
+    })
 
-    function validate()
+    async function validate()
     {
-        if(code.value == '10')
+        const config = {
+            headers: { "Authorization": `Bearer ${token}`,
+            "Content-Type": "application/json" 
+        }
+        };
+        console.log(code.value)
+        let res = await axios.post("http://localhost:3000/2fa/authenticate", {code: code.value} ,config)
+        .then((response) => { 
+            console.log(response);
+            return response.data;})
+        .catch((err) => console.log(err));
+        console.log("-------",res);
+        if(code.value == res)
         {
             invalid.value = false;
             return true;
@@ -48,6 +72,7 @@ import { useRouter } from 'vue-router';
     #invalidErr
     {
         color: red;
+        background-color:transparent;
     }
     p{
         background: rgba(124, 26, 137, 0.787);
@@ -89,7 +114,7 @@ import { useRouter } from 'vue-router';
         cursor: pointer;
         width: 30%;
         min-width: 200px;
-        font-size: 1.5rem;
+        font-size: 0.5em;
     }
     
 
