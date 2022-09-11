@@ -24,6 +24,12 @@ export default () => createRouter({
       name: 'twofa',
       path: '/twofa',
       component: () => import('./views/twofaView.vue')
+    },
+    {
+      name: 'game',
+      path: '/play',
+      component: () => import('./views/GameView.vue')
     }
+
   ]
 })
