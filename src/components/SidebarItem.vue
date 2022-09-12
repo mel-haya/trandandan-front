@@ -25,7 +25,7 @@
         position: absolute;
         top: 0;
         right: 0;
-        background-color: rgba(123,51,125, 0.5);
+        background-color: rgba(123,51,125, 0.7);
         width: 25%;
         height: 100%;
         transition: all 0.7s ease;
@@ -47,7 +47,7 @@
         display: flex;
         justify-content: center;
         align-items: center;
-        background-color: rgba(123,51,125, 0.5);
+        background-color: rgba(123,51,125, 0.7);
         border-radius: 20px 0 0 20px;
     }
 

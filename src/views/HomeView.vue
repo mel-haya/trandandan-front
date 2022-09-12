@@ -5,11 +5,11 @@
     import Cookies from 'js-cookie'
     import SidebareItem from '@/components/SidebarItem.vue'
     import axios from 'axios';
+    import ProfileItem from '@/components/ProfileItem.vue';
+
     const store = useUserStore()
     const {username, imgUrl } = storeToRefs(store)
     let token = Cookies.get('accessToken')
-
-
     if(username.value == ""){
         const config = {
             headers: { "Authorization": `Bearer ${token}` }
@@ -20,7 +20,7 @@
                 imgUrl.value = response.data.imageUrl;
             })
             .catch(error => {
-                console.log(error)
+                
             })
     }
 </script>
@@ -46,8 +46,11 @@
             <div id="gameMenu"></div>
             <div id="currplayed"></div>
             <div id="leaderboard"></div>
+            <ProfileItem></ProfileItem>
         </div>
-    </div>
+    </div> 
+    
+    <SidebareItem></SidebareItem>
 </template>
 
 <style  scoped>
@@ -147,5 +150,8 @@
         background-color: yellow;
         border-radius: 20px;
     }
+
+    
+
 
 </style>
