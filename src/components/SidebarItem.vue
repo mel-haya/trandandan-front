@@ -1,17 +1,17 @@
 <template>
     
     <div id="sidebg" :class="[state ? 'active' : '']">
-        <div @click="toggleSide" id="closebutton">x</div>
-        Chat
         <div @click="toggleSide" id="slidebutton">
             <fa v-if="state" icon="angle-left"/>
             <fa v-else icon="angle-right"/>
         </div>
+        <SidebarProfileItem/>
     </div>
 </template>
 
 <script setup>
     import {ref} from 'vue'
+    import SidebarProfileItem from './SidebarProfileItem.vue';
     let state= ref(true)
     function toggleSide(){
         state.value = !state.value
@@ -20,7 +20,7 @@
 
 <style scoped>
     #sidebg{
-        min-width: 350px; 
+        min-width: 400px; 
         position: absolute;
         top: 0;
         right: 0;
@@ -29,13 +29,11 @@
         height: 100%;
         transition: all 0.7s ease;
     }
-
     .active{
         transform: translateX(100%);
     }
 
-    #sidebg>#slidebutton{
-        /* border: 3px solid green; */
+    #slidebutton{
         width: 70px;
         aspect-ratio : 1/2;
         position: absolute;
@@ -48,14 +46,6 @@
         align-items: center;
         background-color: rgba(123,51,125, 0.7);
         border-radius: 20px 0 0 20px;
-    }
-
-    #sidebg>#closebutton{
-       width: 10%;
-       position: absolute;
-       top: 0;
-       right: 0;
-       cursor: pointer;
     }
     
 

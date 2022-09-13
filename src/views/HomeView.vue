@@ -25,15 +25,11 @@ import { onMounted } from 'vue';
             })
     }
     var audio = new Audio(require('../assets/hover1.mp3'));
-    
+  
     function hoverAudio(){
         audio.play();
     }
 </script>
-
-
-
-
 
 <template>
     <!--  -->
@@ -45,12 +41,11 @@ import { onMounted } from 'vue';
         
         <div id="menuWrapper">
             <div id="logo"></div>
-            <audio id="hoverAudio" src="../assets/hover1.mp3"></audio>
             <div @click="hoverAudio" id="playBtn" class="menuBtn"><span>PLAY</span></div>
             <div @click="hoverAudio" id="watchBtn" class="menuBtn"><span>WATCH</span></div>
             <div @click="hoverAudio" id="leaderboardBtn" class="menuBtn"><span>LEADERBOARD</span></div>
+            <!-- <ProfileItem></ProfileItem> -->
         </div>
-        <!-- <ProfileItem></ProfileItem> -->
     <SidebareItem></SidebareItem>
 </template>
 
@@ -111,24 +106,25 @@ import { onMounted } from 'vue';
         text-align: center;
         cursor: pointer;
         font-family: 'B612 Mono', sans-sarif;
-        font-size: 26px;
-        border-top: #7B337D solid 5px;
+        font-size: 24px;
+        border-top: #7B337D solid 2px;
         border-right: #7B337D solid 2px;
         border-bottom: #7B337D solid 2px;
         margin: 10px 0;
-        transition: all 0.2s ease;
-        transform: skew(30deg)
+        transition: all 0.4s ease;
+        transform: skew(30deg);
     }
 
     .menuBtn span{
         transform: skew(-30deg);
         display:inline-block;
+        user-select: none;
     }
 
     .menuBtn:hover{
         font-size: 30px;
+        text-shadow: 3px 3px 2px rgba(0, 0, 0, 0.5);
     }
-
     .menuBtn::before{
         content: "";
         position: absolute;
@@ -136,13 +132,14 @@ import { onMounted } from 'vue';
         left: 0;
         width: 5%;
         height: 100%;
-        transition: all 0.4s ease;
+        transition: all 0.4s ease-in-out;
         background-color: #7a337d;
     }
 
     .menuBtn:hover::before{
+        background-color: #a942ac;
         width: 100%;
-        
+        box-shadow: #7a337d 0px 0px 20px 10px; 
     }
 
 
