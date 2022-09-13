@@ -169,8 +169,6 @@
         font-size: large;
         background: #B4B4B47F;
     }
-
-
     @media (max-height: 720px) {
         #closeButton {
             font-size: 50%;

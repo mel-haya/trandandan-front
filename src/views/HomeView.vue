@@ -6,6 +6,7 @@
     import SidebareItem from '@/components/SidebarItem.vue'
     import axios from 'axios';
     import ProfileItem from '@/components/ProfileItem.vue';
+import { onMounted } from 'vue';
 
     const store = useUserStore()
     const {username, imgUrl } = storeToRefs(store)
@@ -23,69 +24,48 @@
                 
             })
     }
+    var audio = new Audio(require('../assets/hover1.mp3'));
+    
+    function hoverAudio(){
+        audio.play();
+    }
 </script>
+
+
+
 
 
 <template>
     <!--  -->
-    <div id="contentwrapper">
-        <div id="header">
-            <div id="logo">
-            </div>
+        <!-- <div id="header">
             <div id="profile">
-                <div id="profileName">
-                    <p>{{username}}</p>
-                </div>
-                <div id="profileImg" :style='`background: url(${imgUrl}); background-size:cover;`'>
-                    <!-- <img :src="imgUrl" alt=""> -->
-                </div>
-                
+                <div id="profileImg" :style='`background: url(${imgUrl}); background-size:cover;`'></div>
             </div>
+        </div> -->
+        
+        <div id="menuWrapper">
+            <div id="logo"></div>
+            <audio id="hoverAudio" src="../assets/hover1.mp3"></audio>
+            <div @click="hoverAudio" id="playBtn" class="menuBtn"><span>PLAY</span></div>
+            <div @click="hoverAudio" id="watchBtn" class="menuBtn"><span>WATCH</span></div>
+            <div @click="hoverAudio" id="leaderboardBtn" class="menuBtn"><span>LEADERBOARD</span></div>
         </div>
-        <div id="gridWrapper">
-            <div id="gameMenu"></div>
-            <div id="currplayed"></div>
-            <div id="leaderboard"></div>
-            <ProfileItem></ProfileItem>
-        </div>
-    </div> 
-    
+        <!-- <ProfileItem></ProfileItem> -->
     <SidebareItem></SidebareItem>
 </template>
 
 <style  scoped>
 
-    #header{
-        position: absolute;
-        top: 0px;
-        width: 100%;
-        height: 15%;
-        /* background-color: #FF0FBB;*/
-    }
     #logo{
-        position: absolute;
-        min-width: 250px;
         width: 50%;
-        height: 100%;
+        min-height: 250px;
+        height: 35vh;
         text-align: left;
-        background-image: url('../assets/pong-online.png');
+        background-image: url('@/assets/pong-online.png');
         background-repeat: no-repeat;
         background-size: contain;
+        background-position: center;
         /* background-color: #FF0FBB; */
-    }
-    #logo img{
-        width: 70%;
-    }
-
-    #contentwrapper
-    {
-        position: relative;
-        top: 20px;
-        width: 85%;
-        height: 100%;
-        margin: 0 auto;
-        display: flex;
-        align-items: center;
     }
     #profile
     {
@@ -103,55 +83,67 @@
         text-align: left;
         border-radius: 100vh;
     }
+
     #profileImg img
     {
         width: 100%;
         height: auto;
         border-radius: 100vw;
     }
-    #profileName
-    {
-        padding: 10px;
-        text-align: left;
-        font-size: 24px;
-        display: flex;
-        align-items: center;
-    }
 
-    #gridWrapper{
+    #menuWrapper{
         position: absolute;
-        top: 20%;
+        top: 15%;
         width: 100%;
         height: 75%;
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        grid-template-rows: 2fr 1fr;
-        grid-template-areas: 
-        "gameMenu leaderboard"
-        "currplayed leaderboard";
-        grid-gap: 25px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
 
     }
 
-    #gameMenu{
-        grid-area: gameMenu;
-        background-color: #FF0FBB;
-        border-radius: 20px;
+    .menuBtn{
+        position: relative;
+        max-width: 350px;
+        width: 40%;
+        height: 60px;
+        line-height: 60px;
+        text-align: center;
+        cursor: pointer;
+        font-family: 'B612 Mono', sans-sarif;
+        font-size: 26px;
+        border-top: #7B337D solid 5px;
+        border-right: #7B337D solid 2px;
+        border-bottom: #7B337D solid 2px;
+        margin: 10px 0;
+        transition: all 0.2s ease;
+        transform: skew(30deg)
     }
 
-    #currplayed{
-        grid-area: currplayed;
-        background-color: green;
-        border-radius: 20px;
+    .menuBtn span{
+        transform: skew(-30deg);
+        display:inline-block;
     }
 
-    #leaderboard{
-        grid-area: leaderboard;
-        background-color: yellow;
-        border-radius: 20px;
+    .menuBtn:hover{
+        font-size: 30px;
     }
 
-    
+    .menuBtn::before{
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 5%;
+        height: 100%;
+        transition: all 0.4s ease;
+        background-color: #7a337d;
+    }
+
+    .menuBtn:hover::before{
+        width: 100%;
+        
+    }
 
 
 </style>

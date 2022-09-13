@@ -14,19 +14,18 @@
     import {ref} from 'vue'
     let state= ref(true)
     function toggleSide(){
-        console.log(state.value)
         state.value = !state.value
     }
 </script>
 
 <style scoped>
     #sidebg{
-        min-width: 350px;
+        min-width: 350px; 
         position: absolute;
         top: 0;
         right: 0;
         background-color: rgba(123,51,125, 0.7);
-        width: 25%;
+        width: 20vw;
         height: 100%;
         transition: all 0.7s ease;
     }
@@ -37,7 +36,7 @@
 
     #sidebg>#slidebutton{
         /* border: 3px solid green; */
-        width: 15%;
+        width: 70px;
         aspect-ratio : 1/2;
         position: absolute;
         top: 50%;
