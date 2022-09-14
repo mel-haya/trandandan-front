@@ -32,12 +32,8 @@
             })
     }
     var audio = new Audio(require('../assets/hover1.mp3'));
-    function hoverAudio(){
-        audio.play();
-    }
-
     function firstButton(){
-        hoverAudio()
+        audio.play();
         if(test.a === "PLAY")
         {
             test.a = "EASY";
@@ -48,11 +44,14 @@
             router.push('/play') 
     }
     function secondButton(){
-        hoverAudio()
-        router.push('/watch')
+        audio.play();
+        if(test.b === "WATCH")
+            router.push('/watch')
+        else
+            router.push('/play')
     }
     function thirdButton(){
-        hoverAudio()
+        audio.play();
         if(test.c === "RETURN")
         {
             test.a = "PLAY";
@@ -69,20 +68,12 @@
 
 </script>
 
-<template>
-    <!--  -->
-        <!-- <div id="header">
-            <div id="profile">
-                <div id="profileImg" :style='`background: url(${imgUrl}); background-size:cover;`'></div>
-            </div>
-        </div> -->
-        
+<template> 
         <div id="menuWrapper">
             <div id="logo"></div>
             <div @click="firstButton" id="playBtn" class="menuBtn"><span>{{test.a}}</span></div>
             <div @click="secondButton" id="watchBtn" class="menuBtn"><span>{{test.b}}</span></div>
             <div @click="thirdButton" id="leaderboardBtn" class="menuBtn" v-if="test.c"><span>{{test.c}}</span></div>
-            <!-- <ProfileItem></ProfileItem> -->
         </div>
     <SidebareItem></SidebareItem>
 </template>
@@ -166,17 +157,17 @@
     .menuBtn::before{
         content: "";
         position: absolute;
-        top: 0;
+        top: -2px;
         left: 0;
         width: 5%;
-        height: 100%;
-        transition: all 0.4s ease-in-out;
+        height: 64px;
+        transition: all 0.3s ease-in-out;
         background-color: #7a337d;
     }
 
     .menuBtn:hover::before{
         background-color: #a942ac;
-        width: 100%;
+        width: calc(100% + 2px);
         box-shadow: #7a337d 0px 0px 20px 10px; 
     }
 
