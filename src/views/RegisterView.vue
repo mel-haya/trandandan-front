@@ -21,7 +21,7 @@
     import Cookies from 'js-cookie'
     import axios from 'axios'
     import { useUserStore } from '@/stores/user'
-import { useRouter } from 'vue-router';
+    import { useRouter } from 'vue-router';
 
     const user = reactive({
         id: 0,

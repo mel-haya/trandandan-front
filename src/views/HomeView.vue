@@ -6,11 +6,18 @@
     import SidebareItem from '@/components/SidebarItem.vue'
     import axios from 'axios';
     import ProfileItem from '@/components/ProfileItem.vue';
-import { onMounted } from 'vue';
+    import { onMounted, reactive } from 'vue';
+    import { useRouter } from 'vue-router';
 
+    const router = useRouter();
     const store = useUserStore()
     const {username, imgUrl } = storeToRefs(store)
     let token = Cookies.get('accessToken')
+    let test = reactive({
+        a:"PLAY",
+        b:"WATCH",
+        c:"LEADERBOARD"
+    })
     if(username.value == ""){
         const config = {
             headers: { "Authorization": `Bearer ${token}` }
@@ -25,10 +32,41 @@ import { onMounted } from 'vue';
             })
     }
     var audio = new Audio(require('../assets/hover1.mp3'));
-  
     function hoverAudio(){
         audio.play();
     }
+
+    function firstButton(){
+        hoverAudio()
+        if(test.a === "PLAY")
+        {
+            test.a = "EASY";
+            test.b = "HARD";
+            test.c = "RETURN";
+        }
+        else
+            router.push('/play') 
+    }
+    function secondButton(){
+        hoverAudio()
+        router.push('/watch')
+    }
+    function thirdButton(){
+        hoverAudio()
+        if(test.c === "RETURN")
+        {
+            test.a = "PLAY";
+            test.b = "WATCH";
+            test.c = "LEADERBOARD";
+        }
+        else
+        {
+            router.push('/leaderboard')
+        }
+    }
+
+
+
 </script>
 
 <template>
@@ -41,9 +79,9 @@ import { onMounted } from 'vue';
         
         <div id="menuWrapper">
             <div id="logo"></div>
-            <div @click="hoverAudio" id="playBtn" class="menuBtn"><span>PLAY</span></div>
-            <div @click="hoverAudio" id="watchBtn" class="menuBtn"><span>WATCH</span></div>
-            <div @click="hoverAudio" id="leaderboardBtn" class="menuBtn"><span>LEADERBOARD</span></div>
+            <div @click="firstButton" id="playBtn" class="menuBtn"><span>{{test.a}}</span></div>
+            <div @click="secondButton" id="watchBtn" class="menuBtn"><span>{{test.b}}</span></div>
+            <div @click="thirdButton" id="leaderboardBtn" class="menuBtn" v-if="test.c"><span>{{test.c}}</span></div>
             <!-- <ProfileItem></ProfileItem> -->
         </div>
     <SidebareItem></SidebareItem>

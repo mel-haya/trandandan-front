@@ -35,9 +35,8 @@
 </script>
 
 <script>
-
     window.addEventListener('click', function (e) {
-        if (e.target.id !== 'settings') {
+        if (!(document.getElementById("settings").contains(e.target))) {
             document.getElementById('context-menu').style.display = 'none';
         }
     });
