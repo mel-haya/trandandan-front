@@ -12,30 +12,68 @@
         <div id="filterbar" :style="`top: ${filterheight}px`">
             <input id="filterInput" type="text" placeholder="Filter friends..."/>
         </div>
-        <div id="slider" :style="`top: ${filterheight}px`">
-            <div id="addFriend">
-                <fa icon="plus"/>
-            </div>
-            <div id="addFriend">
-                <fa icon="user"/>
-            </div>
-            <div id="addFriend">
-                <fa icon="user"/>
-            </div>
-            <div id="addFriend">
-                <fa icon="user"/>
-            </div>
-            <div id="addFriend">
-                <fa icon="user"/>
+        <div ref="slider" id="slider" @mouseup="sliderLeave" @mouseleave="sliderLeave" @mousedown="sliderClick" @mousemove="sliderMove" :style="`top: ${filterheight}px`">
+            <div ref="innerSlider" id="innerSlider">
+                <div id="addFriend" @click="bruh">
+                    <fa icon="plus"/>
+                </div>
+                <div id="addFriend" @click="bruh">
+                    <fa icon="user"/>
+                </div>
+                <div id="addFriend" @click="bruh">
+                    <fa icon="user"/>
+                </div>
+                <div id="addFriend" @click="bruh">
+                    <fa icon="user"/>
+                </div>
+                <div id="addFriend" @click="bruh">
+                    <fa icon="user"/>
+                </div>
+                <div id="addFriend" @click="bruh">
+                    <fa icon="user"/>
+                </div>
+                <div id="addFriend" @click="bruh">
+                    <fa icon="user"/>
+                </div>
+                <div id="addFriend" @click="bruh">
+                    <fa icon="user"/>
+                </div>
             </div>
         </div>
-
     </div>
 </template>
 
 <script setup>
     import {ref} from 'vue'
     let filterheight = ref(-40);
+    let innerSlider = ref("innerSlider");
+    let slider = ref("slider");
+    let isDown = false;
+    let startX;
+    let scrollLeft;
+
+    function sliderClick(e){
+        isDown = true;
+        startX = e.pageX - slider.value.offsetLeft;
+        scrollLeft = slider.value.scrollLeft;
+    }
+
+    function sliderLeave(){
+        isDown = false;
+    }
+
+    function sliderMove(e){
+        if(!isDown) return;
+        e.preventDefault();
+        const x = e.pageX - slider.value.offsetLeft;
+        const walk = (x - startX) * 2;
+        slider.value.scrollLeft = scrollLeft - walk;
+    }
+
+    function bruh(){
+        console.log("bruh");
+    }
+
     function toggleFilter(){
         filterheight.value = filterheight.value == 0 ? -40 : 0;
     }
@@ -43,6 +81,16 @@
 
 
 <style scoped>
+
+#friendComponent{
+    width: 100%;
+    position: relative;
+}
+*{
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
 
 #friendHeader{
     width: 100%;
@@ -94,25 +142,24 @@
     overflow-x: scroll;
     overflow-y: hidden;
     white-space: nowrap;
-    height: 100%;
     padding: 10px 0;
     position: relative;
     transition: all 0.5s ease;
+    background-color: #51515142;
 }
 
 #addFriend{
-    width: 75px;
-    height: 75px;
+    width: 80px;
+    height: 80px;
     background-color: white;
     color  : black;
     display: inline-block;
-    margin: 10px;
-    border-radius: 100px;
+    margin: 5px;
+    border-radius: 80px;
     text-align: center;
-    line-height: 75px;
+    line-height: 80px;
     font-size: 35px;
     font-weight: bold;
-    cursor: pointer;
 }
 
 #filterbar{
@@ -122,11 +169,11 @@
     transition: all 0.5s ease;
     z-index: 0;
     top: 0px;
-    z-index: 1;
+    
 }
 
 #filterbar input{
-    width: calc(100% - 20px);
+    width: 100%;
     height: 100%;
     border: none;
     font-size: 20px;
@@ -135,10 +182,19 @@
     left: 0px;
     position: absolute;
     padding: 0 10px;
+    box-sizing: content-box;
 }
 
 textarea:focus, input:focus{
     outline: none;
+}
+
+#innerSlider{
+    position: relative;
+    top: 0px;
+    left: 0px;
+    /* pointer-events: none; */
+    display: inline-block;
 }
 
 

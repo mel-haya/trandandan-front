@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div id="sideProfile">
         <div id="userImg"></div>
         <div id="userName">mel-haya</div>
         <div id="settings" @click="togglemenu">
@@ -43,6 +43,13 @@
 </script>
 
 <style scoped>
+
+    #sideProfile{
+        width: 100%;
+        padding-bottom: 10px;
+
+    }
+
     #userImg{
         width: 150px;
         height: 150px;
