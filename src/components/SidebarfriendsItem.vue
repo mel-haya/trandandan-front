@@ -9,10 +9,12 @@
                 <fa icon="bell"/>
             </div>
         </div>
-        <div id="filterbar" :style="`top: ${filterheight}px`">
-            <input id="filterInput" type="text" placeholder="Filter friends..."/>
+        <div :style="`height:${filterheight+40}px; transition: all 0.5s ease;`">
+            <div id="filterbar" :style="`top:${filterheight}px`">
+                <input id="filterInput" type="text" placeholder="Filter friends..."/>
+            </div>
         </div>
-        <div ref="slider" id="slider" @mouseup="sliderLeave" @mouseleave="sliderLeave" @mousedown="sliderClick" @mousemove="sliderMove" :style="`top: ${filterheight}px`">
+        <div ref="slider" id="slider" @mouseup="sliderLeave" @mouseleave="sliderLeave" @mousedown="sliderClick" @mousemove="sliderMove">
             <div ref="innerSlider" id="innerSlider">
                 <div id="addFriend" @click="bruh">
                     <fa icon="plus"/>
@@ -68,10 +70,6 @@
         const x = e.pageX - slider.value.offsetLeft;
         const walk = (x - startX) * 2;
         slider.value.scrollLeft = scrollLeft - walk;
-    }
-
-    function bruh(){
-        console.log("bruh");
     }
 
     function toggleFilter(){
@@ -146,6 +144,7 @@
     position: relative;
     transition: all 0.5s ease;
     background-color: #51515142;
+    scrollbar-width: none;
 }
 
 #addFriend{
@@ -169,7 +168,6 @@
     transition: all 0.5s ease;
     z-index: 0;
     top: 0px;
-    
 }
 
 #filterbar input{
@@ -195,9 +193,7 @@ textarea:focus, input:focus{
     left: 0px;
     /* pointer-events: none; */
     display: inline-block;
+    scrollbar-width: none;
 }
-
-
-
 
 </style>

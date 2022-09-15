@@ -33,7 +33,6 @@ export const s = p => {
   
     p.draw = function() {
         p.background(0);
-        // p.fill(255);
         p.translate(p.width/2, p.height/2);
         for(let i = 0; i < 400; i++){
             stars[i].update();

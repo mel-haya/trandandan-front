@@ -7,13 +7,15 @@
         </div>
         <SidebarProfileItem/>
         <SidebarfriendsItem/>
+        <SidebarMsgItem/>
     </div>
 </template>
 
 <script setup>
     import {ref} from 'vue'
     import SidebarProfileItem from './SidebarProfileItem.vue';
-import SidebarfriendsItem from './SidebarfriendsItem.vue';
+    import SidebarfriendsItem from './SidebarfriendsItem.vue';
+    import SidebarMsgItem from './SidebarMsgItem.vue';
     let state= ref(true)
     function toggleSide(){
         state.value = !state.value
