@@ -21,29 +21,53 @@
         </div>
         <div ref="slider" id="slider" @mouseup="sliderLeave" @mouseleave="sliderLeave" @mousedown="sliderClick" @mousemove="sliderMove">
             <div ref="innerSlider" id="innerSlider">
-                <div id="addFriend" @click="bruh">
-                    <fa icon="plus"/>
+                <div class="sliderItem" @click="bruh">
+                    <div class="sliderImg">
+                        <fa  icon="plus"/>
+                    </div>
+                    <p>Add</p>
                 </div>
-                <div id="addFriend" @click="bruh">
-                    <fa icon="user"/>
+                <div class="sliderItem" @click="bruh">
+                    <div class="sliderImg">
+                        <fa  icon="user"/>
+                    </div>
+                    <p>Friend 1</p>
                 </div>
-                <div id="addFriend" @click="bruh">
-                    <fa icon="user"/>
+                <div class="sliderItem" @click="bruh">
+                    <div class="sliderImg">
+                        <fa  icon="user"/>
+                    </div>
+                    <p>Friend 2</p>
                 </div>
-                <div id="addFriend" @click="bruh">
-                    <fa icon="user"/>
+                <div class="sliderItem" @click="bruh">
+                    <div class="sliderImg">
+                        <fa  icon="user"/>
+                    </div>
+                    <p>Friend 3</p>
                 </div>
-                <div id="addFriend" @click="bruh">
-                    <fa icon="user"/>
+                <div class="sliderItem" @click="bruh">
+                    <div class="sliderImg">
+                        <fa  icon="user"/>
+                    </div>
+                    <p>Friend 4</p>
                 </div>
-                <div id="addFriend" @click="bruh">
-                    <fa icon="user"/>
+                <div class="sliderItem" @click="bruh">
+                    <div class="sliderImg">
+                        <fa  icon="user"/>
+                    </div>
+                    <p>Friend 5</p>
                 </div>
-                <div id="addFriend" @click="bruh">
-                    <fa icon="user"/>
+                <div class="sliderItem" @click="bruh">
+                    <div class="sliderImg">
+                        <fa  icon="user"/>
+                    </div>
+                    <p>Friend 6</p>
                 </div>
-                <div id="addFriend" @click="bruh">
-                    <fa icon="user"/>
+                <div class="sliderItem" @click="bruh">
+                    <div class="sliderImg">
+                        <fa  icon="user"/>
+                    </div>
+                    <p>Friend 7</p>
                 </div>
             </div>
         </div>
@@ -52,6 +76,8 @@
 
 <script setup>
     import {ref} from 'vue'
+    // import FriendSliderItem from './FriendSliderItem.vue'
+
     let filterheight = ref(-40);
     let notificationHeight = ref('0px');
     let innerSlider = ref("innerSlider");
@@ -59,6 +85,7 @@
     let isDown = false;
     let startX;
     let scrollLeft;
+
 
     function sliderClick(e){
         isDown = true;
@@ -86,8 +113,6 @@
         notificationHeight.value = notificationHeight.value == '0px' ? '300px' : '0px';
         console.log(notificationHeight.value);
     }
-
-
 </script>
 
 
@@ -161,11 +186,12 @@
     overflow-x: scroll;
     overflow-y: hidden;
     white-space: nowrap;
-    padding: 10px 0;
+    padding-top: 10px;
     position: relative;
     transition: all 0.5s ease;
     background-color: #51515142;
     scrollbar-width: none;
+    text-align: left;
 }
 
 #addFriend{
@@ -212,9 +238,32 @@ textarea:focus, input:focus{
     position: relative;
     top: 0px;
     left: 0px;
-    /* pointer-events: none; */
     display: inline-block;
     scrollbar-width: none;
 }
+
+ .sliderItem{
+    display: inline-block;
+    width: 100px;
+}
+
+.sliderItem p{
+    font-size: 15px;
+    text-align: center;
+    margin-top: 10px;
+}
+
+.sliderImg{
+    width: 80px;
+    height: 80px;
+    background-color: white;
+    color  : black;
+    display: inline-block;
+    margin: 0px 10px;
+    border-radius: 80px;
+    text-align: center;
+    line-height: 80px;
+    font-size: 30px;
+} 
 
 </style>
