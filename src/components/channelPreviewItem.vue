@@ -1,8 +1,8 @@
 <template>
     <div id="msgItem">
         <div id="senderName">
-            <p>{{props.message.channel}}</p>
-            <div id="status" :style="`background: ${props.message.status}?green:grey`"></div>
+            <p>{{props.message.channel}} <span id="status" :style="`background: ${props.message.status}?green:grey`"></span></p>
+            
         </div>
         <div id="msgBody">
             <p>{{props.message.body}}</p>
@@ -25,6 +25,7 @@
         position: relative;
         width: 100%;
         height: 100px;
+        margin: 10px 0;
         background-color: rgba(255, 255, 255, 0.399);
     }
     #senderName{
@@ -47,7 +48,8 @@
         width: 10px;
         height: 10px;
         border-radius: 100vw;
-        background-color: green;
+        background-color: rgb(0, 255, 0);
+        display: inline-block;
     }
     #msgBody{
         position: absolute;
@@ -55,11 +57,12 @@
         left: 0;
         width: 100%;
         height: 60px;
-        padding: 10px;
+        padding: 10px;  
     }
     #msgBody p{
-        font-size: 20px;
+        font-size: 15px;
         font-weight: 600;
+        text-align: left;
         color: white;
     }
 

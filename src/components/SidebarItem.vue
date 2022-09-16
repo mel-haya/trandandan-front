@@ -5,9 +5,11 @@
             <fa v-if="state" icon="angle-left"/>
             <fa v-else icon="angle-right"/>
         </div>
-        <SidebarProfileItem/>
-        <SidebarfriendsItem/>
-        <SidebarMsgItem/>
+        <div id="gridContainer">
+            <SidebarProfileItem/>
+            <SidebarfriendsItem/>
+            <SidebarMsgItem/>
+        </div>      
     </div>
 </template>
 
@@ -23,6 +25,14 @@
 </script>
 
 <style scoped>
+
+    #gridContainer{
+        display: grid;
+        grid-template-rows: auto auto auto;
+        grid-template-columns: 100%;
+        height: 100%;
+    }
+
     #sidebg{
         min-width: 400px; 
         position: absolute;

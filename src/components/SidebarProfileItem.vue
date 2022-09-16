@@ -47,7 +47,6 @@
     #sideProfile{
         width: 100%;
         padding-bottom: 10px;
-
     }
 
     #userImg{

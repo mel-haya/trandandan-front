@@ -1,19 +1,28 @@
 <template>
     <div id="messagesContainer">
         <p id="msgHeader">Messages</p>
-        
-        <channelPreviewItem :message="message">
-
-        </channelPreviewItem> 
     </div>
+    <div id="messages">
+            <channelPreviewItem :message="message"/>
+            <channelPreviewItem :message="message"/>
+            <channelPreviewItem :message="message"/>
+            <channelPreviewItem :message="message"/>
+            <channelPreviewItem :message="message"/>
+            <channelPreviewItem :message="message"/>
+            <channelPreviewItem :message="message"/>
+            <channelPreviewItem :message="message"/>
+            <channelPreviewItem :message="message"/>
+            <channelPreviewItem :message="message"/>
+            <channelPreviewItem :message="message"/>
+        </div>
 </template>
 
 <script setup>
     import channelPreviewItem from './channelPreviewItem.vue';
     let message = {
-        body: "l7abs",
+        body: "Chms",
         channel: "Mouad",
-        status: "online"
+        online: true
     };
 </script>
 
@@ -21,6 +30,7 @@
 
     #messagesContainer{
         position: relative;
+        width: 100%;
     }
 
     #msgHeader{
@@ -31,6 +41,18 @@
         text-align: left;
         padding: 10px;
         background-color: rgba(122, 51, 125, 0.995);
-
     }
+
+    #messages{
+        position: relative;
+        width: 100%;
+        overflow-y: scroll;
+        overflow-x: hidden;
+    }
+
+    #messages::-webkit-scrollbar {
+        width: 0px;
+    }
+
+
 </style>

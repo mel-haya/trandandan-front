@@ -147,7 +147,6 @@
     .menuBtn span{
         transform: skew(-30deg);
         display:inline-block;
-        user-select: none;
     }
 
     .menuBtn:hover{

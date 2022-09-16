@@ -1,17 +1,22 @@
 <template>
     <div id="friendComponent">
         <div id="friendHeader">
-            <p>Connected friends</p>
+            <p>Friends</p>
             <div id="filter" @click="toggleFilter">
                 <fa icon="search"/>
             </div>
-            <div id="notification">
+            <div id="notification" @click="toggleNotification">
                 <fa icon="bell"/>
             </div>
         </div>
         <div :style="`height:${filterheight+40}px; transition: all 0.5s ease;`">
             <div id="filterbar" :style="`top:${filterheight}px`">
-                <input id="filterInput" type="text" placeholder="Filter friends..."/>
+                <input tabindex="-1" id="filterInput" type="text" placeholder="Filter friends..."/>
+            </div>
+        </div>
+        <div id="notifContainer" :style="`height:${notificationHeight}`">
+            <div>
+                Lorem ipsum dolor sit amet consectetur adipisicing elit. Rem esse sint, eveniet laborum, debitis modi similique fuga deleniti incidunt qui fugiat nemo quisquam et sit asperiores velit temporibus ullam eaque!
             </div>
         </div>
         <div ref="slider" id="slider" @mouseup="sliderLeave" @mouseleave="sliderLeave" @mousedown="sliderClick" @mousemove="sliderMove">
@@ -48,6 +53,7 @@
 <script setup>
     import {ref} from 'vue'
     let filterheight = ref(-40);
+    let notificationHeight = ref('0px');
     let innerSlider = ref("innerSlider");
     let slider = ref("slider");
     let isDown = false;
@@ -75,6 +81,13 @@
     function toggleFilter(){
         filterheight.value = filterheight.value == 0 ? -40 : 0;
     }
+
+    function toggleNotification(){
+        notificationHeight.value = notificationHeight.value == '0px' ? '300px' : '0px';
+        console.log(notificationHeight.value);
+    }
+
+
 </script>
 
 
@@ -88,6 +101,14 @@
     box-sizing: border-box;
     margin: 0;
     padding: 0;
+}
+
+#notifContainer{
+    transition: all 0.5s ease;
+    overflow: scroll;
+}
+#notifContainer::-webkit-scrollbar{
+    display: none;
 }
 
 #friendHeader{
@@ -148,15 +169,15 @@
 }
 
 #addFriend{
-    width: 80px;
-    height: 80px;
+    width: 70px;
+    height: 70px;
     background-color: white;
     color  : black;
     display: inline-block;
     margin: 5px;
     border-radius: 80px;
     text-align: center;
-    line-height: 80px;
+    line-height: 70px;
     font-size: 35px;
     font-weight: bold;
 }
