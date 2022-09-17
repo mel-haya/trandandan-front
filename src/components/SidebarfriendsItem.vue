@@ -16,13 +16,7 @@
         </div>
         <div id="notifContainer" :style="`height:${notificationHeight}px`">
             <NotifItem name="arbi"/>
-            <NotifItem name="bouchta"/> 
-            <NotifItem name="abdelaziz"/> 
-            <NotifItem name="mourad"/>
-            <NotifItem name="abdelaziz"/> 
-            <NotifItem name="abdelaziz"/> 
-            <NotifItem name="abdelaziz"/> 
-            <NotifItem name="abdelaziz"/> 
+            <NotifItem name="bouchta"/>
         </div>
         <div ref="slider" id="slider" @mouseup="sliderLeave" @mouseleave="sliderLeave" @mousedown="sliderClick" @mousemove="sliderMove">
             <div ref="innerSlider" id="innerSlider">
