@@ -24,8 +24,8 @@
     #msgItem{
         position: relative;
         width: 100%;
-        height: 100px;
-        margin: 10px 0;
+        height: 80px;
+        margin: 5px 0;
         background-color: rgba(255, 255, 255, 0.399);
     }
     #senderName{
@@ -53,7 +53,7 @@
     }
     #msgBody{
         position: absolute;
-        top: 40px;
+        top: 35px;
         left: 0;
         width: 100%;
         height: 60px;
@@ -61,10 +61,8 @@
     }
     #msgBody p{
         font-size: 15px;
-        font-weight: 600;
+        font-weight: 500;
         text-align: left;
         color: white;
     }
-
-
 </style>

@@ -35,8 +35,8 @@
         left: 50%;
         transform: translate(-50%,-50%);
         max-width: 1200px;
-        width: 90%;
-        height: 80%;
+        width: 80%;
+        aspect-ratio: 5/3;
         background-color: rgba(123, 51, 125, 0.9);
         transition: all 0.7s ease;
         border-radius: 20px;

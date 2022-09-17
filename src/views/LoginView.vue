@@ -10,7 +10,7 @@
 
 
 <template>
-    <img src="../assets/pong-online.png" alt="" style="width: 40%;">
+    <img src="../assets/pong-online.png" alt="" style="width: 35%;">
     <br>
     <div id="loginButton">
         <a @click="submit" href="http://0.0.0.0:3000/auth/42">Sign up with 42</a>
@@ -21,28 +21,55 @@
 <style scoped>
 
 #loginButton{
-    text-decoration: none;
-    border-radius: 0.4em;
-    font-size: 3rem;
+    max-width: 350px;
+    width: 40%;
+    height: 60px;
+    line-height: 60px;
+    font-size: 26px;
     /* height: 4rem; */
-    line-height: 5rem;
-    border: 0.125em solid #FF0FBB;
+    border-top: #7B337D solid 3px;
+    border-right: #7B337D solid 3px;
+    border-bottom: #7B337D solid 3px;
     display: inline-block;
-    padding: 0.25em 1em;
+    padding: 10px 30px;
     cursor: pointer;
+    transform: skew(30deg);
 }
 
 #loginButton:hover{
-    background: #FF0FBB;
+    font-size: 30px;
+    text-shadow: 3px 3px 2px rgba(0, 0, 0, 0.5);
 }
 
 #loginButton a{
+    color: white;
     text-decoration: none;
-    color: #FF0FBB;
+    display: inline-block;
+    transform: skew(-30deg);
+    transition: all 0.3s ease-in-out;
 }
 
-#loginButton:hover a{ 
-    color: black;
+#loginButton::before{
+    content: "";
+    position: absolute;
+    top: -2px;
+    left: 0;
+    width: 5%;
+    height: 84px;
+    transition: all 0.3s ease-in-out;
+    background-color: #7a337d;
+
 }
+
+#loginButton:hover::before{
+    background-color: #a942ac;
+    width: calc(100% + 2px);
+    box-shadow: #7a337d 0px 0px 20px 10px; 
+}
+
+
+
+
+
 
 </style>

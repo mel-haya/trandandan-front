@@ -73,9 +73,11 @@
             <div id="logo"></div>
             <div @click="firstButton" id="playBtn" class="menuBtn"><span>{{test.a}}</span></div>
             <div @click="secondButton" id="watchBtn" class="menuBtn"><span>{{test.b}}</span></div>
-            <div @click="thirdButton" id="leaderboardBtn" class="menuBtn" v-if="test.c"><span>{{test.c}}</span></div>
+            <div @click="thirdButton" id="leaderboardBtn" class="menuBtn"><span>{{test.c}}</span></div>
+            <!-- <ProfileItem/> -->
         </div>
-    <SidebareItem></SidebareItem>
+    <SidebareItem/>
+    <!-- <ProfileItem></ProfileItem> -->
 </template>
 
 <style  scoped>

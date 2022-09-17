@@ -6,69 +6,33 @@
                 <fa icon="search"/>
             </div>
             <div id="notification" @click="toggleNotification">
-                <fa icon="bell"/>
+                <fa icon="user-group"/>
             </div>
         </div>
-        <div :style="`height:${filterheight+40}px; transition: all 0.5s ease;`">
-            <div id="filterbar" :style="`top:${filterheight}px`">
+        <div :style="`height:${filterheight+40}px; transition: all 0.5s ease; overflow:hidden;`">
+            <div id="filterbar">
                 <input tabindex="-1" id="filterInput" type="text" placeholder="Filter friends..."/>
             </div>
         </div>
-        <div id="notifContainer" :style="`height:${notificationHeight}`">
-            <div>
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Rem esse sint, eveniet laborum, debitis modi similique fuga deleniti incidunt qui fugiat nemo quisquam et sit asperiores velit temporibus ullam eaque!
-            </div>
+        <div id="notifContainer" :style="`height:${notificationHeight}px`">
+            <NotifItem name="arbi"/>
+            <NotifItem name="bouchta"/> 
+            <NotifItem name="abdelaziz"/> 
+            <NotifItem name="mourad"/>
+            <NotifItem name="abdelaziz"/> 
+            <NotifItem name="abdelaziz"/> 
+            <NotifItem name="abdelaziz"/> 
+            <NotifItem name="abdelaziz"/> 
         </div>
         <div ref="slider" id="slider" @mouseup="sliderLeave" @mouseleave="sliderLeave" @mousedown="sliderClick" @mousemove="sliderMove">
             <div ref="innerSlider" id="innerSlider">
-                <div class="sliderItem" @click="bruh">
-                    <div class="sliderImg">
-                        <fa  icon="plus"/>
-                    </div>
-                    <p>Add</p>
-                </div>
-                <div class="sliderItem" @click="bruh">
-                    <div class="sliderImg">
-                        <fa  icon="user"/>
-                    </div>
-                    <p>Friend 1</p>
-                </div>
-                <div class="sliderItem" @click="bruh">
-                    <div class="sliderImg">
-                        <fa  icon="user"/>
-                    </div>
-                    <p>Friend 2</p>
-                </div>
-                <div class="sliderItem" @click="bruh">
-                    <div class="sliderImg">
-                        <fa  icon="user"/>
-                    </div>
-                    <p>Friend 3</p>
-                </div>
-                <div class="sliderItem" @click="bruh">
-                    <div class="sliderImg">
-                        <fa  icon="user"/>
-                    </div>
-                    <p>Friend 4</p>
-                </div>
-                <div class="sliderItem" @click="bruh">
-                    <div class="sliderImg">
-                        <fa  icon="user"/>
-                    </div>
-                    <p>Friend 5</p>
-                </div>
-                <div class="sliderItem" @click="bruh">
-                    <div class="sliderImg">
-                        <fa  icon="user"/>
-                    </div>
-                    <p>Friend 6</p>
-                </div>
-                <div class="sliderItem" @click="bruh">
-                    <div class="sliderImg">
-                        <fa  icon="user"/>
-                    </div>
-                    <p>Friend 7</p>
-                </div>
+                <FriendSliderItem name="Add"/>
+                <FriendSliderItem name="friend 1"/>
+                <FriendSliderItem name="friend 2"/>
+                <FriendSliderItem name="friend 3"/>
+                <FriendSliderItem name="friend 4"/>
+                <FriendSliderItem name="friend 5"/>
+                <FriendSliderItem name="friend 6"/>
             </div>
         </div>
     </div>
@@ -76,10 +40,11 @@
 
 <script setup>
     import {ref} from 'vue'
-    // import FriendSliderItem from './FriendSliderItem.vue'
+    import FriendSliderItem from './FriendSliderItem.vue'
+    import NotifItem from './NotifItem.vue'
 
     let filterheight = ref(-40);
-    let notificationHeight = ref('0px');
+    let notificationHeight = ref(0);
     let innerSlider = ref("innerSlider");
     let slider = ref("slider");
     let isDown = false;
@@ -110,7 +75,7 @@
     }
 
     function toggleNotification(){
-        notificationHeight.value = notificationHeight.value == '0px' ? '300px' : '0px';
+        notificationHeight.value = notificationHeight.value == 0 ? 200 : 0;
         console.log(notificationHeight.value);
     }
 </script>
@@ -142,7 +107,6 @@
     font-size: 20px;
     height: 40px;
     position: relative;
-    z-index: 2;
 }
 
 #friendHeader p{
@@ -213,7 +177,6 @@
     height: 40px;
     position: relative;
     transition: all 0.5s ease;
-    z-index: 0;
     top: 0px;
 }
 
@@ -242,28 +205,5 @@ textarea:focus, input:focus{
     scrollbar-width: none;
 }
 
- .sliderItem{
-    display: inline-block;
-    width: 100px;
-}
-
-.sliderItem p{
-    font-size: 15px;
-    text-align: center;
-    margin-top: 10px;
-}
-
-.sliderImg{
-    width: 80px;
-    height: 80px;
-    background-color: white;
-    color  : black;
-    display: inline-block;
-    margin: 0px 10px;
-    border-radius: 80px;
-    text-align: center;
-    line-height: 80px;
-    font-size: 30px;
-} 
 
 </style>

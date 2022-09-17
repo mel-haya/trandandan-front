@@ -1,19 +1,19 @@
 <template>
-    <div id="sliderItem">
+    <div class="sliderItem">
         <div class="sliderImg">
             <fa icon="user"/>
         </div>
-        <p>{{friend.username}}</p>
+        <p>{{props.name}}</p>
     </div>
 </template>
 
 <script setup>
-    // import {defineProps} from 'vue'
-    // let props = defineProps({
-    //     name: String,
-    //     img: String,
-    //     online: Boolean
-    // });
+    import {defineProps} from 'vue'
+    let props = defineProps({
+        name: String,
+        img: String,
+        online: Boolean
+    });
 </script>
 
 <style scoped>
