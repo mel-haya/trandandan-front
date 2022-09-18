@@ -1,26 +1,31 @@
 <template>
     
-    <div id="sidebg" :class="[state ? 'active' : '']">
+    <div id="sidebg" :class="[chat ? 'active' : '']">
         <div @click="toggleSide" id="slidebutton">
-            <fa v-if="state" icon="angle-left"/>
+            <fa v-if="chat" icon="angle-left"/>
             <fa v-else icon="angle-right"/>
         </div>
         <div id="gridContainer">
             <SidebarProfileItem/>
             <SidebarfriendsItem/>
             <SidebarMsgItem/>
-        </div>      
+            <SidebarRoomsItem/>
+        </div>
+        <transition name="">
+
+        </transition>  
     </div>
 </template>
 
 <script setup>
-    import {ref} from 'vue'
+    import {ref} from 'vue';
     import SidebarProfileItem from './SidebarProfileItem.vue';
     import SidebarfriendsItem from './SidebarfriendsItem.vue';
     import SidebarMsgItem from './SidebarMsgItem.vue';
-    let state= ref(true)
+    import SidebarRoomsItem from './SidebarRoomsItem.vue';
+    let chat= ref(true)
     function toggleSide(){
-        state.value = !state.value
+        chat.value = !chat.value
     }
 </script>
 
@@ -28,9 +33,7 @@
 
     #gridContainer{
         display: grid;
-        grid-template-rows: auto auto auto;
         grid-template-columns: 100%;
-        height: 100%;
     }
 
     #sidebg{
