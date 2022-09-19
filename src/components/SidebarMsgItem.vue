@@ -2,7 +2,11 @@
     <div id="messagesContainer" @click="enableDiv">
         <p id="msgHeader"> <fa :icon="icon"/> Messages</p>
     </div>
-    <div id="messages" :style="`height:${scale}px`">
+    <div id="messages" :style="`max-height:${scale}px`">
+            <channelPreviewItem :message="message"/>
+            <channelPreviewItem :message="message"/>
+            <channelPreviewItem :message="message"/>
+            <channelPreviewItem :message="message"/>
             <channelPreviewItem :message="message"/>
             <channelPreviewItem :message="message"/>
             <channelPreviewItem :message="message"/>
@@ -25,7 +29,7 @@
     function enableDiv(){
         enable.value = !enable.value;
         if(enable.value){
-            scale.value = 340;
+            scale.value = 260;
             icon.value = "caret-down";
         }else{
             scale.value = 0;
@@ -56,8 +60,7 @@
         width: 100%;
         overflow-y: scroll;
         overflow-x: hidden;
-        height: 340px;
-        transition: all 0.5s ease; 
+        transition: max-height 0.5s ease; 
     }
 
     #messages::-webkit-scrollbar {

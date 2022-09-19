@@ -43,6 +43,5 @@ export const s = p => {
 
     p.windowResized = function() {
         p.resizeCanvas(p.windowWidth, p.windowHeight);
-        
     };
   };

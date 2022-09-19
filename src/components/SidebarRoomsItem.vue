@@ -2,7 +2,7 @@
     <div id="roomsContainer" @click="enableDiv">
         <p id="roomsHeader"><fa :icon="icon" /> Groups</p>
     </div>
-    <div id="rooms" :style="`height:${scale}px`">
+    <div id="rooms" :style="`max-height:${scale}px`">
             <RoomsItem :room="room"/>
             <RoomsItem :room="room"/>
             <RoomsItem :room="room"/>
@@ -24,7 +24,7 @@
     function enableDiv(){
         enable.value = !enable.value;
         if(enable.value){
-            scale.value = 330;
+            scale.value = 320;
             icon.value = "caret-down";
         }else{
             scale.value = 0;
@@ -38,7 +38,6 @@
             position: relative;
             width: 100%;
         }
-    
         #roomsHeader{
             position: relative;
             font-size: 20px;
@@ -48,16 +47,13 @@
             padding: 10px;
             background-color: rgba(122, 51, 125, 0.995);
         }
-    
         #rooms{
             position: relative;
             width: 100%;
             overflow-y: scroll;
             overflow-x: hidden;
-            height: 340px;
-            transition: all 0.5s ease; 
+            transition: max-height 0.5s ease; 
         }
-    
         #rooms::-webkit-scrollbar {
             width: 0px;
         }
