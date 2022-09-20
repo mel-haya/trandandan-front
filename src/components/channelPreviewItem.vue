@@ -1,5 +1,5 @@
 <template>
-    <div id="msgItem">
+    <div id="msgItem" @click="store.setActiveChat(props.message.channel)">
         <div id="senderName">
             <p>{{props.message.channel}} <span id="status" :style="`background: ${props.message.status}?green:grey`"></span></p>
             
@@ -11,13 +11,17 @@
 </template>
 
 <script setup>
-    import {defineProps} from 'vue'
+    import { defineProps } from 'vue'
+    import { useInterfaceStore } from '@/stores/interface';
+    let store = useInterfaceStore();
     const props = defineProps({
         message:
         {
             required: false
         }
     })
+
+
 </script>
 
 <style scoped>

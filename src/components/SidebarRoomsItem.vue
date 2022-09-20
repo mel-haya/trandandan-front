@@ -18,9 +18,9 @@
     import RoomsItem from './RoomsItem.vue';
     import {ref} from 'vue';
     let room = {name: "Room 1", members: 5};
-    let enable = ref(false);
+    let enable = ref(true);
     let icon = ref("caret-right");
-    let scale = ref(0);
+    let scale = ref(320);
     function enableDiv(){
         enable.value = !enable.value;
         if(enable.value){
@@ -54,7 +54,18 @@
             overflow-x: hidden;
             transition: max-height 0.5s ease; 
         }
+        
         #rooms::-webkit-scrollbar {
-            width: 0px;
+            width: 10px;
+            padding: 10px;
+        }
+
+        #rooms::-webkit-scrollbar-track {
+            background: #ffffff20;
+        }
+
+        #rooms::-webkit-scrollbar-thumb {
+            background: rgba(79, 17, 81, 0.995);
+            border-radius: 10px;
         }
 </style>

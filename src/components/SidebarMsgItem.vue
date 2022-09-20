@@ -23,9 +23,9 @@
         channel: "Mouad",
         online: true
     };
-    let enable = ref(false);
+    let enable = ref(true);
     let icon = ref("caret-right");
-    let scale = ref(0);
+    let scale = ref(260);
     function enableDiv(){
         enable.value = !enable.value;
         if(enable.value){
@@ -64,7 +64,17 @@
     }
 
     #messages::-webkit-scrollbar {
-        width: 0px;
+        width: 10px;
+        padding: 10px;
+    }
+
+    #messages::-webkit-scrollbar-track {
+        background: #ffffff20;
+    }
+
+    #messages::-webkit-scrollbar-thumb {
+        background: rgba(79, 17, 81, 0.995);
+        border-radius: 10px;
     }
 
 

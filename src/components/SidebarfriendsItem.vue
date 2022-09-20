@@ -9,13 +9,18 @@
                 <fa icon="user-group"/>
             </div>
         </div>
-        <div :style="`height:${filterheight+40}px; transition: all 0.5s ease; overflow:hidden;`">
+        <div id="notifContainer" :style="`height:${filterheight+40}px;`">
             <div id="filterbar">
                 <input tabindex="-1" id="filterInput" type="text" placeholder="Filter friends..."/>
             </div>
         </div>
-        <div id="notifContainer" :style="`height:${notificationHeight}px`">
+        <div id="notifContainer" :style="`max-height:${notificationHeight}px`">
             <NotifItem name="arbi"/>
+            <NotifItem name="bouchta"/>
+            <NotifItem name="bouchta"/>
+            <NotifItem name="bouchta"/>
+            <NotifItem name="bouchta"/>
+            <NotifItem name="bouchta"/>
             <NotifItem name="bouchta"/>
         </div>
         <div ref="slider" id="slider" @mouseup="sliderLeave" @mouseleave="sliderLeave" @mousedown="sliderClick" @mousemove="sliderMove">
@@ -130,7 +135,6 @@
     position: absolute;
     display: inline-block;
     right: 40px;
-    height: 100%;
     line-height: 40px;
     cursor: pointer;
 }
@@ -197,6 +201,11 @@ textarea:focus, input:focus{
     left: 0px;
     display: inline-block;
     scrollbar-width: none;
+}
+
+#notifContainer{
+    transition: max-height 0.5s ease;
+    overflow :scroll;
 }
 
 

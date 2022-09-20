@@ -1,5 +1,4 @@
 export const s = p => {
-    
     p.setup = function() {
       p.createCanvas(300, 300);
     };
