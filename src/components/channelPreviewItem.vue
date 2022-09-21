@@ -1,7 +1,7 @@
 <template>
     <div id="msgItem" @click="store.setActiveChat(props.message.channel)">
         <div id="senderName">
-            <p>{{props.message.channel}} <span id="status" :style="`background: ${props.message.status}?green:grey`"></span></p>
+            <p>{{props.message.channel.name}} <span id="status" :style="`background: ${props.message.status}?green:grey`"></span></p>
             
         </div>
         <div id="msgBody">

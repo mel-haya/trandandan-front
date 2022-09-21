@@ -19,8 +19,9 @@
     import channelPreviewItem from './channelPreviewItem.vue';
     import {ref} from 'vue';
     let message = {
+        id: 1,
         body: "Chms",
-        channel: "Mouad",
+        channel: {id:500, name:"Mouad"},
         online: true
     };
     let enable = ref(true);

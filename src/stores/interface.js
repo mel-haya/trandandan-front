@@ -3,7 +3,7 @@ import { ref } from "vue"
 
 export const useInterfaceStore = defineStore('Interface', () =>
 {
-    let activeChat = ref("")
+    let activeChat = ref(null);
     function setActiveChat(c){
         activeChat.value = c
     }
