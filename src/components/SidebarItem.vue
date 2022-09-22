@@ -1,20 +1,15 @@
-<template>
-    
+<template>  
     <div id="sidebg" :class="[chat ? 'active' : '']">
         <div @click="toggleSide" id="slidebutton">
             <fa v-if="chat" icon="angle-left"/>
             <fa v-else icon="angle-right"/>
         </div>
-        <Transition name="slide-fade">
-            <MessageBox v-if="interfaceStore.activeChat"></MessageBox>
-            <div id="gridContainer" v-else>
-                <SidebarProfileItem/>
-                <SidebarfriendsItem/>
-                <SidebarMsgItem/>
-                <SidebarRoomsItem/>
-            </div>
-        </Transition> 
-        
+        <div id="gridContainer">
+            <SidebarProfileItem/>
+            <SidebarfriendsItem/>
+            <SidebarMsgItem/>
+            <SidebarRoomsItem/>
+        </div>
     </div>
 </template>
 
@@ -24,9 +19,7 @@
     import SidebarfriendsItem from './SidebarfriendsItem.vue';
     import SidebarMsgItem from './SidebarMsgItem.vue';
     import SidebarRoomsItem from './SidebarRoomsItem.vue';
-    import MessageBox from './MessageBox.vue';
-    import {useInterfaceStore} from '@/stores/interface';
-    let interfaceStore = useInterfaceStore();
+    
 
     let chat= ref(true)
     function toggleSide(){
@@ -44,12 +37,11 @@
     }
 
     #sidebg{
-        min-width: 400px; 
+        width: 450px;
         position: absolute;
         top: 0;
         right: 0;
         background-color: rgba(123,51,125, 0.7);
-        width: 20vw;
         height: 100%;
         transition: all 0.7s ease;
     }

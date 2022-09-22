@@ -4,7 +4,7 @@
     </div>
     <div id="messages" :style="`max-height:${scale}px`">
             <channelPreviewItem :message="message"/>
-            <channelPreviewItem :message="message"/>
+            <channelPreviewItem :message="message2"/>
             <channelPreviewItem :message="message"/>
             <channelPreviewItem :message="message"/>
             <channelPreviewItem :message="message"/>
@@ -22,6 +22,12 @@
         id: 1,
         body: "Chms",
         channel: {id:500, name:"Mouad"},
+        online: true
+    };
+    let message2 = {
+        id: 2,
+        body: "Hop on valorant",
+        channel: {id:501, name:"Innocent"},
         online: true
     };
     let enable = ref(true);

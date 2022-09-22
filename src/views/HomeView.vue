@@ -8,6 +8,9 @@
     import ProfileItem from '@/components/ProfileItem.vue';
     import { onMounted, reactive } from 'vue';
     import { useRouter } from 'vue-router';
+    import MessageBox from '@/components/MessageBox.vue';
+    import {useInterfaceStore} from '@/stores/interface';
+    let interfaceStore = useInterfaceStore();
 
     const router = useRouter();
     const store = useUserStore()
@@ -77,6 +80,7 @@
             <!-- <ProfileItem/> -->
         </div>
     <SidebareItem/>
+    <MessageBox v-if="interfaceStore.activeChat"></MessageBox> 
     <!-- <ProfileItem></ProfileItem> -->
 </template>
 
