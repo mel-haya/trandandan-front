@@ -90,12 +90,14 @@
 
     }
     #chatUser{ 
-        border-top-left-radius: 10px;
-        height: 60px;
+        /* border-top-left-radius: 10px; */
+        height: 52px;
+        margin: 4px;
         display: inline-block;
         padding-right: 40px;
         max-width: 300px;
         overflow: hidden;
+        border-radius: 5px;
     }
 
     .maximized #chatUser:hover, #chatMinimize:hover, #leaveChat:hover{
@@ -105,7 +107,7 @@
 
     #chatName{
         float: left;
-        line-height: 60px;
+        line-height: 52px;
         text-overflow: ellipsis;
         white-space: nowrap;
     }
@@ -129,7 +131,7 @@
         width: 40px;
         background-color: burlywood;
         border-radius: 60px;
-        margin : 10px 5px;
+        margin : 6px 5px;
         float: left;
     }
 
