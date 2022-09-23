@@ -21,7 +21,7 @@
     let message = {
         id: 1,
         body: "Chms",
-        channel: {id:500, name:"Mouad"},
+        channel: {id:500, name:"MMMMMMMMMMMMMMMMM"},
         online: true
     };
     let message2 = {

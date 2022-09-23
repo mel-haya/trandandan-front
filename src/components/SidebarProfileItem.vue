@@ -2,7 +2,7 @@
     <div id="sideProfile">
         <div id="userImg"></div>
         <div id="userName">mel-haya</div>
-        <div id="settings" @click="togglemenu">
+        <div id="settings" @click.stop="togglemenu">
             <fa id="settings-icon" icon="ellipsis-vertical"/>
         </div>
     </div>

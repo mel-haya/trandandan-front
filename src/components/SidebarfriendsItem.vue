@@ -9,7 +9,7 @@
                 <fa icon="user-group"/>
             </div>
         </div>
-        <div id="notifContainer" :style="`height:${filterheight+40}px;`">
+        <div id="notifContainer" :style="`max-height:${filterheight}px;`">
             <div id="filterbar">
                 <input tabindex="-1" id="filterInput" type="text" placeholder="Filter friends..."/>
             </div>
@@ -42,7 +42,7 @@
     import FriendSliderItem from './FriendSliderItem.vue'
     import NotifItem from './NotifItem.vue'
 
-    let filterheight = ref(-40);
+    let filterheight = ref(0);
     let notificationHeight = ref(0);
     let innerSlider = ref("innerSlider");
     let slider = ref("slider");
@@ -70,7 +70,7 @@
     }
 
     function toggleFilter(){
-        filterheight.value = filterheight.value == 0 ? -40 : 0;
+        filterheight.value = filterheight.value == 0 ? 40 : 0;
     }
 
     function toggleNotification(){
