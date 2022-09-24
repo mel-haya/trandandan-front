@@ -1,5 +1,5 @@
 <template>
-    <div id="msgItem" @click="store.setActiveChat(props.message.channel)">
+    <div id="msgItem" @click="changeActiveChat">
         <div id="senderName">
             <p>{{props.message.channel.name}} <span id="status" :style="`background: ${props.message.status}?green:grey`"></span></p>
             
@@ -17,15 +17,18 @@
     const props = defineProps({
         message:
         {
-            required: false
+            required: true
         }
     })
 
-
+    function changeActiveChat(){
+        store.setActiveChat(props.message.channel);
+    }
 </script>
 
 <style scoped>
     #msgItem{
+        cursor: pointer;
         position: relative;
         width: 100%;
         height: 80px;

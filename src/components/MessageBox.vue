@@ -1,11 +1,11 @@
 <template>
     <div id="messageContainer" :class="active">
         <div id="chatHeader" @click="maximize">
-            <div id="chatUser" >
+            <div id="chatUser" @click.stop="enableOptions = !enableOptions">
                 <div id="userImg">
                 </div>
                 <div id="chatName" >
-                    {{store.activeChat.name.slice(0, 10)}}
+                    {{store.activeChat.name}}
                 </div>
             </div>
             <div id="leaveChat" @click="store.activeChat = null" v-if="active === 'maximized'">
@@ -13,6 +13,20 @@
             </div>
             <div id="chatMinimize" @click.stop="minimize()" v-if="active === 'maximized'">
                 <fa icon="minus"/>
+            </div>
+        </div>
+        <div id="chatOptions" v-if="enableOptions">
+            <div id="directOptions" v-if="store.activeChat.type === 1">
+                <p>Profile</p>
+                <hr/>
+                <p>Block {{store.activeChat.name}}</p>
+            </div>
+            <div id="groupOptions" v-else>
+                <p>Group settings</p>
+                <hr/>
+                <p>Members</p>
+                <hr/>
+                <p>Leave Group</p>
             </div>
         </div>
         <div id="chatBody">
@@ -28,6 +42,7 @@
                 <MessageBoxItem body="Chms" by="them"/>
                 <MessageBoxItem body="Chms" by="them"/>
             </div>
+            
             <input type="text" placeholder="Message..." id="chatInput">
             <fa icon="paper-plane" id="sendButton"/>
         </div>
@@ -41,6 +56,9 @@
     let chatMessages = ref(null);
     let store = useInterfaceStore();
     let active = ref('maximized');
+    let enableOptions = ref(false);
+    
+
     function minimize(){
         if(active.value === 'maximized'){
             active.value = 'minimized';
@@ -55,6 +73,10 @@
 
     onMounted(() => {
         chatMessages.value.scrollTop = chatMessages.value.scrollHeight;
+    });
+
+    window.addEventListener('click', function () {
+        enableOptions.value = false;
     });
     
 </script>
@@ -85,12 +107,10 @@
         height: 35px;
         text-align: center;
         line-height: 40px;
-        /* align-self: flex-end; */
         float: right;
 
     }
     #chatUser{ 
-        /* border-top-left-radius: 10px; */
         height: 52px;
         margin: 4px;
         display: inline-block;
@@ -107,9 +127,9 @@
 
     #chatName{
         float: left;
+        max-width: 250px;
         line-height: 52px;
-        text-overflow: ellipsis;
-        white-space: nowrap;
+        word-wrap: break-word;
     }
 
     .minimized #chatBody{
@@ -197,5 +217,53 @@
     }
 
     /* #chatMessages:: */
+    #chatOptions{
+        position: absolute;
+        top: 65px;
+        left: 5px;
+        width: 200px;
+        background-color: rgba(122, 51, 125, 0.995);
+        display: flex;
+        flex-direction: column;
+        justify-content: space-evenly;
+        align-items: center;
+        font-size: 20px;
+        color: white;
+        transition: all 0.1s ease;
+        z-index: 1;
+        overflow: hidden;
+        border-radius: 10px;
+        box-shadow: 2px 2px 10px 5px rgba(0,0,0,0.5);
+    }
+
+    #chatOptions p:hover{
+        cursor: pointer;
+        background-color: rgba(92, 34, 94, 0.995);
+    }
+
+    #chatOptions p{
+        width: 100%;
+        height: 50px;
+        line-height: 50px;
+        text-align: left;
+        margin: 0;
+        padding-left: 15px;
+        
+    }
+
+    #chatOptions hr{
+        width: 100%;
+        margin: 0;
+        border: none;
+        border-top: 1px solid rgba(92, 34, 94, 0.995);
+    }
+
+    .minimized #chatOptions{
+        height: 0px;
+    }
+
+    #chatOptions div{
+        width: 100%;
+    }
 
 </style>

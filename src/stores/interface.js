@@ -5,6 +5,7 @@ export const useInterfaceStore = defineStore('Interface', () =>
 {
     let activeChat = ref(null);
     function setActiveChat(c){
+        activeChat.value = null
         activeChat.value = c
     }
     return({activeChat, setActiveChat})

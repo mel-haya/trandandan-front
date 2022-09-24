@@ -6,7 +6,7 @@
             <fa id="settings-icon" icon="ellipsis-vertical"/>
         </div>
     </div>
-    <div id="context-menu">
+    <div id="context-menu" ref="contextMenu">
         <div id="context-menu-item">
             <fa icon="user"/>
             <span> My profile</span>
@@ -25,22 +25,24 @@
 </template>
 
 <script setup>
+    import { ref } from 'vue';
+    let contextMenu = ref(null)
+
     function togglemenu(){
-        let menu = document.getElementById("context-menu")
-        if(menu.style.display === 'none')
-            menu.style.display = 'block'
+        
+        if(contextMenu.value.style.display === 'none')
+            contextMenu.value.style.display = 'block'
         else
-            menu.style.display = 'none';
+            contextMenu.value.style.display = 'none';
     }
+
+    window.addEventListener('click', function () {
+        if(contextMenu.value)
+            contextMenu.value.style.display = 'none';
+    });
+
 </script>
 
-<script>
-    window.addEventListener('click', function (e) {
-        if (!(document.getElementById("settings").contains(e.target))) {
-            document.getElementById('context-menu').style.display = 'none';
-        }
-    });
-</script>
 
 <style scoped>
 

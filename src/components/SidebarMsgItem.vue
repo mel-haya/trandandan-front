@@ -21,13 +21,14 @@
     let message = {
         id: 1,
         body: "Chms",
-        channel: {id:500, name:"MMMMMMMMMMMMMMMMM"},
+        channel: {id:500, name:"Mouad", type: 1},
         online: true
+        
     };
     let message2 = {
         id: 2,
         body: "Hop on valorant",
-        channel: {id:501, name:"Innocent"},
+        channel: {id:501, name:"ADHD and retarded group", type: 2}, 
         online: true
     };
     let enable = ref(true);
