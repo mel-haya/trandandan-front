@@ -1,23 +1,23 @@
 <template>
-    <div id="messageContainer" :class="active">
+    <div id="messageContainer" :class="getClass()">
         <div id="chatHeader" @click="maximize">
-            <div id="chatUser" @click.stop="enableOptions = !enableOptions">
+            <div id="chatUser" @click.stop="toggleOptions">
                 <div id="userImg">
                 </div>
                 <div id="chatName" >
                     {{store.activeChat.name}}
                 </div>
             </div>
-            <div id="leaveChat" @click="store.activeChat = null" v-if="active === 'maximized'">
+            <div id="leaveChat" @click="store.activeChat = null">
                 <fa icon="xmark"/>
             </div>
-            <div id="chatMinimize" @click.stop="minimize()" v-if="active === 'maximized'">
+            <div id="chatMinimize" @click.stop="minimize()" v-if="active === true">
                 <fa icon="minus"/>
             </div>
         </div>
         <div id="chatOptions" v-if="enableOptions">
             <div id="directOptions" v-if="store.activeChat.type === 1">
-                <p>Profile</p>
+                <p @click="store.setActiveProfile(test)">Profile</p>
                 <hr/>
                 <p>Block {{store.activeChat.name}}</p>
             </div>
@@ -55,20 +55,44 @@
     import {onMounted, ref} from 'vue'
     let chatMessages = ref(null);
     let store = useInterfaceStore();
-    let active = ref('maximized');
+    let active = ref(true);
     let enableOptions = ref(false);
-    
+    let test = {
+        name: 'Mouad',
+        level: 5,
+        status: 'online',
+        img: 'bruh.jpg'
+    }
+
+    function getClass(){
+        let ret = ''
+        if(active.value === true)
+            ret += 'maximized'
+        else
+            ret += 'minimized'
+        if(store.enableSidebar)
+            ret += ' sidebarEnabled'
+        return ret;
+    }
 
     function minimize(){
-        if(active.value === 'maximized'){
-            active.value = 'minimized';
+        if(active.value === true){
+            active.value = false;
+            enableOptions.value = false;
         }
     }
 
     function maximize(){
-        if(active.value === 'minimized'){
-            active.value = 'maximized';
+        if(active.value === false){
+            active.value = true;
         }
+    }
+
+    function toggleOptions(){
+        if(active.value)
+            enableOptions.value = !enableOptions.value;
+        else
+            maximize();
     }
 
     onMounted(() => {
@@ -82,19 +106,25 @@
 </script>
 
 <style scoped>
+
+
+    .sidebarEnabled{
+        transform: translateX(450px);
+    }
+
     #messageContainer{
         position: absolute;
         bottom: 0px;
+        right: 480px;
         width: 425px;
         border-top-left-radius: 10px;
         border-top-right-radius: 10px;
-        right: 470px;
         z-index: 1;
         background-color: rgba(123,51,125, 0.8);
+        transition: all 0.3s ease;
     }
     #chatHeader{
         height: 60px;
-        
         border-top-left-radius: 10px;
         border-top-right-radius: 10px;
         text-align: left;
@@ -108,7 +138,6 @@
         text-align: center;
         line-height: 40px;
         float: right;
-
     }
     #chatUser{ 
         height: 52px;

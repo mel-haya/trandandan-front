@@ -1,42 +1,59 @@
 <template>
-    <div id="profileContainer">
-        <div id="profileHeader">Player profile</div>
-        <div id="closeButton">
-            <fa icon="xmark"/>
-        </div>
-        <div id="profileBody">
-            <div id="userImg"></div>
-            <div id="userInfo">
-                <p>Alejandro <span id="userStatus"></span> </p>
-                <p>level: 5</p>
-                <div id="addFriendButton">
-                    <fa icon="user-plus"/>
-                </div>
-                <div id="blockUserButton">
-                    <fa icon="user-xmark"/>
-                </div>
+    <div id="profileBg" @click="closeDiv">
+        <div id="profileContainer">
+            <div id="profileHeader">Player profile</div>
+            <div id="closeButton" @click="store.setActiveProfile(null)">
+                <fa icon="xmark"/>
             </div>
-            <div id="userAchiv"></div>
-            <div id="matchHistory"></div>
+            <div id="profileBody">
+                <div id="userImg" :style="image"></div>
+                <div id="userInfo">
+                    <p>{{store.activeProfile.name}} <span id="userStatus"></span> </p>
+                    <p>level: 5</p>
+                    <div id="addFriendButton">
+                        <fa icon="user-plus"/>
+                    </div>
+                    <div id="blockUserButton">
+                        <fa icon="user-xmark"/>
+                    </div>
+                </div>
+                <div id="userAchiv"></div>
+                <div id="matchHistory"></div>
+            </div>
         </div>
     </div>
 </template>
 
 <script setup>
+    import { useInterfaceStore } from '@/stores/interface';
+    let store = useInterfaceStore();
+    let image = "background-image: url('" + require('@/assets/'+store.activeProfile.img) + "');";
 
+    function closeDiv(e){
+        if(e.target.id === 'profileBg')
+            store.setActiveProfile(null);
+    }
 </script>
 
 <style scoped>
-
+    #profileBg{
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        top: 0;
+        left: 0;
+        background-color: rgba(0,0,0,0.8);
+        z-index: 2;
+    }
 
     #profileContainer{
         position: absolute;
         top: 50%;
         left: 50%;
         transform: translate(-50%,-50%);
-        max-width: 1200px;
+        max-width: 1000px;
         width: 80%;
-        aspect-ratio: 5/3;
+        aspect-ratio: 6/4;
         background-color: rgba(123, 51, 125, 0.9);
         transition: all 0.7s ease;
         border-radius: 20px;
@@ -86,7 +103,6 @@
         left: 20px;
         width: 130px;
         height: 130px;
-        background-image: url('../assets/bruh.jpg');
         background-size: cover;
         background-repeat: no-repeat;
         background-position: center;

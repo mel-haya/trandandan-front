@@ -75,7 +75,6 @@
 
     function toggleNotification(){
         notificationHeight.value = notificationHeight.value == 0 ? 200 : 0;
-        console.log(notificationHeight.value);
     }
 </script>
 

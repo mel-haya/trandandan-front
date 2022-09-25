@@ -13,7 +13,7 @@
     let interfaceStore = useInterfaceStore();
 
     const router = useRouter();
-    const store = useUserStore()
+    const store = useUserStore();
     const {username, imgUrl } = storeToRefs(store)
     let token = Cookies.get('accessToken')
     let test = reactive({
@@ -77,11 +77,10 @@
             <div @click="firstButton" id="playBtn" class="menuBtn"><span>{{test.a}}</span></div>
             <div @click="secondButton" id="watchBtn" class="menuBtn"><span>{{test.b}}</span></div>
             <div @click="thirdButton" id="leaderboardBtn" class="menuBtn"><span>{{test.c}}</span></div>
-            <!-- <ProfileItem/> -->
         </div>
     <SidebareItem/>
-    <MessageBox v-if="interfaceStore.activeChat"></MessageBox> 
-    <!-- <ProfileItem></ProfileItem> -->
+    <MessageBox v-if="interfaceStore.activeChat"/>
+    <ProfileItem v-if="interfaceStore.activeProfile"/>
 </template>
 
 <style  scoped>
