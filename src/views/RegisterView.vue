@@ -1,6 +1,6 @@
 <template>
     <div id="registercontainer">
-        <h2>Register</h2>
+        <h3>Account settings</h3>
         <div id="registerForm">
             <div id="imageCont">
                 <img :src="user.imageUrl" alt="bruh">
@@ -87,7 +87,7 @@
 </script>
 
 <style scoped>
-    h2{
+    h3{
         /* text-decoration: solid underline; */
         background: rgba(124, 26, 137, 0.787);
         border-radius: 0.5em 0.5em 0 0;

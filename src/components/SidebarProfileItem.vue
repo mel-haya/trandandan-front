@@ -7,12 +7,12 @@
         </div>
     </div>
     <div id="context-menu" ref="contextMenu">
-        <div id="context-menu-item">
+        <div id="context-menu-item" @click="store.setActiveProfile(test)">
             <fa icon="user"/>
             <span> My profile</span>
         </div>
         <hr>
-        <div id="context-menu-item">
+        <div id="context-menu-item" @click="router.push('/settings')">
             <fa icon="gear"/>
             <span> Settings</span>
         </div>
@@ -26,7 +26,19 @@
 
 <script setup>
     import { ref } from 'vue';
-    let contextMenu = ref(null)
+    import { useInterfaceStore } from '../stores/interface';
+    import { useRouter } from 'vue-router';
+
+    let router = useRouter();
+    let store = useInterfaceStore();
+    let contextMenu = ref(null);
+    
+    let test = {
+        name: 'Mourad',
+        level: 3,
+        status: 'online',
+        img: 'bruh.jpg'
+    }
 
     function togglemenu(){
         

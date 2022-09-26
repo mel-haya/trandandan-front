@@ -45,7 +45,7 @@
             color: white;
             text-align: left;
             padding: 10px;
-            background-color: rgba(122, 51, 125, 0.995);
+            background: linear-gradient(0deg, rgba(61,15,64,1) 0%, rgba(105,39,110,1) 41%, rgba(122,51,125,1) 100%);
         }
         #rooms{
             position: relative;

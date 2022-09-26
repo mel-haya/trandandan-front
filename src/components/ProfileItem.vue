@@ -9,7 +9,7 @@
                 <div id="userImg" :style="image"></div>
                 <div id="userInfo">
                     <p>{{store.activeProfile.name}} <span id="userStatus"></span> </p>
-                    <p>level: 5</p>
+                    <p>level: {{store.activeProfile.level}}</p>
                     <div id="addFriendButton">
                         <fa icon="user-plus"/>
                     </div>

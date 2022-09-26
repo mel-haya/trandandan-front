@@ -101,9 +101,9 @@
 
 #friendHeader{
     width: 100%;
-    background-color: rgba(122, 51, 125, 0.995);
+    background: linear-gradient(0deg, rgba(61,15,64,1) 0%, rgba(105,39,110,1) 41%, rgba(122,51,125,1) 100%);
     font-size: 20px;
-    height: 40px;
+    height: 47.5px;
     position: relative;
 }
 
@@ -118,7 +118,7 @@
     width: 100%;
     text-align: left;
     display: inline-block;
-    line-height: 40px;
+    line-height: 47.5px;
 }
 
 #filter{
@@ -126,7 +126,7 @@
     display: inline-block;
     right: 10px;
     height: 100%;
-    line-height: 40px;
+    line-height: 47.5px;
     cursor: pointer;
 }
 
@@ -134,7 +134,7 @@
     position: absolute;
     display: inline-block;
     right: 40px;
-    line-height: 40px;
+    line-height: 47.5px;
     cursor: pointer;
 }
 

@@ -29,6 +29,11 @@ export default () => createRouter({
       name: 'game',
       path: '/play',
       component: () => import('./views/GameView.vue')
+    },
+    {
+      name: 'settings',
+      path: '/settings',
+      component: () => import('./views/RegisterView.vue')
     }
 
   ]
