@@ -24,7 +24,7 @@
 			<div id="groupOptions" v-else>
 				<p @click="store.activeChatSetting = true">Group settings</p>
 				<hr/>
-				<p>Members</p>
+				<p @click.stop="enableMembers = true">Members</p>
 				<hr/>
 				<p>Leave Group</p>
 			</div>
@@ -51,11 +51,13 @@
 		<div id="closeSettings" @click="store.activeChatSetting = false"> <fa icon="chevron-left"/> </div>
 		<MessageboxSettingsVue/>
 	</div>
+	<membersListVue v-if="enableMembers"/>
 </template>
 
 <script setup>
 	// TODO: close chat when changing active chat 
 	import { useInterfaceStore } from '@/stores/interface';
+	import membersListVue from './membersList.vue';
 	import MessageBoxItem from '@/components/messageBoxItem.vue'
 	import MessageboxSettingsVue from './MessageboxSettings.vue';
 	import {onMounted, ref} from 'vue'
@@ -64,6 +66,7 @@
 	let store = useInterfaceStore();
 	let active = ref(true);
 	let enableOptions = ref(false);
+	let enableMembers = ref(false);
 	let test = {
 		name: 'Mouad',
 		level: 5,
@@ -105,8 +108,10 @@
 		chatMessages.value.scrollTop = chatMessages.value.scrollHeight;
 	});
 
-	window.addEventListener('click', function () {
+	window.addEventListener('click', function (e) {
+		e.preventDefault();
 		enableOptions.value = false;
+		enableMembers.value = false;
 	});
 	
 </script>

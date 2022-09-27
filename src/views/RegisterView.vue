@@ -31,6 +31,7 @@
         username: '',
         imageUrl: '',
     });
+    
     let img;
     const store = useUserStore()
     const { update } = store
