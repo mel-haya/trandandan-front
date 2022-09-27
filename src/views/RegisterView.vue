@@ -1,6 +1,9 @@
 <template>
     <div id="registercontainer">
-        <h3>Account settings</h3>
+        <h3>
+            <fa icon="gear"/>
+            Account settings
+        </h3>
         <div id="registerForm">
             <div id="imageCont">
                 <img :src="user.imageUrl" alt="bruh">
