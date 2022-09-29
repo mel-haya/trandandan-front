@@ -3,20 +3,28 @@
         <div id="memberName">
             <h3>{{props.member.username}}</h3>
         </div>
-        <div id="memberSettings">
+        <div id="memberSettings" @click.stop="settingsClick">
             <fa icon="ellipsis-vertical" />
         </div>
     </div>
+    
 </template>
 
 <script setup>
     import { defineProps } from 'vue'
+    import { useInterfaceStore } from '@/stores/interface'
     let props = defineProps({
         member: {
             type: Object,
             required: true
         }
     })
+    let store = useInterfaceStore()
+    function settingsClick(e){
+        store.enableMembersSettings = props.member;
+        store.enableMembersSettings.x = e.clientX;
+        store.enableMembersSettings.y = e.clientY;
+    }
 </script>
 
 <style scoped>
@@ -57,7 +65,5 @@
     cursor: pointer;
     background-color: rgba(92, 34, 94, 0.995);
 }
-
-
 
 </style>

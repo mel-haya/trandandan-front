@@ -22,6 +22,8 @@
 				<p>Block {{store.activeChat.name}}</p>
 			</div>
 			<div id="groupOptions" v-else>
+				<p>Add a new user</p>
+				<hr/>
 				<p @click="store.activeChatSetting = true">Group settings</p>
 				<hr/>
 				<p @click.stop="enableMembers = true">Members</p>
@@ -55,7 +57,6 @@
 </template>
 
 <script setup>
-	// TODO: close chat when changing active chat 
 	import { useInterfaceStore } from '@/stores/interface';
 	import membersListVue from './membersList.vue';
 	import MessageBoxItem from '@/components/messageBoxItem.vue'
@@ -106,13 +107,18 @@
 
 	onMounted(() => {
 		chatMessages.value.scrollTop = chatMessages.value.scrollHeight;
+		window.addEventListener('resize', () => {
+			enableMembers.value = false;
+		});
 	});
 
 	window.addEventListener('click', function (e) {
 		e.preventDefault();
 		enableOptions.value = false;
 		enableMembers.value = false;
+		store.enableMembersSettings = false;
 	});
+
 	
 </script>
 
@@ -256,7 +262,6 @@
 		border-radius: 10px;
 	}
 
-	/* #chatMessages:: */
 	#chatOptions{
 		position: absolute;
 		top: 65px;
