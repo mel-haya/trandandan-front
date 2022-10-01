@@ -18,7 +18,7 @@
             </div>
             <div id="memberSettingsMenu" v-if="store.enableMembersSettings" :style="getSettingsCoords()">
                 <div id="settingItem">{{store.enableMembersSettings.username}}'s Profile</div><hr/>
-                <div id="settingItem">Mute {{store.enableMembersSettings.username}}</div><hr/>
+                <div id="settingItem">Mute {{store.enableMembersSettings.username}} for 1 hour</div><hr/>
                 <div id="settingItem">Ban {{store.enableMembersSettings.username}}</div><hr/>
                 <div id="settingItem">Set {{store.enableMembersSettings.username}} as Admin</div><hr/>
             </div>

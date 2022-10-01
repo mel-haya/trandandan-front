@@ -34,6 +34,11 @@ export default () => createRouter({
       name: 'settings',
       path: '/settings',
       component: () => import('./views/RegisterView.vue')
+    },
+    {
+      name: 'leaderboard',
+      path: '/leaderboard',
+      component: () => import('./views/LeaderboardView.vue')
     }
 
   ]
