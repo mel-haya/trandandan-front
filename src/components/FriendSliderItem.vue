@@ -1,7 +1,7 @@
 <template>
     <div class="sliderItem">
         <div class="sliderImg">
-            <fa icon="user"/>
+            <fa :icon="props.icon"/>
         </div>
         <p>{{props.name}}</p>
     </div>
@@ -12,6 +12,7 @@
     let props = defineProps({
         name: String,
         img: String,
+        icon: String,
         online: Boolean
     });
 </script>

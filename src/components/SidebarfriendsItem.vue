@@ -25,13 +25,13 @@
         </div>
         <div ref="slider" id="slider" @mouseup="sliderLeave" @mouseleave="sliderLeave" @mousedown="sliderClick" @mousemove="sliderMove">
             <div ref="innerSlider" id="innerSlider">
-                <FriendSliderItem name="Add"/>
-                <FriendSliderItem name="friend 1"/>
-                <FriendSliderItem name="friend 2"/>
-                <FriendSliderItem name="friend 3"/>
-                <FriendSliderItem name="friend 4"/>
-                <FriendSliderItem name="friend 5"/>
-                <FriendSliderItem name="friend 6"/>
+                <FriendSliderItem name="Add" icon="plus"/>
+                <FriendSliderItem name="friend 1" icon="user"/>
+                <FriendSliderItem name="friend 2" icon="user"/>
+                <FriendSliderItem name="friend 3" icon="user"/>
+                <FriendSliderItem name="friend 4" icon="user"/>
+                <FriendSliderItem name="friend 5" icon="user"/>
+                <FriendSliderItem name="friend 6" icon="user"/>
             </div>
         </div>
     </div>

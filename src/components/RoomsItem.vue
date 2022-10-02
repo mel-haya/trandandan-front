@@ -17,10 +17,17 @@
 </script>
 
 <style scoped>
+
+    *{
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
     #GroupItem{
         position: relative;
-        width: calc(100% - 40px);
-        height: 50px;
+        width: 100%;
+        height: 120px;
         background-color: rgba(122, 51, 125, 0.995);
         color: white;
         font-size: 20px;
@@ -29,33 +36,37 @@
         padding: 10px;
         margin: 10px;
         border-radius: 10px;
+        background-image: url('@/assets/991.jpg');
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+
     }
 
     #GroupName{
         position: relative;
         width: 100%;
-        height: 50%;
         text-align: left;
         padding-left: 10px;
         font-size: 20px;
         font-weight: 600;
+        text-shadow: 4px 2px 2px rgb(62, 62, 62);
     }
 
     #GroupCount{
         position: relative;
         width: 100%;
-        height: 50%;
         text-align: left;
         padding-left: 10px;
         font-size: 15px;
         font-weight: 400;
-    }  
+        text-shadow: 2px 2px 2px rgb(62, 62, 62);
+    } 
+    
 
 
     #JoinBtn{
         position: absolute;
-        height: 20px;
-        line-height: 20px;
         background-color:rgba(17, 151, 21, 0.995);
         color: white;
         font-size: 15px;
@@ -64,8 +75,8 @@
         padding: 5px 10px;
         margin: 10px;
         border-radius: 10px;
-        right: 0;
-        top: 0;
+        right: 5px;
+        bottom: 5px;
     }
 
     #JoinBtn:hover{

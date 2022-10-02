@@ -90,7 +90,7 @@ td{
     background: url('@/assets/pong-online.png');
     background-size: cover;
     background-position: center;
-
+    cursor: pointer;
     margin: 20px auto;
     margin-bottom: 20px;
 }

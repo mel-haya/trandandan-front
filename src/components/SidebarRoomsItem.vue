@@ -20,11 +20,11 @@
     let room = {name: "Room 1", members: 5};
     let enable = ref(true);
     let icon = ref("caret-right");
-    let scale = ref(320);
+    let scale = ref(265);
     function enableDiv(){
         enable.value = !enable.value;
         if(enable.value){
-            scale.value = 320;
+            scale.value = 265;
             icon.value = "caret-down";
         }else{
             scale.value = 0;
