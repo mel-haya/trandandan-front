@@ -10,6 +10,7 @@
     import { useRouter } from 'vue-router';
     import MessageBox from '@/components/MessageBox.vue';
     import {useInterfaceStore} from '@/stores/interface';
+    import FriendSearchItem from '@/components/FriendSearchItem.vue';
     let interfaceStore = useInterfaceStore();
 
     const router = useRouter();
@@ -81,6 +82,7 @@
     <SidebareItem/>
     <MessageBox v-if="interfaceStore.activeChat"/>
     <ProfileItem v-if="interfaceStore.activeProfile"/>
+    <FriendSearchItem v-if="interfaceStore.enableFriendSearch"/>
 </template>
 
 <style  scoped>

@@ -4,7 +4,7 @@
     </div>
     <div id="rooms" :style="`max-height:${scale}px`">
             <RoomsItem :room="room"/>
-            <RoomsItem :room="room"/>
+            <RoomsItem :room="room2"/>
             <RoomsItem :room="room"/>
             <RoomsItem :room="room"/>
             <RoomsItem :room="room"/>
@@ -17,14 +17,15 @@
 <script setup>
     import RoomsItem from './RoomsItem.vue';
     import {ref} from 'vue';
-    let room = {name: "Room 1", members: 5};
+    let room = {name: "1337", members: 5, img:"loading.jpg"};
+    let room2 = {name: "Eva fans", members: 22, img:"991.jpg"};
     let enable = ref(true);
     let icon = ref("caret-right");
-    let scale = ref(265);
+    let scale = ref(400);
     function enableDiv(){
         enable.value = !enable.value;
         if(enable.value){
-            scale.value = 265;
+            scale.value = 400;
             icon.value = "caret-down";
         }else{
             scale.value = 0;

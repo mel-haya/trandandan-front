@@ -27,14 +27,22 @@
 </script>
 
 <style scoped>
+
     #msgItem{
+        box-sizing: border-box;
         cursor: pointer;
         position: relative;
-        width: 100%;
+        margin: 0 auto;
+        border-radius: 5px;
+        width: 98%;
         height: 80px;
-        margin: 5px 0;
-        background-color: rgba(255, 255, 255, 0.399);
+        background-color: transparent;
     }
+
+    #msgItem:hover{
+        background-color: rgba(255, 255, 255, 0.4);
+    }
+
     #senderName{
         position: absolute;
         top: 0;

@@ -33,11 +33,11 @@
     };
     let enable = ref(true);
     let icon = ref("caret-right");
-    let scale = ref(260);
+    let scale = ref(240);
     function enableDiv(){
         enable.value = !enable.value;
         if(enable.value){
-            scale.value = 260;
+            scale.value = 240;
             icon.value = "caret-down";
         }else{
             scale.value = 0;

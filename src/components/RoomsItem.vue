@@ -1,5 +1,6 @@
 <template>
     <div id="GroupItem">
+        <div id="GroupChild" :style="`background-image: url('${require('@/assets/'+Props.room.img)}');`"></div>
         <p id="GroupName">{{Props.room.name}}</p>
         <p id="GroupCount">{{Props.room.members}} members</p>
         <div id="JoinBtn">Join</div>
@@ -24,6 +25,23 @@
         box-sizing: border-box;
     }
 
+    #GroupChild{
+        width: 100%;
+        height: 120px;
+        position: absolute;
+        top: 0;
+        left: 0;
+        background-image: url('@/assets/loading.jpg');
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+        transition: all 0.5s ease;
+    }
+
+    #GroupItem:hover #GroupChild{
+        transform: scale(1.2);
+    }
+
     #GroupItem{
         position: relative;
         width: 100%;
@@ -36,12 +54,10 @@
         padding: 10px;
         margin: 10px;
         border-radius: 10px;
-        background-image: url('@/assets/991.jpg');
-        background-size: cover;
-        background-position: center;
-        background-repeat: no-repeat;
-
+        overflow: hidden;
     }
+
+
 
     #GroupName{
         position: relative;
@@ -82,7 +98,7 @@
     #JoinBtn:hover{
         cursor: pointer;
         background-color: rgba(21, 204, 27, 0.995);
-        box-shadow: 0px 0px 5px 2px rgba(21, 204, 27, 0.995);
+        /* box-shadow: 0px 0px 5px 2px rgba(21, 204, 27, 0.995); */
         text-shadow: 2px 2px 2px #0000007F;
     }
 

@@ -27,6 +27,7 @@
         font-size: 15px;
         text-align: center;
         margin-top: 10px;
+        cursor: pointer;
     }
 
     .sliderImg{
@@ -40,5 +41,6 @@
         text-align: center;
         line-height: 80px;
         font-size: 30px;
+        cursor: pointer;
     }
 </style>

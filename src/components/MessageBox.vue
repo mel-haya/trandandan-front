@@ -19,6 +19,8 @@
 			<div id="directOptions" v-if="store.activeChat.type === 1">
 				<p @click="store.setActiveProfile(test)">Profile</p>
 				<hr/>
+				<p>Invite for a game</p>
+				<hr/>	
 				<p>Block {{store.activeChat.name}}</p>
 			</div>
 			<div id="groupOptions" v-else>
