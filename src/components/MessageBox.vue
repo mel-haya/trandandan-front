@@ -19,7 +19,7 @@
 			<div id="directOptions" v-if="store.activeChat.type === 1">
 				<p @click="store.setActiveProfile(test)">Profile</p>
 				<hr/>
-				<p>Invite for a game</p>
+				<p>Invite to a game</p>
 				<hr/>	
 				<p>Block {{store.activeChat.name}}</p>
 			</div>
@@ -209,8 +209,7 @@
 		position: absolute;
 		bottom: 0;
 		left: 0;
-		width: calc(100% - 20px);
-		height: 40px;
+		width: 100%;
 		font-size: 24px;
 		padding: 10px;
 		border: none;

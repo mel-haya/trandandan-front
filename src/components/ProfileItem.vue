@@ -101,8 +101,8 @@
         position: absolute;
         top: 20px;
         left: 20px;
-        width: 130px;
-        height: 130px;
+        width: 150px;
+        height: 150px;
         background-size: cover;
         background-repeat: no-repeat;
         background-position: center;

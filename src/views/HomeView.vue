@@ -10,7 +10,6 @@
     import { useRouter } from 'vue-router';
     import MessageBox from '@/components/MessageBox.vue';
     import {useInterfaceStore} from '@/stores/interface';
-    import FriendSearchItem from '@/components/FriendSearchItem.vue';
     let interfaceStore = useInterfaceStore();
 
     const router = useRouter();
@@ -68,21 +67,18 @@
         }
     }
 
-
-
 </script>
 
-<template> 
-        <div id="menuWrapper">
-            <div id="logo"></div>
-            <div @click="firstButton" id="playBtn" class="menuBtn"><span>{{test.a}}</span></div>
-            <div @click="secondButton" id="watchBtn" class="menuBtn"><span>{{test.b}}</span></div>
-            <div @click="thirdButton" id="leaderboardBtn" class="menuBtn"><span>{{test.c}}</span></div>
-        </div>
+<template>
+    <div id="menuWrapper">
+        <div id="logo"></div>
+        <div @click="firstButton" id="playBtn" class="menuBtn"><span>{{test.a}}</span></div>
+        <div @click="secondButton" id="watchBtn" class="menuBtn"><span>{{test.b}}</span></div>
+        <div @click="thirdButton" id="leaderboardBtn" class="menuBtn"><span>{{test.c}}</span></div>
+    </div>
     <SidebareItem/>
     <MessageBox v-if="interfaceStore.activeChat"/>
     <ProfileItem v-if="interfaceStore.activeProfile"/>
-    <FriendSearchItem v-if="interfaceStore.enableFriendSearch"/>
 </template>
 
 <style  scoped>
@@ -166,7 +162,7 @@
         top: -2px;
         left: 0;
         width: 5%;
-        height: 64px;
+        height: 60px;
         transition: all 0.3s ease-in-out;
         background-color: #7a337d;
     }
@@ -176,6 +172,7 @@
         width: calc(100% + 2px);
         box-shadow: #7a337d 0px 0px 20px 10px; 
     }
+
 
 
 </style>

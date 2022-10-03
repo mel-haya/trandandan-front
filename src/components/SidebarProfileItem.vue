@@ -81,7 +81,7 @@
     }
     #context-menu{
         position: absolute;
-        top: 70px;
+        top: 65px;
         right: 10px;
         background-color: #FFFEFE;
         color: black;
@@ -105,8 +105,8 @@
         top: 10px;
         right: 10px;
         padding: 10px;
-        width: 30px; 
-        height: 30px;
+        width: 50px; 
+        height: 50px;
         line-height: 30px;
         font-size: 30px;
         border-radius: 50px;

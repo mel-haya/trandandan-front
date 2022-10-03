@@ -22,6 +22,10 @@ export default {
 </script>
 
 <style>
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
@@ -35,3 +39,4 @@ export default {
   overflow: hidden;
 }
 </style>
+

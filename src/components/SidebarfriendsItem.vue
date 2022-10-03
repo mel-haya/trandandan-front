@@ -11,7 +11,7 @@
         </div>
         <div id="notifContainer" :style="`max-height:${filterheight}px;`">
             <div id="filterbar">
-                <input tabindex="-1" id="filterInput" type="text" placeholder="Filter friends..."/>
+                <input tabindex="-1" id="filterInput" type="text" @keyup.enter="sendFriendReq()" placeholder="Add new friends..."/>
             </div>
         </div>
         <div id="notifContainer" :style="`max-height:${notificationHeight}px`">
@@ -25,7 +25,6 @@
         </div>
         <div ref="slider" id="slider" @mouseup="sliderLeave" @mouseleave="sliderLeave" @mousedown="sliderClick" @mousemove="sliderMove">
             <div ref="innerSlider" id="innerSlider">
-                <FriendSliderItem name="Add" icon="plus" @click.stop="store.enableFriendSearch = true"/>
                 <FriendSliderItem name="friend 1" icon="user"/>
                 <FriendSliderItem name="friend 2" icon="user"/>
                 <FriendSliderItem name="friend 3" icon="user"/>
@@ -38,11 +37,12 @@
 </template>
 
 <script setup>
-    import { useInterfaceStore } from '@/stores/interface';
     import {ref} from 'vue'
     import FriendSliderItem from './FriendSliderItem.vue'
     import NotifItem from './NotifItem.vue'
+    import { useToast } from "vue-toastification";
 
+    const toast = useToast();
     let filterheight = ref(0);
     let notificationHeight = ref(0);
     let innerSlider = ref("innerSlider");
@@ -50,11 +50,6 @@
     let isDown = false;
     let startX;
     let scrollLeft;
-    let store = useInterfaceStore();
-
-    window.addEventListener('mousedown', ()=>{
-        store.enableFriendSearch = false;
-    });
 
     function sliderClick(e){
         isDown = true;
@@ -81,6 +76,15 @@
     function toggleNotification(){
         notificationHeight.value = notificationHeight.value == 0 ? 200 : 0;
     }
+
+    function sendFriendReq(){
+        toast.success("Friend request sent", {
+        timeout: 4000,
+        position: "top-left"
+      });
+      
+    }
+
 </script>
 
 
