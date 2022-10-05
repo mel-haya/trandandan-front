@@ -39,6 +39,11 @@ export default () => createRouter({
       name: 'leaderboard',
       path: '/leaderboard',
       component: () => import('./views/LeaderboardView.vue')
+    },
+    {
+      name: 'fake',
+      path: '/fake',
+      component: () => import('./views/fakeView.vue')
     }
 
   ]

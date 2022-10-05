@@ -8,11 +8,11 @@
 					{{store.activeChat.name}}
 				</div>
 			</div>
-			<div id="leaveChat" @click="store.activeChat = null">
-				<fa icon="xmark"/>
-			</div>
 			<div id="chatMinimize" @click.stop="minimize()" v-if="active === true">
 				<fa icon="minus"/>
+			</div>
+			<div id="leaveChat" @click="store.activeChat = null">
+				<fa icon="xmark"/>
 			</div>
 		</div>
 		<div id="chatOptions" v-if="enableOptions">
@@ -114,8 +114,8 @@
 		});
 	});
 
-	window.addEventListener('click', function (e) {
-		e.preventDefault();
+	window.addEventListener('click', function () {
+		
 		enableOptions.value = false;
 		enableMembers.value = false;
 		store.enableMembersSettings = false;
@@ -149,6 +149,7 @@
 		text-align: left;
 		background-color: rgba(122, 51, 125, 0.995);
 		font-size: 22px;
+		display: flex;
 	}
 
 	#leaveChat, #chatMinimize{
@@ -156,16 +157,14 @@
 		height: 35px;
 		text-align: center;
 		line-height: 40px;
-		float: right;
 	}
 	#chatUser{ 
-		height: 52px;
 		margin: 4px;
-		display: inline-block;
-		padding-right: 40px;
+		display: flex;
 		max-width: 300px;
 		overflow: hidden;
 		border-radius: 5px;
+		margin-right: auto;
 	}
 
 	.maximized #chatUser:hover, #chatMinimize:hover, #leaveChat:hover{
@@ -174,7 +173,7 @@
 	}
 
 	#chatName{
-		float: left;
+		margin-right: auto;
 		max-width: 250px;
 		line-height: 52px;
 		word-wrap: break-word;
@@ -200,7 +199,6 @@
 		background-color: burlywood;
 		border-radius: 60px;
 		margin : 6px 5px;
-		float: left;
 	}
 
 	
@@ -316,9 +314,10 @@
 		width: 50px;
 		height: 50px;
 		position: absolute;
-		top: 10px;
-		left: 10px;
+		top: 0px;
+		left: 0px;
 		cursor: pointer;
+		z-index: 99;
 	}
 
 </style>

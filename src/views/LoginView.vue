@@ -2,7 +2,7 @@
 <script setup>
     import axios from 'axios';
      function submit(){
-        axios.get(`http://0.0.0.0:3000/auth/42`).catch((err) => console.log(err)) 
+        axios.get(`http://localhost:3000/auth/42`).catch((err) => console.log(err)) 
     }
     
 </script>
@@ -10,23 +10,25 @@
 
 
 <template>
-    <img src="../assets/pong-online.png" alt="" style="width: 35%;">
+    <img src="../assets/pong-online.png" alt="">
     <br>
     <div id="loginButton">
-        <a @click="submit" href="http://0.0.0.0:3000/auth/42">Sign up with 42</a>
+        <a @click="submit" href="http://localhost:3000/auth/42">Sign up with 42</a>
     </div>
 
 </template>
 
 <style scoped>
-
+img{
+    width: 35%;
+    margin: 10px auto;
+}
 #loginButton{
     max-width: 350px;
     width: 40%;
-    height: 60px;
+    height: 84px;
     line-height: 60px;
     font-size: 26px;
-    /* height: 4rem; */
     border-top: #7B337D solid 3px;
     border-right: #7B337D solid 3px;
     border-bottom: #7B337D solid 3px;
@@ -55,7 +57,7 @@
     top: -2px;
     left: 0;
     width: 5%;
-    height: 84px;
+    height: 82px;
     transition: all 0.3s ease-in-out;
     background-color: #7a337d;
 
@@ -66,10 +68,5 @@
     width: calc(100% + 2px);
     box-shadow: #7a337d 0px 0px 20px 10px; 
 }
-
-
-
-
-
 
 </style>

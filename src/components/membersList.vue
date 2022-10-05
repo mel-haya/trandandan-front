@@ -119,7 +119,7 @@
 }
 
 #settingItem{
-    width: calc(100% - 15px);
+    width: 100%;
 	height: 50px;
 	line-height: 50px;
 	text-align: left;

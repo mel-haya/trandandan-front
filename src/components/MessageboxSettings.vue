@@ -1,20 +1,20 @@
 <template>
 	<div id="groupSettings">
-		<div id="groupImage">
+		<div id="groupImage" :style="`background-image: url('${require('@/assets/991.jpg')}')`">
 			<label for="groupFile">Change</label>
-			<input id="groupFile" type="file" style="display: none;">
+			<input id="groupFile" type="file" name="groupFile" @change="changeImage"/>
 		</div>
 		<div id="groupName">
 			<input type="text" placeholder="Group name" value="ADHD and retarded group">
 		</div>
 		<h3>Settings</h3>
 		<label for="public" id="groupVisibility">
-			<input type="checkbox" id="public" value="public" checked>
+			<input type="checkbox" id="public">
 			<i></i>
 			Make the group private
 		</label>
 		<label for="password" id="groupVisibility" @click="togglePassword">
-			<input type="checkbox" id="password" v-model="password" >
+			<input type="checkbox" id="password" v-model="password">
 			<i></i>
 			Protect channel with a password
 		</label>
@@ -35,7 +35,7 @@ import { ref, onMounted } from 'vue';
 	})
 
 	function togglePassword(){
-		passInput.value.disabled = (password.value);
+		passInput.value.disabled = password.value;
 	}
 </script>
 
@@ -45,28 +45,29 @@ import { ref, onMounted } from 'vue';
 		height: 565px;
 		background-color: transparent;
 		border-top-left-radius: 10px;
-		border-top-right-radius: 10px;
-		padding-top : 15px;
+		border-top-right-radius: 10px;	
 	}
 
 	#groupImage{
 		position: relative;
 		height: 150px;
-		width: 150px;
-		background-color: burlywood;
-		border-radius: 100px;
+		width: 100%;
+		border-radius: inherit;
 		margin: 0px auto;
+		background-size: cover;
+		background-position: center;
+
 	}
 
 	#groupImage label{
 		position: absolute;
-		bottom: 0;
 		right: 0;
 		background-color: rgba(92, 34, 94, 0.995);
 		color: white;
 		font-size: 20px;
 		padding: 5px;
 		border-bottom-left-radius: 10px;
+		border-top-right-radius: 10px;
 	}
 
 	#groupImage label:hover{
@@ -159,7 +160,6 @@ import { ref, onMounted } from 'vue';
 
 	#passInput{
 		padding: 10px;
-		/* border: none; */
 		background: transparent;
 		color: white;
 		font-size: 18px;
@@ -196,5 +196,9 @@ import { ref, onMounted } from 'vue';
     #deleteBtn{
         background-color: red;
     }
+
+	#groupFile{
+		display: none;
+	}
 
 </style>

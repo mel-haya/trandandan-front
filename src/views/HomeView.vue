@@ -25,7 +25,7 @@
         const config = {
             headers: { "Authorization": `Bearer ${token}` }
         };
-        axios.get('http://localhost:3000/user/profile', config)
+        axios.get('http://localhost:3000/user/me', config)
             .then(response => {
                 username.value = response.data.username;
                 imgUrl.value = response.data.imageUrl;

@@ -1,13 +1,13 @@
 <template>
     <div id="sideProfile">
-        <div id="userImg"></div>
-        <div id="userName">mel-haya</div>
+        <div id="userImg" :style="`background-image: url('${Profile.imageUrl}')`"></div>
+        <div id="userName">{{Profile.username}}</div>
         <div id="settings" @click.stop="togglemenu">
             <fa id="settings-icon" icon="ellipsis-vertical"/>
         </div>
     </div>
     <div id="context-menu" ref="contextMenu">
-        <div id="context-menu-item" @click="store.setActiveProfile(test)">
+        <div id="context-menu-item" @click="store.setActiveProfile(Profile)">
             <fa icon="user"/>
             <span> My profile</span>
         </div>
@@ -25,23 +25,23 @@
 </template>
 
 <script setup>
-    import { ref } from 'vue';
+    import { onMounted, onUnmounted, ref } from 'vue';
     import { useInterfaceStore } from '../stores/interface';
     import { useRouter } from 'vue-router';
+    import axios from 'axios';
+    import Cookies from 'js-cookie';
 
     let router = useRouter();
     let store = useInterfaceStore();
     let contextMenu = ref(null);
+    let Profile = ref({
+        id: 0,
+        username: '',
+        imageUrl: '',
+    });
     
-    let test = {
-        name: 'Mourad',
-        level: 3,
-        status: 'online',
-        img: 'bruh.jpg'
-    }
 
     function togglemenu(){
-        
         if(contextMenu.value.style.display === 'none')
             contextMenu.value.style.display = 'block'
         else
@@ -52,6 +52,23 @@
         if(contextMenu.value)
             contextMenu.value.style.display = 'none';
     });
+    
+    onMounted(async () => {
+        console.log('mounted');
+        let res = await axios.get('http://localhost:3000/user/me', {
+            headers: {
+                Authorization: `Bearer ${Cookies.get('accessToken')}`
+            }
+        })
+        Profile.value.id = res.data.id;
+        Profile.value.username = res.data.displayName;
+        Profile.value.imageUrl = res.data.imgPath;
+    })
+
+    onUnmounted(() => {
+        console.log('unmounted');
+    })
+
 
 </script>
 

@@ -15,32 +15,32 @@
             </div>
         </div>
         <div id="notifContainer" :style="`max-height:${notificationHeight}px`">
-            <NotifItem name="arbi"/>
-            <NotifItem name="bouchta"/>
-            <NotifItem name="bouchta"/>
-            <NotifItem name="bouchta"/>
-            <NotifItem name="bouchta"/>
-            <NotifItem name="bouchta"/>
-            <NotifItem name="bouchta"/>
+            <h2 id="requestEmpty" v-if="!friendRequests.length">No friend requests</h2>
+            <NotifItem v-for="req in friendRequests" :key="req.id" :user="req" @update="updateRequests()"/>
         </div>
         <div ref="slider" id="slider" @mouseup="sliderLeave" @mouseleave="sliderLeave" @mousedown="sliderClick" @mousemove="sliderMove">
             <div ref="innerSlider" id="innerSlider">
-                <FriendSliderItem name="friend 1" icon="user"/>
+                <h2 id="requestEmpty" v-if="!friends.length">No friends yet</h2>
+                <FriendSliderItem v-for="friend in friends" :key="friend.id" :user="friend"/>
+                <!-- <FriendSliderItem name="friend 1" icon="user"/>
                 <FriendSliderItem name="friend 2" icon="user"/>
                 <FriendSliderItem name="friend 3" icon="user"/>
                 <FriendSliderItem name="friend 4" icon="user"/>
                 <FriendSliderItem name="friend 5" icon="user"/>
-                <FriendSliderItem name="friend 6" icon="user"/>
+                <FriendSliderItem name="friend 6" icon="user"/> -->
             </div>
         </div>
     </div>
 </template>
 
 <script setup>
-    import {ref} from 'vue'
+    import {onMounted, ref} from 'vue'
     import FriendSliderItem from './FriendSliderItem.vue'
-    import NotifItem from './NotifItem.vue'
+    // import NotifItem from './NotifItem.vue'
     import { useToast } from "vue-toastification";
+    import axios from 'axios'
+    import Cookies from 'js-cookie'
+    import NotifItem from './NotifItem.vue';
 
     const toast = useToast();
     let filterheight = ref(0);
@@ -50,6 +50,40 @@
     let isDown = false;
     let startX;
     let scrollLeft;
+
+    let friendRequests = ref([]);
+    let friends = ref([]);
+
+    function updateRequests()
+    {
+        const config = {
+            headers: { "Authorization": `Bearer ${Cookies.get('accessToken')}` }
+        };
+        axios.get("http://localhost:3000/user/received-requests", config)
+        .then(function (response){ 
+            friendRequests.value = response.data;
+        })
+        .catch((err) => console.log(err));
+    }
+
+    function updateFriends()
+    {
+        const config = {
+            headers: { "Authorization": `Bearer ${Cookies.get('accessToken')}` }
+        };
+        axios.get("http://localhost:3000/user/friends", config)
+        .then(function (response){ 
+            friends.value = response.data;
+        })
+        .catch((err) => console.log(err));
+    }
+
+    onMounted(() => {
+        // fetch friend requests with axios
+        updateRequests()
+        updateFriends()
+        // fetch friends
+    });
 
     function sliderClick(e){
         isDown = true;
@@ -80,7 +114,6 @@
     function sendFriendReq(){
         toast.success("Friend request sent", {
         timeout: 4000,
-        position: "top-left"
       });
       
     }
@@ -152,7 +185,6 @@
 }
 #slider{
     width: 100%;
-    overflow: hidden;
     overflow-x: scroll;
     overflow-y: hidden;
     white-space: nowrap;
@@ -205,10 +237,7 @@ textarea:focus, input:focus{
 
 #innerSlider{
     position: relative;
-    top: 0px;
-    left: 0px;
     display: inline-block;
-    scrollbar-width: none;
 }
 
 #notifContainer{
@@ -216,5 +245,8 @@ textarea:focus, input:focus{
     overflow :scroll;
 }
 
+#requestEmpty{
+    color: grey;
+}
 
 </style>

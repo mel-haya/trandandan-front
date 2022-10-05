@@ -22,6 +22,7 @@ library.add(fas)
 createApp(App)
 .use(Toast, {
     transition: "Vue-Toastification__fade",
+    position: "top-left",
     maxToasts: 10,
     newestOnTop: true
 })

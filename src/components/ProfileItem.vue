@@ -1,25 +1,14 @@
 <template>
     <div id="profileBg" @click="closeDiv">
         <div id="profileContainer">
-            <div id="profileHeader">Player profile</div>
-            <div id="closeButton" @click="store.setActiveProfile(null)">
-                <fa icon="xmark"/>
-            </div>
-            <div id="profileBody">
+            <div id="profileHeader">
                 <div id="userImg" :style="image"></div>
-                <div id="userInfo">
-                    <p>{{store.activeProfile.name}} <span id="userStatus"></span> </p>
-                    <p>level: {{store.activeProfile.level}}</p>
-                    <div id="addFriendButton">
-                        <fa icon="user-plus"/>
-                    </div>
-                    <div id="blockUserButton">
-                        <fa icon="user-xmark"/>
-                    </div>
-                </div>
-                <div id="userAchiv"></div>
-                <div id="matchHistory"></div>
             </div>
+            <div id="userInfo">
+                <p>{{store.activeProfile.username}} <span id="userStatus"></span> </p>
+                <div id="reqBtn">Send friend request</div>
+                <fa id="settings-icon" icon="ellipsis-vertical"/>
+            </div>        
         </div>
     </div>
 </template>
@@ -27,7 +16,7 @@
 <script setup>
     import { useInterfaceStore } from '@/stores/interface';
     let store = useInterfaceStore();
-    let image = "background-image: url('" + require('@/assets/'+store.activeProfile.img) + "');";
+    let image = "background-image: url('" + store.activeProfile.imageUrl + "');";
 
     function closeDiv(e){
         if(e.target.id === 'profileBg')
@@ -51,74 +40,35 @@
         top: 50%;
         left: 50%;
         transform: translate(-50%,-50%);
-        max-width: 1000px;
-        width: 80%;
-        aspect-ratio: 6/4;
-        background-color: rgba(123, 51, 125, 0.9);
+        width: 700px;
+        height: 600px;
+        background-color: rgb(149, 60, 152);
         transition: all 0.7s ease;
-        border-radius: 20px;
+        border-radius: 10px;
         overflow: hidden;
     }
-    #closeButton{
-        position: absolute;
-        top: 20px;
-        left: 20px;
-        width: 75px;
-        aspect-ratio: 1/1;
-        background: #C70000;
-        border-radius: 10px;
-        cursor: pointer;
-        display: flex;
-        justify-content: center;
-        align-items: center;
 
-    }
-    #profileHeader{
-        position: absolute;
-        top: 20px;
-        width: 100%;
-        height: 75px;
-        line-height: 75px;
-        text-align: center;
-    }
-    #profileBody::-webkit-scrollbar {
-        display: none;
-    }
-    #profileBody{
-        position: absolute;
-        top: 120px;
-        left: 30px;
-        width: calc(100% - 60px);
-        height: calc(100% - 150px);
-        background-color: rgb(149, 60, 152);
-        border-radius: 20px;
-        overflow: scroll;
-        scrollbar-width: none;
-    }
     #userImg{
-        background-color: rgba(255, 255, 255, 0.9);
-        border-radius: 10px;
+        border-radius: 150px;
         position: absolute;
-        top: 20px;
+        bottom: -75px;
         left: 20px;
         width: 150px;
         height: 150px;
         background-size: cover;
         background-repeat: no-repeat;
         background-position: center;
-        border: rgba(149, 60, 152, 0.9) 10px ridge; 
+        border: 10px solid rgb(149, 60, 152) ;
     }
     
     #userInfo{
-        border-radius: 10px;
-        position: absolute;
-        top: 20px;
-        left: 190px;
-        width: 150px;
-        height: 150px;
+        position: relative;
+        height: 100px;
     }
 
     #userInfo p{
+        position: absolute;
+        bottom: 0px;
         padding-left: 10px;
         padding-top: 10px;
         text-align: left;
@@ -128,87 +78,39 @@
 
     #userStatus{
         background-color: #0f0;
-        border-radius: 10px;
-        width: 10px;
-        height: 10px;
+        border-radius: 15px;
+        width: 15px;
+        height: 15px;
         display: inline-block;
     }
-    #userAchiv{
-        background-color: rgba(255, 255, 255, 0.9);
+
+    #profileHeader{
+        position: relative;
+        width: 100%;
+        height: 100px;
+        background-color: rgb(99, 38, 101);
+    }
+
+    #reqBtn{
+        position: absolute;
+        bottom: 0px;
+        right: 50px;
+        padding: 10px 20px;
+        background-color: rgb(0, 137, 23);
         border-radius: 10px;
-        position: absolute;
-        top: 20px;
-        right: 20px;
-        height: 150px;
-        width: calc(100% - 410px);
-        background-color: #4242427c;
-    }
-    #matchHistory{
-        background-color: rgba(255, 255, 255, 0.9);
-        border-radius: 10px; 
-        width: calc(100% - 40px);
-        height: calc(100% - 220px);
-        position: absolute;
-        top: 200px;
-        left: 20px;
-        background-color: #4242427c;
+        color: white;
+        font-size: 16px;
+        cursor: pointer;
     }
 
-    #blockUserButton{
+    #settings-icon{
         position: absolute;
-        bottom: 0px;
-        left: 60px;
-        width: 50px;
-        aspect-ratio: 1/1;
-        color: #f00;
-        border-radius: 50px;
+        bottom: 7px;
+        right: 0px;
+        font-size: 30px;
+        color: white;
         cursor: pointer;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        font-size: large;
-        background: #B4B4B47F;
-    }
-
-    #addFriendButton{
-        position: absolute;
-        bottom: 0px;
-        left: 0px;
         width: 50px;
-        aspect-ratio: 1/1;
-        color: #0f0;
-        border-radius: 50px;
-        cursor: pointer;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        font-size: large;
-        background: #B4B4B47F;
-    }
-    @media (max-height: 720px) {
-        #closeButton {
-            font-size: 50%;
-            top: 10px;
-            left: 10px;
-            width: 50px;
-            aspect-ratio: 1/1;
-        }
-        #profileHeader {
-            font-size: 75%;
-            top: 10px;
-            height: 50px;
-            line-height: 50px;
-        }
-        #profileBody {
-            top: 80px;
-            left: 20px;
-            width: calc(100% - 40px);
-            height: calc(100% - 100px);
-        }
-        #profileContainer {
-            width: 90%;
-            height: 80%;
-        }
     }
 
 </style>

@@ -1,19 +1,45 @@
 <template>
     <div id="notifContainer">
-        <p id="notifBody"><span>{{props.name}}</span> Sent you a friend request</p>
-        <div id="approveBtn"><fa icon="check"/></div>
-        <div id="denyBtn"><fa icon="xmark"/></div>
+        <p id="notifBody"><span>{{props.user.displayName}}</span> Sent you a friend request</p>
+        <div id="approveBtn" @click="acceptReq"><fa icon="check"/></div>
+        <div id="denyBtn" @click="denyReq"><fa icon="xmark"/></div>
     </div>
     
 </template>
 
 <script setup>
-    import {defineProps} from 'vue'
+    import {defineProps, defineEmits} from 'vue'
+    import Cookies from 'js-cookie'
+    import Axios from 'axios'
     let props = defineProps({
-        name: String,
-        img: String,
-        online: Boolean
+        user: Object
     });
+    let emit = defineEmits(['update']);
+
+    function acceptReq(){
+        Axios.post('http://localhost:3000/user/accept-friend', {
+            "target_id": props.user.id
+        },
+        {
+            headers: { "Authorization": `Bearer ${Cookies.get('accessToken')}`,
+            "Content-Type": "application/json" 
+        }}).then(() => {
+            emit('update');
+        })
+    }
+
+    function denyReq(){
+        Axios.post('http://localhost:3000/user/remove-friend', {
+            "target_id": props.user.id
+        },
+        {
+            headers: { "Authorization": `Bearer ${Cookies.get('accessToken')}`,
+            "Content-Type": "application/json" 
+        }}).then(() => {
+            emit('update');
+        })
+    }
+
 
 </script>
 

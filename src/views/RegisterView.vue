@@ -8,7 +8,7 @@
             <div id="imageCont">
                 <img :src="user.imageUrl" alt="bruh">
                 <label for="file"><fa icon="file-arrow-up"/></label>
-                <input type="file"  name="file" id="file" @change="changeImage">
+                <input ref="imageInput" type="file" name="file" id="file" @change="changeImage">
             </div>
             <input type="text" placeholder="change your name" id="usernameInput" name="username" v-model="user.username">
             <button id="faBtn" @click="redirectHome">activate 2FA</button>
@@ -20,10 +20,9 @@
 
 <script setup>
     /*eslint-disable*/
-    import { onMounted, reactive } from 'vue'
+    import { ref,onMounted, reactive } from 'vue'
     import Cookies from 'js-cookie'
     import axios from 'axios'
-    import { useUserStore } from '@/stores/user'
     import { useRouter } from 'vue-router';
 
     const user = reactive({
@@ -33,21 +32,18 @@
     });
     
     let img;
-    const store = useUserStore()
-    const { update } = store
     let router = useRouter()
-
+    let imageInput = ref(null);
     let token = Cookies.get('accessToken')
     onMounted(() => {
         const config = {
             headers: { "Authorization": `Bearer ${token}` }
         };
-        
-        axios.get('http://localhost:3000/user/profile', config)
+        axios.get('http://localhost:3000/user/me', config)
             .then(response => {
                 user.id = response.data.id;
-                user.username = response.data.username;
-                user.imageUrl = response.data.imageUrl;
+                user.username = response.data.displayName;
+                user.imageUrl = response.data.imgPath;
             })
             .catch(error => {
                 console.log(error)
@@ -66,8 +62,9 @@
     function submitForm()
     {
         var bodyFormData = new FormData();
-        bodyFormData.append('file', img);
-        bodyFormData.append('username', user.username);
+        bodyFormData.append('file', imageInput.value.files[0]);
+        bodyFormData.append('displayName', user.username);
+        console.log(bodyFormData)
         axios({
                 method: "patch",
                 url: "http://localhost:3000/user/update",
@@ -78,11 +75,8 @@
                     },
                 })
                 .then(function (response) {
-                    user.imageUrl = response.data.imageUrl;
-                    user.username = response.data.username;
-                    update(user.username, user.imageUrl)
                     router.push('/')
-                    // console.log(response);
+                    console.log(response);
                 })
                 .catch(function (response) {
                     console.log(response);
