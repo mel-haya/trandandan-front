@@ -22,12 +22,6 @@
             <div ref="innerSlider" id="innerSlider">
                 <h2 id="requestEmpty" v-if="!friends.length">No friends yet</h2>
                 <FriendSliderItem v-for="friend in friends" :key="friend.id" :user="friend"/>
-                <!-- <FriendSliderItem name="friend 1" icon="user"/>
-                <FriendSliderItem name="friend 2" icon="user"/>
-                <FriendSliderItem name="friend 3" icon="user"/>
-                <FriendSliderItem name="friend 4" icon="user"/>
-                <FriendSliderItem name="friend 5" icon="user"/>
-                <FriendSliderItem name="friend 6" icon="user"/> -->
             </div>
         </div>
     </div>
@@ -64,6 +58,7 @@
             friendRequests.value = response.data;
         })
         .catch((err) => console.log(err));
+        updateFriends()
     }
 
     function updateFriends()
@@ -81,7 +76,6 @@
     onMounted(() => {
         // fetch friend requests with axios
         updateRequests()
-        updateFriends()
         // fetch friends
     });
 
