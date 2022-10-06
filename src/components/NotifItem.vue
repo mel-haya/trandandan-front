@@ -7,12 +7,16 @@
     
 </template>
 
-<script setup>
+<script lang="ts" setup>
     import {defineProps, defineEmits} from 'vue'
-    import Cookies from 'js-cookie'
+    // import Cookies from 'js-cookie'
     import Axios from 'axios'
+    const Cookies = require('js-cookie')
     let props = defineProps({
-        user: Object
+        user: {
+            type: Object,
+            required: true
+        }
     });
     let emit = defineEmits(['update']);
 

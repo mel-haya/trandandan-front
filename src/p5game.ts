@@ -1,4 +1,4 @@
-export const s = p => {
+export const s = (p:any):any => {
     p.setup = function() {
       p.createCanvas(300, 300);
     };

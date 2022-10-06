@@ -1,4 +1,4 @@
-import { createRouter, createWebHistory } from 'vue-router/dist/vue-router.esm-bundler'
+import { createRouter, createWebHistory } from 'vue-router'
 
 export default () => createRouter({
   history: createWebHistory(),

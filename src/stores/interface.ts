@@ -3,19 +3,19 @@ import { ref } from "vue"
 
 export const useInterfaceStore = defineStore('Interface', () =>
 {
-    let activeChat = ref(null);
-    let activeChatSetting = ref(false);
-    let activeProfile = ref(null);
-    let enableSidebar = ref(true);
-    let enableMembersSettings = ref(null);
+    const activeChat = ref(null);
+    const activeChatSetting = ref(false);
+    const activeProfile = ref(null);
+    const enableSidebar = ref(true);
+    const enableMembersSettings = ref(null);
 
-    function setActiveChat(c){
+    function setActiveChat(c:any){
         activeChat.value = null
         activeChat.value = c
         activeChatSetting.value = false
     }
 
-    function setActiveProfile(p){
+    function setActiveProfile(p:any){
         activeProfile.value = p
     }
 

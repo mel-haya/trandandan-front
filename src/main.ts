@@ -32,6 +32,6 @@ createApp(App)
 .mount('#app')
 
 
-import {s} from '@/p5starfield.js'
+import {s} from '@/p5starfield'
 
-new P5(s, document.getElementById("bg"))
+new P5(s, document.getElementById("bg")!)

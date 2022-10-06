@@ -1,5 +1,11 @@
-export const s = p => {
+
+export const s = (p:any):any => {
     class star{
+
+        x: number;
+        y: number;
+        z: number;
+
         constructor(){
             this.x = p.random(-p.width, p.width);
             this.y = p.random(-p.height, p.height);
@@ -8,9 +14,9 @@ export const s = p => {
         show(){
             p.fill(255);
             p.noStroke();
-            let sx = p.map(this.x / this.z, 0, 1, 0, p.width);
-            let sy = p.map(this.y / this.z, 0, 1, 0, p.height);
-            let r = p.map(this.z, 0, p.width, 7, 0);
+            const sx = p.map(this.x / this.z, 0, 1, 0, p.width);
+            const sy = p.map(this.y / this.z, 0, 1, 0, p.height);
+            const r = p.map(this.z, 0, p.width, 7, 0);
             p.ellipse(sx, sy, r, r);
         }
         update(){
@@ -22,7 +28,7 @@ export const s = p => {
             }
         }
     }
-    let stars = [];
+    const stars:star[] = [];
 
     p.setup = function() {
       p.createCanvas(p.windowWidth, p.windowHeight);
