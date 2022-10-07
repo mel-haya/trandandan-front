@@ -11,7 +11,7 @@
 </template>
 
 <script setup>
-    import { defineProps } from 'vue'
+     
     import { useInterfaceStore } from '@/stores/interface';
     let store = useInterfaceStore();
     const props = defineProps({
