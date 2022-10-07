@@ -7,7 +7,7 @@
         </div>
     </div>
     <div id="context-menu" ref="contextMenu">
-        <div id="context-menu-item" @click="store.setActiveProfile(Profile)">
+        <div id="context-menu-item" @click="store.setActiveProfile(Profile.id)">
             <fa icon="user"/>
             <span> My profile</span>
         </div>
@@ -39,7 +39,6 @@
         username: '',
         imageUrl: '',
     });
-    
 
     function togglemenu(){
         if(contextMenu.value.style.display === 'none')

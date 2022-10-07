@@ -1,12 +1,11 @@
 <script setup>
-/* eslint-disable */
     import { useUserStore } from '@/stores/user'
     import { storeToRefs } from 'pinia'
     import Cookies from 'js-cookie'
     import SidebareItem from '@/components/SidebarItem.vue'
     import axios from 'axios';
     import ProfileItem from '@/components/ProfileItem.vue';
-    import { onMounted, reactive } from 'vue';
+    import { reactive } from 'vue';
     import { useRouter } from 'vue-router';
     import MessageBox from '@/components/MessageBox.vue';
     import {useInterfaceStore} from '@/stores/interface';
@@ -14,24 +13,20 @@
 
     const router = useRouter();
     const store = useUserStore();
-    const {username, imgUrl } = storeToRefs(store)
+    const {user} = storeToRefs(store)
     let token = Cookies.get('accessToken')
     let test = reactive({
         a:"PLAY",
         b:"WATCH",
         c:"LEADERBOARD"
     })
-    if(username.value == ""){
+    if(user.value === null){
         const config = {
             headers: { "Authorization": `Bearer ${token}` }
         };
         axios.get('http://localhost:3000/user/me', config)
             .then(response => {
-                username.value = response.data.username;
-                imgUrl.value = response.data.imageUrl;
-            })
-            .catch(error => {
-                
+                user.value = response.data;
             })
     }
     var audio = new Audio(require('../assets/hover1.mp3'));
@@ -78,7 +73,7 @@
     </div>
     <SidebareItem/>
     <MessageBox v-if="interfaceStore.activeChat"/>
-    <ProfileItem v-if="interfaceStore.activeProfile"/>
+    <ProfileItem v-if="interfaceStore.activeProfile !== 0"/>
 </template>
 
 <style  scoped>

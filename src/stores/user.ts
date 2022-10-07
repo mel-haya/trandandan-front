@@ -7,12 +7,10 @@ import { ref } from "vue"
 
 export const useUserStore = defineStore('user', () =>
 {
-    const username = ref("")
-    const imgUrl = ref("")
-    function update(u:string,p:string){
-        username.value = u
-        imgUrl.value = p
+    const user: any = ref(null);
+    function update(r:any){
+        user.value = r;
     }
 
-    return({username, imgUrl, update})
+    return({user, update})
 })

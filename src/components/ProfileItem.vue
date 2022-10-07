@@ -2,10 +2,10 @@
     <div id="profileBg" @click="closeDiv">
         <div id="profileContainer">
             <div id="profileHeader">
-                <div id="userImg" :style="image"></div>
+                <div id="userImg" :style="`background-image: url('${profile?.profile.imgPath}')`"></div>
             </div>
             <div id="userInfo">
-                <p>{{store.activeProfile.username}} <span id="userStatus"></span> </p>
+                <p>{{profile?.profile.displayName}} <span id="userStatus"></span> </p>
                 <div id="reqBtn">Send friend request</div>
                 <fa id="settings-icon" icon="ellipsis-vertical"/>
             </div>        
@@ -13,15 +13,26 @@
     </div>
 </template>
 
-<script setup>
+<script lang="ts" setup>
     import { useInterfaceStore } from '@/stores/interface';
+    import { ref,onMounted } from 'vue';
+    import { $api } from '@/axios'
     let store = useInterfaceStore();
-    let image = "background-image: url('" + store.activeProfile.imageUrl + "');";
+    let profile:any = ref(null)
 
-    function closeDiv(e){
+    function closeDiv(e:any){
         if(e.target.id === 'profileBg')
-            store.setActiveProfile(null);
+            store.setActiveProfile(0);
     }
+
+    onMounted(() => {
+        // TODO: get profile idd from store
+        $api.get('user/profile/' + 1)
+            .then((response:any) => {
+                profile.value = response.data;
+                console.log(response)
+            })
+    })
 </script>
 
 <style scoped>
