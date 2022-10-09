@@ -2,58 +2,53 @@
     <div id="friendComponent">
         <div id="friendHeader">
             <p>Friends</p>
-            <div id="filter" @click="toggleFilter">
-                <fa icon="search"/>
-            </div>
             <div id="notification" @click="toggleNotification">
                 <fa icon="user-group"/>
             </div>
-        </div>
-        <div id="notifContainer" :style="`max-height:${filterheight}px;`">
-            <div id="filterbar">
-                <input tabindex="-1" id="filterInput" type="text" @keyup.enter="sendFriendReq()" placeholder="Add new friends..."/>
+            <div id="filter" @click="toggleSearch">
+                <fa icon="search"/>
             </div>
         </div>
         <div id="notifContainer" :style="`max-height:${notificationHeight}px`">
             <h2 id="requestEmpty" v-if="!friendRequests.length">No friend requests</h2>
-            <NotifItem v-for="req in friendRequests" :key="req.id" :user="req" @update="updateRequests()"/>
+            <!-- <NotifItem :user="req" @update="updateRequests()"/> -->
+            <div id="notifItem" v-for="req in friendRequests" :key="req?.id">
+                <p id="notifBody"><span>{{req.displayName}}</span> Sent you a friend request</p>
+                <div id="approveBtn" @click="acceptReq(req.id)"><fa icon="check"/></div>
+                <div id="denyBtn" @click="denyReq(req.id)"><fa icon="xmark"/></div>
+            </div>
         </div>
         <div ref="slider" id="slider" @mouseup="sliderLeave" @mouseleave="sliderLeave" @mousedown="sliderClick" @mousemove="sliderMove">
             <div ref="innerSlider" id="innerSlider">
                 <h2 id="requestEmpty" v-if="!friends.length">No friends yet</h2>
-                <FriendSliderItem v-for="friend in friends" :key="friend.id" :user="friend"/>
+                <FriendSliderItem v-for="friend in friends" :key="friend?.id" :user="friend"/>
             </div>
         </div>
     </div>
 </template>
 
-<script setup>
+<script lang="ts" setup>
     import {onMounted, ref} from 'vue'
     import FriendSliderItem from './FriendSliderItem.vue'
-    // import NotifItem from './NotifItem.vue'
-    import { useToast } from "vue-toastification";
-    import axios from 'axios'
-    import Cookies from 'js-cookie'
-    import NotifItem from './NotifItem.vue';
+    import type { Ref } from 'vue'
+    import {useInterfaceStore} from '@/stores/interface';
+    import {$api} from '@/axios'
+    import {useToast} from 'vue-toastification'
 
     const toast = useToast();
-    let filterheight = ref(0);
     let notificationHeight = ref(0);
     let innerSlider = ref("innerSlider");
-    let slider = ref("slider");
+    let slider:Ref<any|null> = ref(null);
     let isDown = false;
-    let startX;
-    let scrollLeft;
-
-    let friendRequests = ref([]);
-    let friends = ref([]);
+    let startX:any;
+    let scrollLeft:any;
+    let interfaceStore = useInterfaceStore();
+    let friendRequests:Ref<any> = ref([]);
+    let friends:Ref<any> = ref([]);
 
     function updateRequests()
-    {
-        const config = {
-            headers: { "Authorization": `Bearer ${Cookies.get('accessToken')}` }
-        };
-        axios.get("http://localhost:3000/user/received-requests", config)
+    {   
+        $api.get("user/received-requests")
         .then(function (response){ 
             friendRequests.value = response.data;
         })
@@ -63,10 +58,7 @@
 
     function updateFriends()
     {
-        const config = {
-            headers: { "Authorization": `Bearer ${Cookies.get('accessToken')}` }
-        };
-        axios.get("http://localhost:3000/user/friends", config)
+        $api.get("user/friends")
         .then(function (response){ 
             friends.value = response.data;
         })
@@ -74,22 +66,20 @@
     }
 
     onMounted(() => {
-        // fetch friend requests with axios
         updateRequests()
-        // fetch friends
     });
 
-    function sliderClick(e){
+    function sliderClick(e:any){
         isDown = true;
-        startX = e.pageX - slider.value.offsetLeft;
-        scrollLeft = slider.value.scrollLeft;
+        startX = e.pageX - slider.value?.offsetLeft;
+        scrollLeft = slider.value?.scrollLeft;
     }
 
     function sliderLeave(){
         isDown = false;
     }
 
-    function sliderMove(e){
+    function sliderMove(e:any){
         if(!isDown) return;
         e.preventDefault();
         const x = e.pageX - slider.value.offsetLeft;
@@ -97,19 +87,30 @@
         slider.value.scrollLeft = scrollLeft - walk;
     }
 
-    function toggleFilter(){
-        filterheight.value = filterheight.value == 0 ? 40 : 0;
-    }
-
     function toggleNotification(){
         notificationHeight.value = notificationHeight.value == 0 ? 200 : 0;
     }
 
-    function sendFriendReq(){
-        toast.success("Friend request sent", {
-        timeout: 4000,
-      });
-      
+    function toggleSearch(){
+        interfaceStore.enableSearch = true;
+    }
+
+    function acceptReq(id:number){
+        $api.post('user/accept-friend', {
+            "target_id": id
+        }).then((r) => {
+            updateRequests()
+            toast.success(r.data)
+        })
+    }
+
+    function denyReq(id:number){
+        $api.post('user/remove-friend', {
+            "target_id": id
+        }).then((r) => {
+            updateRequests()
+            toast.success(r.data)
+        })
     }
 
 </script>
@@ -130,6 +131,7 @@
 #notifContainer{
     transition: all 0.5s ease;
     overflow: scroll;
+    scrollbar-width: none; /* Firefox */
 }
 #notifContainer::-webkit-scrollbar{
     display: none;
@@ -242,5 +244,66 @@ textarea:focus, input:focus{
 #requestEmpty{
     color: grey;
 }
+
+#notifItem{
+        position: relative;
+        width: 100%;
+        height: 50px;
+        background-color: white;
+        border-bottom: 1px solid #e6e6e6;
+        display: flex;
+        align-items: center;
+        padding: 0px 10px;
+    }
+
+    #notifBody{
+        position: relative;
+        left: 0;
+        font-size: 15px;
+        font-weight: 600;
+        color: black;
+        text-align: left;
+        margin: 0px;
+        flex-grow: 1;
+    }
+
+    #notifBody span{
+        color: #1e90ff;
+    }
+
+    #approveBtn{
+        position: relative;
+        width: 30px;
+        height: 30px;
+        background-color: #00b300;
+        border-radius: 30px;
+        cursor: pointer;
+        font-size: 20px;
+        line-height: 30px;
+        display: inline-block;
+        text-align: center;
+    }
+
+    #denyBtn{
+        position: relative;
+        width: 30px;
+        height: 30px;
+        background-color: #ff0000;
+        border-radius: 30px;
+        cursor: pointer;
+        font-size: 20px;
+        line-height: 30px;
+        right: 0px;
+        display: inline-block;
+        margin-left: 10px;
+    }
+
+    #denyBtn:hover{
+        background-color: #ff4d4d;
+    }
+
+    #approveBtn:hover{
+        background-color: #00e600;
+    }
 
 </style>

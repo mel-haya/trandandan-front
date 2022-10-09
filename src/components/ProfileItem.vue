@@ -2,30 +2,35 @@
     <div id="profileBg" @click="closeDiv">
         <div id="profileContainer" @click = "enableMenu = false">
             <div id="profileHeader">
-                <div id="userImg" :style="`background-image: url('${profile?.profile.imgPath}')`"><div id="userStatus"></div></div>
+                <div id="userImg" alt="bruh" v-if="profile?.profile.imgPath" :style="`background-image: url('${profile?.profile.imgPath}')`"><div id="userStatus"></div></div>
             </div>
             <div id="profileMenu" v-if="enableMenu">
-                <p class="text-red">Block</p>
-                <p>Invite to a game</p>
+                <p class="text-red" @click="blockUser">Block</p>
+                <p class="text-red" v-if="friendshipStatus === 'friend'" @click="removeFriend">Unfriend</p>
+                <p v-if="friendshipStatus === 'friend'">Invite to a game</p>
             </div>
             <div id="userInfo">
                 <p>{{profile?.profile.displayName}}</p>
-                <div id="reqBtn">Send friend request</div>
-                <div id="settings-icon" @click.stop="enableMenu = true">
-                    <fa icon="ellipsis-vertical" />
+                <div id="options">
+                    <div id="reqBtn" v-if="friendshipStatus === 'none'" @click="sendRequest">Send friend request</div>
+                    <div id="reqBtn" v-if="friendshipStatus === 'pending'">Friend request sent</div>
+                    <div id="reqBtn" v-if="friendshipStatus === 'friend'">Send a message</div>
+                    <div id="reqBtn" v-if="friendshipStatus === 'blocked'" @click="unblockUser">Unblock this user</div>
+                    <div id="reqBtn" v-if="friendshipStatus === 'pending2'" @click="acceptRequest">Accept friend request</div>
+                    <div id="reqBtn" v-if="friendshipStatus === 'self'" @click="router.push('/settings')">Account settings</div>
+                    <div id="settings-icon" v-if="friendshipStatus !== 'blocked' && friendshipStatus !== 'self'" @click.stop="enableMenu = true">
+                        <fa icon="ellipsis-vertical" />
+                    </div>
                 </div>
-                
             </div>
             <div id="userBio">
                 <div id="bioHeader">
                     <div :class="`bioBtn ${(activePointer === 0) ? 'activeBio' : ''}`" id="statsBtn" @click="loadStats" >Stats</div>
                     <div :class="`bioBtn ${(activePointer === 100) ? 'activeBio' : ''}`" id="historyBtn" @click="loadHistory" >History</div>
-                    <!-- <div :class="`bioBtn ${(activePointer === 200) ? 'activeBio' : ''}`" id="achivBtn" @click="loadAchivements" >Achivements</div> -->
                     <div id="activePointer" :style="`transform: translateX(${activePointer}%)`"></div>
                 </div>
                 <div id="bioBody">
                     <div id="stats">
-                        username: mel-haya <br/>
                         level: 10 <br/>
                         Games won: 8 / 50 <br/>
                         win streak: 3 <br/>
@@ -42,10 +47,89 @@
     import { useInterfaceStore } from '@/stores/interface';
     import { ref,onMounted } from 'vue';
     import { $api } from '@/axios'
+    import { useUserStore } from '@/stores/user';
+    import { useRouter } from 'vue-router';
+    import { useToast } from 'vue-toastification';
+
     let store = useInterfaceStore();
+    let user = useUserStore();
     let profile:any = ref(null)
     let activePointer = ref(0);
     let enableMenu = ref(false);
+    let friendshipStatus = ref("")
+    let router = useRouter();
+    let toast = useToast();
+    
+    function setStatus(){
+        if(profile.value?.profile.id === user.user?.id){
+            friendshipStatus.value = "self"
+        }
+        else if(profile.value?.relationship_state == "friends"){
+            friendshipStatus.value = "friend"
+        }
+        else if(profile.value?.relationship_state == "pending" && profile.value?.imSender === true){
+            friendshipStatus.value = "pending"
+        }
+        else if(profile.value?.relationship_state == "pending" && profile.value?.imSender === false){
+            friendshipStatus.value = "pending2"
+        }
+        else if(profile.value?.relationship_state == "blocked" && profile.value?.imSender === true){
+            friendshipStatus.value = "blocked"
+        }
+        else if(profile.value?.relationship_state == "blocked" && profile.value?.imSender === false){
+            friendshipStatus.value = "blocked2"
+        }
+        else{
+            friendshipStatus.value = "none"
+        }
+    }
+
+    function sendRequest(){
+        $api.post('/user/add-friend', {'target_id': profile.value?.profile.id}).then( (r) => {
+            updateUser()
+            toast.success(r.data)
+        }).catch(() => {
+            console.log("error")
+        })
+    }
+
+    function removeFriend(){
+        $api.post('/user/remove-friend', {'target_id': profile.value?.profile.id}).then( (r) => {
+            updateUser()
+            toast.success(r.data)
+        }).catch(() => {
+            console.log("error")
+        })
+    }
+
+    function acceptRequest(){
+        $api.post('/user/accept-friend', {'target_id': profile.value?.profile.id}).then( (r) => {
+            updateUser()
+            toast.success(r.data)
+        }).catch(() => {
+            console.log("error")
+        })
+    }
+
+    function blockUser(){
+        $api.post('/user/block-user', {'target_id': profile.value?.profile.id}).then((r) => {
+            updateUser()
+            toast.success(r.data)
+        }).catch(() => {
+            console.log("error")
+        })
+    }
+
+    function unblockUser(){
+        $api.post('/user/unblock-user', {'target_id': profile.value?.profile.id}).then((r) => {
+            updateUser()
+            toast.success(r.data)
+        }).catch(() => {
+            console.log("error")
+        })
+    }
+
+
 
     function loadStats(){
         // TODO: get stats from api
@@ -57,23 +141,23 @@
         activePointer.value = 100;
     }
 
-    // function loadAchivements(){
-    //     // TODO: get archivements from api
-    //     activePointer.value = 200;
-    // }
 
     function closeDiv(e:any){
         if(e.target.id === 'profileBg')
             store.setActiveProfile(0);
     }
 
-    onMounted(() => {
+    function updateUser(){
         $api.get('user/profile/' + store.activeProfile)
             .then((response:any) => {
                 profile.value = response.data;
-                console.log(response)
+                setStatus()
+                console.log(friendshipStatus.value)
             })
-    })
+    }
+
+    onMounted(updateUser)
+
 </script>
 
 <style scoped>
@@ -150,25 +234,30 @@
     }
 
     #reqBtn{
-        position: absolute;
-        bottom: 0px;
-        right: 50px;
+        position: relative;
         padding: 10px 20px;
         background-color: rgb(0, 137, 23);
         border-radius: 10px;
-        color: white;
         font-size: 16px;
         cursor: pointer;
+        display: inline-block;
     }
 
     #settings-icon{
-        position: absolute;
-        bottom: 0px;
-        right: 0px;
+        position: relative;
         font-size: 30px;
         color: white;
         cursor: pointer;
-        width: 50px;
+        padding-left: 20px;
+        display: inline-block;
+    }
+
+    #options{
+        position: absolute;
+        bottom: 0px;
+        right: 20px;
+        display: flex;
+        flex-direction: row;
     }
 
     #bioHeader{
@@ -225,6 +314,7 @@
         box-shadow: 0px 0px 11px 2px rgba(0,0,0,0.62);
         z-index: 2;
         font-size: 20px;
+        overflow: hidden; 
     }
 
     #profileMenu p{
@@ -233,10 +323,12 @@
         border-bottom: 1px solid rgba(255, 255, 255, 0.2);
         height: 50px;
         line-height: 40px;
+        
     }
 
     #profileMenu p:hover{
         background-color: rgb(99, 38, 101);
+
     }
 
     #profileMenu p:last-child{

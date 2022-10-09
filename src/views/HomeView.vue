@@ -1,4 +1,4 @@
-<script setup>
+<script lang="ts" setup>
     import { useUserStore } from '@/stores/user'
     import { storeToRefs } from 'pinia'
     import Cookies from 'js-cookie'
@@ -9,6 +9,7 @@
     import { useRouter } from 'vue-router';
     import MessageBox from '@/components/MessageBox.vue';
     import {useInterfaceStore} from '@/stores/interface';
+    import FriendSearchItem from '@/components/FriendSearchItem.vue';
     let interfaceStore = useInterfaceStore();
 
     const router = useRouter();
@@ -74,6 +75,7 @@
     <SidebareItem/>
     <MessageBox v-if="interfaceStore.activeChat"/>
     <ProfileItem v-if="interfaceStore.activeProfile !== 0"/>
+    <FriendSearchItem v-if="interfaceStore.enableSearch"/>
 </template>
 
 <style  scoped>

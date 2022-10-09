@@ -9,6 +9,7 @@ export const useInterfaceStore = defineStore('Interface', () =>
     const activeProfile: Ref<number> = ref(0);
     const enableSidebar = ref(true);
     const enableMembersSettings = ref(null);
+    const enableSearch = ref(false);
 
     function setActiveChat(c:any){
         activeChat.value = null
@@ -24,6 +25,6 @@ export const useInterfaceStore = defineStore('Interface', () =>
         enableSidebar.value = !enableSidebar.value
     }
 
-    return({activeChat,activeProfile,enableSidebar,activeChatSetting,enableMembersSettings,
+    return({activeChat,activeProfile,enableSidebar,activeChatSetting,enableMembersSettings,enableSearch,
             setActiveChat,setActiveProfile,toggleSidebar});
 })

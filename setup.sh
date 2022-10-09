@@ -16,13 +16,14 @@ then
 	echo "export PATH=$HOME/goinfre/.brew/bin:$PATH" >> $HOME/.zshrc
 fi
 
-# INSTALL DOCKER
+
+INSTALL DOCKER
 if [[ ! -f "$DOCKER_HOME" || -d "$DOCKER_GOINFRE" ]];
 then
 	echo "----Installing Docker----"
 	rm -rf $DOCKER_HOME && mkdir $DOCKER_GOINFRE
 	ln -s $DOCKER_GOINFRE $DOCKER_HOME
-	brew install docker docker-machine
+	brew install docker-machine
 	docker-machine create --driver virtualbox default
 fi
 
