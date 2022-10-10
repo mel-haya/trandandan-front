@@ -50,12 +50,14 @@
 <script lang="ts" setup>
 import {ref} from 'vue'
 import {useInterfaceStore} from '@/stores/interface'
+import {useToast} from 'vue-toastification'
 
 const name = ref('')
 const privacy = ref('')
 const password = ref('')
 const passwordVisible = ref('text')
 const store = useInterfaceStore();
+const toast = useToast();
 
 function enablePass(){
     if(passwordVisible.value == 'password'){
@@ -68,9 +70,17 @@ function enablePass(){
 
 function createGroup()
 {
-    console.log(name.value)
-    console.log(privacy.value)
-    console.log(password.value)
+    if(name.value == ''){
+        toast.error('Name field is required')
+        return
+    }
+    else if(privacy.value == ''){
+        toast.error('Privacy field is required')
+        return
+    }
+    else{
+        toast.success('Group created successfully')
+    }
 }
 </script>
 

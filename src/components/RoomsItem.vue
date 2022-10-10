@@ -46,7 +46,7 @@
 
     #GroupItem{
         position: relative;
-        width: 100%;
+        width: calc(100% - 10px);
         height: 120px;
         background-color: rgba(122, 51, 125, 0.995);
         color: white;

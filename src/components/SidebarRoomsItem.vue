@@ -79,6 +79,7 @@
         }
         
         #rooms::-webkit-scrollbar {
+            left:100px;
             width: 10px;
             padding: 10px;
         }
@@ -94,7 +95,7 @@
 
         #createRoom{
             position: relative;
-            width: 100%;
+            width: calc(100% - 10px);
             height: 70px;
             display: flex;
             align-items: center;
