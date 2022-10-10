@@ -18,12 +18,14 @@
     
 </template>
 
-<script setup>
+<script lang="ts" setup>
     /*eslint-disable*/
     import { ref,onMounted, reactive } from 'vue'
-    import Cookies from 'js-cookie'
+    // import Cookies from 'js-cookie'
     import axios from 'axios'
     import { useRouter } from 'vue-router';
+    import {$api} from '@/axios'
+    import type { Ref } from 'vue'
 
     const user = reactive({
         id: 0,
@@ -31,15 +33,11 @@
         imageUrl: '',
     });
     
-    let img;
+    let img:any;
     let router = useRouter()
-    let imageInput = ref(null);
-    let token = Cookies.get('accessToken')
+    let imageInput:Ref<any> = ref(null);
     onMounted(() => {
-        const config = {
-            headers: { "Authorization": `Bearer ${token}` }
-        };
-        axios.get('http://localhost:3000/user/me', config)
+        $api.get('user/me')
             .then(response => {
                 user.id = response.data.id;
                 user.username = response.data.displayName;
@@ -50,7 +48,7 @@
             })
     })
 
-    function changeImage(e)
+    function changeImage(e:any)
     {
       user.imageUrl = URL.createObjectURL(e.target.files[0]);
     }
@@ -65,18 +63,16 @@
         bodyFormData.append('file', imageInput.value.files[0]);
         bodyFormData.append('displayName', user.username);
         console.log(bodyFormData)
-        axios({
+        $api({
                 method: "patch",
-                url: "http://localhost:3000/user/update",
+                url: "user/update",
                 data: bodyFormData,
                 headers: {
                      "Content-Type": "multipart/form-data",
-                     "Authorization": `Bearer ${token}`
                     },
                 })
-                .then(function (response) {
+                .then(function () {
                     router.push('/')
-                    console.log(response);
                 })
                 .catch(function (response) {
                     console.log(response);
@@ -86,12 +82,11 @@
 
 <style scoped>
     h3{
-        /* text-decoration: solid underline; */
         background: rgba(124, 26, 137, 0.787);
         border-radius: 0.5em 0.5em 0 0;
         padding: 0.25em 0;
-        /* text-align: left; */
     }
+    
     #file {
         display: none;
     }
@@ -107,7 +102,6 @@
     }
 
     #registerForm{     
-        
         background: rgba(158, 78, 169, 0.703);
         display: flex;
         flex-direction: column;
@@ -116,7 +110,6 @@
         border-radius: 0 0 0.5em 0.5em;
         padding: 1em;
     }
-    
 
     button{
         background-color: #4CAF50;
@@ -136,7 +129,6 @@
         padding: 12px 20px;
         margin: 8px 0;
         display: inline-block;
-        /* border: 1px solid #ccc; */
         border-radius: 4px;
         box-sizing: border-box;
         font-size: 0.5em;

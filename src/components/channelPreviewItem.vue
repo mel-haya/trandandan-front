@@ -10,13 +10,14 @@
     </div>
 </template>
 
-<script setup>
+<script lang="ts" setup>
      
     import { useInterfaceStore } from '@/stores/interface';
     let store = useInterfaceStore();
     const props = defineProps({
         message:
         {
+            type: Object,
             required: true
         }
     })

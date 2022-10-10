@@ -25,11 +25,10 @@
 </template>
 
 <script setup>
-    import { onMounted, onUnmounted, ref } from 'vue';
+    import { onMounted, ref } from 'vue';
     import { useInterfaceStore } from '../stores/interface';
     import { useRouter } from 'vue-router';
-    import axios from 'axios';
-    import Cookies from 'js-cookie';
+    import {$api} from '@/axios';
 
     let router = useRouter();
     let store = useInterfaceStore();
@@ -53,20 +52,12 @@
     });
     
     onMounted(async () => {
-        console.log('mounted');
-        let res = await axios.get('http://localhost:3000/user/me', {
-            headers: {
-                Authorization: `Bearer ${Cookies.get('accessToken')}`
-            }
-        })
+        let res = await $api.get('http://localhost:3000/user/me')
         Profile.value.id = res.data.id;
         Profile.value.username = res.data.displayName;
         Profile.value.imageUrl = res.data.imgPath;
     })
 
-    onUnmounted(() => {
-        console.log('unmounted');
-    })
 
 
 </script>

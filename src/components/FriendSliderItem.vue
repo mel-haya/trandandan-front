@@ -1,12 +1,12 @@
 <template>
     <div class="sliderItem">
-        <div class="sliderImg" :style="`background-image: url('${props.user.imgPath}')`">
+        <div class="sliderImg" :style="`background-image: url('${props.user?.imgPath}')`">
         </div>
-        <p>{{props.user.displayName}}</p>
+        <p>{{props.user?.displayName}}</p>
     </div>
 </template>
 
-<script setup>
+<script lang="ts" setup>
     import {defineProps} from 'vue'
     let props = defineProps({
         user: Object,

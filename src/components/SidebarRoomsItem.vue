@@ -3,35 +3,57 @@
         <p id="roomsHeader"><fa :icon="icon" /> Groups</p>
     </div>
     <div id="rooms" :style="`max-height:${scale}px`">
-            <RoomsItem :room="room"/>
-            <RoomsItem :room="room2"/>
-            <RoomsItem :room="room"/>
-            <RoomsItem :room="room"/>
-            <RoomsItem :room="room"/>
-            <RoomsItem :room="room"/>
-            <RoomsItem :room="room"/>
-            <RoomsItem :room="room"/>
+        <div id="createRoom" @click="store.enableChannelCreate = true">
+            <div id="createIcon">
+                <fa icon="plus"/>
+            </div>
+            <p>Create a new group</p>
+        </div>
+        <RoomsItem v-for="r in publicRooms" :key="r.id" :room="r"/>
+        <!-- <RoomsItem :room="room2"/>
+        <RoomsItem :room="room"/>
+        <RoomsItem :room="room"/>
+        <RoomsItem :room="room"/>
+        <RoomsItem :room="room"/>
+        <RoomsItem :room="room"/>
+        <RoomsItem :room="room"/> -->
     </div>
 </template>
 
-<script setup>
+<script lang="ts" setup>
     import RoomsItem from './RoomsItem.vue';
-    import {ref} from 'vue';
-    let room = {name: "1337", members: 5, img:"loading.jpg"};
-    let room2 = {name: "Eva fans", members: 22, img:"991.jpg"};
-    let enable = ref(true);
+    import {onMounted, ref} from 'vue';
+    import type {Ref} from 'vue';
+    import {$api} from '@/axios';
+    import { useInterfaceStore } from '@/stores/interface';
+    // let room = {name: "1337", members: 5, img:"loading.jpg"};
+    // let room2 = {name: "Eva fans", members: 22, img:"991.jpg"};
+    const store = useInterfaceStore();
+    const enable = ref(true);
+    const publicRooms:Ref<any> = ref([])
+
     let icon = ref("caret-right");
-    let scale = ref(400);
+    let scale = ref(320);
     function enableDiv(){
         enable.value = !enable.value;
         if(enable.value){
-            scale.value = 400;
+            scale.value = 320;
             icon.value = "caret-down";
-        }else{
+        }
+        else{
             scale.value = 0;
             icon.value = "caret-right";
         }
     }
+
+    onMounted(() => {
+        $api.get('/channel/all-public').then((res) => {
+            console.log(res.data);
+            publicRooms.value = res.data;
+        })
+        // publicRooms.value = store.publicRooms;
+
+    })
 </script>
 
 <style scoped>
@@ -69,4 +91,36 @@
             background: rgba(79, 17, 81, 0.995);
             border-radius: 10px;
         }
+
+        #createRoom{
+            position: relative;
+            width: 100%;
+            height: 70px;
+            display: flex;
+            align-items: center;
+            padding: 0 10px;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+            font-size: 20px;
+            margin-left: 10px;
+            border-radius: 30px;
+        }
+
+        #createIcon{
+            position: relative;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: rgba(255, 255, 255, 0.4);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-right: 10px;
+        }
+
+        #createRoom:hover{
+            background-color: rgba(255, 255, 255, 0.4);
+        }
+
+
 </style>

@@ -1,13 +1,14 @@
 <template>
     <div id="GroupItem">
-        <div id="GroupChild" :style="`background-image: url('${require('@/assets/'+Props.room.img)}');`"></div>
+        <div id="GroupChild" style="background-image: url('{{Props.room.imgPath}}')"></div>
         <p id="GroupName">{{Props.room.name}}</p>
-        <p id="GroupCount">{{Props.room.members}} members</p>
+        <!-- <p id="GroupCount">{{Props.room.members}} members</p> -->
+        <p id="GroupCount">26 members</p>
         <div id="JoinBtn">Join</div>
     </div>
 </template>
 
-<script setup>
+<script lang="ts" setup>
     import { defineProps } from 'vue'
     let Props = defineProps({
         room: {
@@ -15,6 +16,7 @@
             required: true
         }
     });
+
 </script>
 
 <style scoped>
@@ -31,7 +33,7 @@
         position: absolute;
         top: 0;
         left: 0;
-        background-image: url('@/assets/loading.jpg');
+        background: grey;
         background-size: cover;
         background-position: center;
         background-repeat: no-repeat;

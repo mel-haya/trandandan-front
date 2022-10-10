@@ -1,32 +1,28 @@
 <script lang="ts" setup>
     import { useUserStore } from '@/stores/user'
     import { storeToRefs } from 'pinia'
-    import Cookies from 'js-cookie'
     import SidebareItem from '@/components/SidebarItem.vue'
-    import axios from 'axios';
+    import {$api} from '@/axios';
     import ProfileItem from '@/components/ProfileItem.vue';
     import { reactive } from 'vue';
     import { useRouter } from 'vue-router';
     import MessageBox from '@/components/MessageBox.vue';
     import {useInterfaceStore} from '@/stores/interface';
     import FriendSearchItem from '@/components/FriendSearchItem.vue';
-    let interfaceStore = useInterfaceStore();
+import ChannelCreateBox from '@/components/ChannelCreateBox.vue';
 
+    let interfaceStore = useInterfaceStore();
     const router = useRouter();
     const store = useUserStore();
     const {user} = storeToRefs(store)
-    let token = Cookies.get('accessToken')
     let test = reactive({
         a:"PLAY",
         b:"WATCH",
         c:"LEADERBOARD"
     })
     if(user.value === null){
-        const config = {
-            headers: { "Authorization": `Bearer ${token}` }
-        };
-        axios.get('http://localhost:3000/user/me', config)
-            .then(response => {
+        $api.get('user/me')
+            .then((response:any) => {
                 user.value = response.data;
             })
     }
@@ -76,6 +72,7 @@
     <MessageBox v-if="interfaceStore.activeChat"/>
     <ProfileItem v-if="interfaceStore.activeProfile !== 0"/>
     <FriendSearchItem v-if="interfaceStore.enableSearch"/>
+    <ChannelCreateBox v-if="interfaceStore.enableChannelCreate"/>
 </template>
 
 <style  scoped>
@@ -89,7 +86,6 @@
         background-repeat: no-repeat;
         background-size: contain;
         background-position: center;
-        /* background-color: #FF0FBB; */
     }
     #profile
     {
@@ -125,7 +121,6 @@
         align-items: center;
 
     }
-
     .menuBtn{
         position: relative;
         max-width: 350px;
@@ -169,7 +164,4 @@
         width: calc(100% + 2px);
         box-shadow: #7a337d 0px 0px 20px 10px; 
     }
-
-
-
 </style>
