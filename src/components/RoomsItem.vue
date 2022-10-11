@@ -1,6 +1,6 @@
 <template>
     <div id="GroupItem">
-        <div id="GroupChild" style="background-image: url('{{Props.room.imgPath}}')"></div>
+        <div id="GroupChild" v-if="Props.room.imgPath" :style="`background-image: url('${Props.room.imgPath}')`"></div>
         <p id="GroupName">{{Props.room.name}}</p>
         <!-- <p id="GroupCount">{{Props.room.members}} members</p> -->
         <p id="GroupCount">26 members</p>
@@ -33,7 +33,7 @@
         position: absolute;
         top: 0;
         left: 0;
-        background: grey;
+        background: rgba(122, 51, 125, 0.995);
         background-size: cover;
         background-position: center;
         background-repeat: no-repeat;
@@ -87,10 +87,10 @@
         position: absolute;
         background-color:rgba(17, 151, 21, 0.995);
         color: white;
-        font-size: 15px;
+        font-size: 20px;
         font-weight: 600;
         text-align: right;
-        padding: 5px 10px;
+        padding: 5px 20px;
         margin: 10px;
         border-radius: 10px;
         right: 5px;
@@ -100,7 +100,7 @@
     #JoinBtn:hover{
         cursor: pointer;
         background-color: rgba(21, 204, 27, 0.995);
-        /* box-shadow: 0px 0px 5px 2px rgba(21, 204, 27, 0.995); */
+        box-shadow: 0px 0px 5px 2px rgba(21, 204, 27, 0.995);
         text-shadow: 2px 2px 2px #0000007F;
     }
 

@@ -17,7 +17,7 @@
 		</div>
 		<div id="chatOptions" v-if="enableOptions">
 			<div id="directOptions" v-if="store.activeChat.type === 1">
-				<p @click="store.setActiveProfile(test)">Profile</p>
+				<p @click="store.setActiveProfile(1)">Profile</p>
 				<hr/>
 				<p>Invite to a game</p>
 				<hr/>	
@@ -52,7 +52,7 @@
 		</div>
 	</div>
 	<div class="messageContainer" v-else>
-		<div id="closeSettings" @click="store.activeChatSetting = false"> <fa icon="chevron-left"/> </div>
+		<div id="closeSettings" @click="store.activeChatSetting = null"> <fa icon="chevron-left"/> </div>
 		<MessageboxSettingsVue/>
 	</div>
 	<membersListVue v-if="enableMembers"/>
@@ -64,18 +64,22 @@
 	import MessageBoxItem from '@/components/messageBoxItem.vue'
 	import MessageboxSettingsVue from './MessageboxSettings.vue';
 	import {onMounted, ref} from 'vue'
-	// let chatSettings = ref(false)
+	import {$api} from '@/axios';
+	// import { io } from "socket.io-client";
 	let chatMessages = ref(null);
 	let store = useInterfaceStore();
 	let active = ref(true);
 	let enableOptions = ref(false);
 	let enableMembers = ref(false);
-	let test = {
-		name: 'Mouad',
-		level: 5,
-		status: 'online',
-		img: 'bruh.jpg'
-	}
+	let user = ref(null);
+
+// 	let socket = io("http://localhost:3000", {extraHeaders: {
+//     "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZGlzcGxheU5hbWUiOiJvb09tYXJpYW5hT29vIiwidHdvZmFTdGF0ZSI6Im5vdF9hY3RpdmUiLCJpYXQiOjE2NjU0NjYxMzMsImV4cCI6MTY2NTU1MjUzM30.n2z3bchatJ95wLTevtgMSav4TcSl42QtiK3PiEEpLZs"}
+//   });
+  
+  
+
+
 	function getClass(){
 		let ret = ''
 		if(active.value === true)
@@ -112,6 +116,14 @@
 		window.addEventListener('resize', () => {
 			enableMembers.value = false;
 		});
+		$api.get('/user/me').then((res) => {
+			user.value = res.data;
+			console.log(user.value);
+			// socket.emit('send_message', { userId: user.value.id, channelId: 9 , content: 'hello world'});
+		});
+
+		
+
 	});
 
 	window.addEventListener('click', function () {
@@ -120,6 +132,8 @@
 		enableMembers.value = false;
 		store.enableMembersSettings = false;
 	});
+
+
 
 	
 </script>

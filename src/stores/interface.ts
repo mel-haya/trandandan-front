@@ -4,7 +4,7 @@ import type { Ref } from 'vue'
 
 export const useInterfaceStore = defineStore('Interface', () =>
 {
-    const activeChat = ref(null);
+    const activeChat:Ref<any|null> = ref(null);
     const activeChatSetting = ref(false);
     const activeProfile: Ref<number> = ref(0);
     const enableSidebar = ref(true);

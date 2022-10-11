@@ -21,8 +21,8 @@
                         <td>
                             <span>:</span><select id="privateInput" v-model="privacy" required>
                                 <option value="" disabled selected hidden>Select your option</option>
-                                <option value="Public">Public</option>
-                                <option value="Private">Private</option>
+                                <option value="public">Public</option>
+                                <option value="private">Private</option>
                             </select>
                         </td>
                     </tr>
@@ -51,6 +51,7 @@
 import {ref} from 'vue'
 import {useInterfaceStore} from '@/stores/interface'
 import {useToast} from 'vue-toastification'
+import {$api} from '@/axios'
 
 const name = ref('')
 const privacy = ref('')
@@ -79,7 +80,22 @@ function createGroup()
         return
     }
     else{
+        let data:any = {
+            name: name.value,
+            type: privacy.value,
+        }
+        if(privacy.value == 'public' && password.value != ''){
+            privacy.value = 'protected'
+            return
+        }
+        if(password.value != ''){
+            data['password'] = password.value
+        }
+
+        $api.post('channel/create',data)
+        console.log(data)
         toast.success('Group created successfully')
+        store.enableChannelCreate = false
     }
 }
 </script>

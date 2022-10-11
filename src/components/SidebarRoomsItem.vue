@@ -47,8 +47,7 @@
     }
 
     onMounted(() => {
-        $api.get('/channel/all-public').then((res) => {
-            console.log(res.data);
+        $api.get('/channel').then((res) => {
             publicRooms.value = res.data;
         })
         // publicRooms.value = store.publicRooms;

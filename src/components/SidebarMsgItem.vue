@@ -3,34 +3,18 @@
         <p id="msgHeader"> <fa :icon="icon"/> Messages</p>
     </div>
     <div id="messages" :style="`max-height:${scale}px`">
-            <channelPreviewItem :message="message"/>
-            <channelPreviewItem :message="message2"/>
-            <channelPreviewItem :message="message"/>
-            <channelPreviewItem :message="message"/>
-            <channelPreviewItem :message="message"/>
-            <channelPreviewItem :message="message"/>
-            <channelPreviewItem :message="message"/>
-        
+            <channelPreviewItem v-for="c in channels" :key="c.id" :channel="c"/> 
     </div>
     
 </template>
 
-<script setup>
+<script lang="ts" setup>
     import channelPreviewItem from './channelPreviewItem.vue';
-    import {ref} from 'vue';
-    let message = {
-        id: 1,
-        body: "Chms",
-        channel: {id:500, name:"Mouad", type: 1},
-        online: true
-        
-    };
-    let message2 = {
-        id: 2,
-        body: "Hop on valorant",
-        channel: {id:501, name:"ADHD and retarded group", type: 2}, 
-        online: true
-    };
+    import {onMounted, ref} from 'vue';
+    import {$api} from '@/axios'
+    import type {Ref} from 'vue';
+
+    let channels:Ref<any> = ref([]);
     let enable = ref(true);
     let icon = ref("caret-right");
     let scale = ref(240);
@@ -44,6 +28,12 @@
             icon.value = "caret-right";
         }
     }
+
+    onMounted(() => {
+        $api.get('/channel/joined').then((res) => {
+            channels.value = res.data;
+        })
+    }) 
 </script>
 
 <style scoped>
