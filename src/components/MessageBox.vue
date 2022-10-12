@@ -1,32 +1,32 @@
 <template>
-	<div class="messageContainer" :class="getClass()" v-if="store.activeChatSetting === false">
+	<div class="messageContainer" :class="getClass()" v-if="chatStore.activeChatSetting === false">
 		<div id="chatHeader" @click="maximize">
 			<div id="chatUser" @click.stop="toggleOptions">
 				<div id="userImg">
 				</div>
 				<div id="chatName" >
-					{{store.activeChat.name}}
+					{{chatStore.activeChat.name}}
 				</div>
 			</div>
 			<div id="chatMinimize" @click.stop="minimize()" v-if="active === true">
 				<fa icon="minus"/>
 			</div>
-			<div id="leaveChat" @click="store.activeChat = null">
+			<div id="leaveChat" @click="chatStore.activeChat = 0">
 				<fa icon="xmark"/>
 			</div>
 		</div>
 		<div id="chatOptions" v-if="enableOptions">
-			<div id="directOptions" v-if="store.activeChat.type === 1">
-				<p @click="store.setActiveProfile(1)">Profile</p>
+			<div id="directOptions" v-if="chatStore.activeChat.type === 'direct'">
+				<p @click="interfaceStore.setActiveProfile(1)">Profile</p>
 				<hr/>
 				<p>Invite to a game</p>
 				<hr/>	
-				<p>Block {{store.activeChat.name}}</p>
+				<p>Block {{chatStore.activeChat.name}}</p>
 			</div>
 			<div id="groupOptions" v-else>
 				<p>Add a new user</p>
 				<hr/>
-				<p @click="store.activeChatSetting = true">Group settings</p>
+				<p @click="chatStore.activeChatSetting = true">Group settings</p>
 				<hr/>
 				<p @click.stop="enableMembers = true">Members</p>
 				<hr/>
@@ -35,50 +35,38 @@
 		</div>
 		<div id="chatBody">
 			<div id="chatMessages" ref="chatMessages">
-				<MessageBoxItem body="Yo" by="me"/>
-				<MessageBoxItem body="Yo" by="them"/>
-				<MessageBoxItem body="Kayn chi satat" by="them"/>
-				<MessageBoxItem body="La walou gha ghyrha" by="me"/>
-				<MessageBoxItem body="Iwa ki ghadi m3a chi 9raya" by="them"/>
-				<MessageBoxItem body="bdit f chat ghad lina douk channels rah khas nsaliw" by="me"/>
-				<MessageBoxItem body="Ha lghdar bda" by="them"/>
-				<MessageBoxItem body="Chms" by="them"/>
-				<MessageBoxItem body="Chms" by="them"/>
-				<MessageBoxItem body="Chms" by="them"/>
+				<MessageBoxItem  body="Yo" by="me"/>
 			</div>
 			
-			<input type="text" placeholder="Message..." id="chatInput">
-			<fa icon="paper-plane" id="sendButton"/>
+			<input type="text" placeholder="Message..." id="chatInput" v-model="messageBody">
+			<fa icon="paper-plane" id="sendButton" @click="send_message"/>
 		</div>
 	</div>
 	<div class="messageContainer" v-else>
-		<div id="closeSettings" @click="store.activeChatSetting = null"> <fa icon="chevron-left"/> </div>
+		<div id="closeSettings" @click="chatStore.activeChatSetting = false"> <fa icon="chevron-left"/> </div>
 		<MessageboxSettingsVue/>
 	</div>
 	<membersListVue v-if="enableMembers"/>
 </template>
 
-<script setup>
+<script lang="ts" setup>
 	import { useInterfaceStore } from '@/stores/interface';
+	import { useChatStore } from '@/stores/chat';
+	import { useUserStore } from '@/stores/user';
 	import membersListVue from './membersList.vue';
 	import MessageBoxItem from '@/components/messageBoxItem.vue'
 	import MessageboxSettingsVue from './MessageboxSettings.vue';
 	import {onMounted, ref} from 'vue'
-	import {$api} from '@/axios';
-	// import { io } from "socket.io-client";
-	let chatMessages = ref(null);
-	let store = useInterfaceStore();
+	import type { Ref } from 'vue'
+	
+	let chatMessages:Ref<any> = ref(null);
+	const interfaceStore = useInterfaceStore();
+	const chatStore = useChatStore();
+	const userStore = useUserStore();
 	let active = ref(true);
 	let enableOptions = ref(false);
 	let enableMembers = ref(false);
-	let user = ref(null);
-
-// 	let socket = io("http://localhost:3000", {extraHeaders: {
-//     "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZGlzcGxheU5hbWUiOiJvb09tYXJpYW5hT29vIiwidHdvZmFTdGF0ZSI6Im5vdF9hY3RpdmUiLCJpYXQiOjE2NjU0NjYxMzMsImV4cCI6MTY2NTU1MjUzM30.n2z3bchatJ95wLTevtgMSav4TcSl42QtiK3PiEEpLZs"}
-//   });
-  
-  
-
+	let messageBody = ref('');
 
 	function getClass(){
 		let ret = ''
@@ -86,7 +74,7 @@
 			ret += 'maximized'
 		else
 			ret += 'minimized'
-		if(store.enableSidebar)
+		if(interfaceStore.enableSidebar)
 			ret += ' sidebarEnabled'
 		return ret;
 	}
@@ -111,16 +99,26 @@
 			maximize();
 	}
 
+	function send_message(){
+		if(messageBody.value === '')
+			return;
+		chatStore.socket.emit('send_message', { userId: userStore.user.id, channelId: chatStore.activeChat.id , content: messageBody.value});
+		chatStore.chatMessages.push(
+			{
+				from: "me",
+                channelId: chatStore.activeChat.id,
+                content: messageBody.value
+            });
+		messageBody.value = '';
+	}
+	// TODO: list  messages from chatStore.chatMessages (needs key for v-for)
 	onMounted(() => {
 		chatMessages.value.scrollTop = chatMessages.value.scrollHeight;
 		window.addEventListener('resize', () => {
 			enableMembers.value = false;
 		});
-		$api.get('/user/me').then((res) => {
-			user.value = res.data;
-			console.log(user.value);
-			// socket.emit('send_message', { userId: user.value.id, channelId: 9 , content: 'hello world'});
-		});
+		
+		chatStore.socket.emit('join_channel', { userId: userStore.user.id, channelId: chatStore.activeChat.id});
 
 		
 
@@ -130,7 +128,7 @@
 		
 		enableOptions.value = false;
 		enableMembers.value = false;
-		store.enableMembersSettings = false;
+		chatStore.enableMembersSettings = false;
 	});
 
 

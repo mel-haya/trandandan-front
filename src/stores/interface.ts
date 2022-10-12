@@ -4,19 +4,10 @@ import type { Ref } from 'vue'
 
 export const useInterfaceStore = defineStore('Interface', () =>
 {
-    const activeChat:Ref<any|null> = ref(null);
-    const activeChatSetting = ref(false);
     const activeProfile: Ref<number> = ref(0);
     const enableSidebar = ref(true);
-    const enableMembersSettings = ref(null);
     const enableSearch = ref(false);
     const enableChannelCreate = ref(false);
-
-    function setActiveChat(c:any){
-        activeChat.value = null
-        activeChat.value = c
-        activeChatSetting.value = false
-    }
 
     function setActiveProfile(p:number){
         activeProfile.value = p
@@ -26,6 +17,6 @@ export const useInterfaceStore = defineStore('Interface', () =>
         enableSidebar.value = !enableSidebar.value
     }
 
-    return({activeChat,activeProfile,enableSidebar,activeChatSetting,enableMembersSettings,enableSearch,enableChannelCreate,
-            setActiveChat,setActiveProfile,toggleSidebar});
+    return({activeProfile,enableSidebar,enableSearch,enableChannelCreate,
+            setActiveProfile,toggleSidebar});
 })

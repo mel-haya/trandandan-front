@@ -3,20 +3,29 @@
         <div id="GroupChild" v-if="Props.room.imgPath" :style="`background-image: url('${Props.room.imgPath}')`"></div>
         <p id="GroupName">{{Props.room.name}}</p>
         <!-- <p id="GroupCount">{{Props.room.members}} members</p> -->
-        <p id="GroupCount">26 members</p>
-        <div id="JoinBtn">Join</div>
+        <p id="GroupCount">{{Props.room.membersCount}} members</p>
+        <div id="JoinBtn" @click="joinGroup">Join</div>
     </div>
 </template>
 
 <script lang="ts" setup>
     import { defineProps } from 'vue'
+    import { useChatStore } from '@/stores/chat';
+    import { useUserStore } from '@/stores/user';
+    const chat = useChatStore();
+    const user = useUserStore();
     let Props = defineProps({
         room: {
             type: Object,
             required: true
         }
     });
-
+    function joinGroup(){
+        chat.socket.emit("join_channel", {"channelId": Props.room.id, "userId": user.user.id});
+        chat.updateAvailable();
+        chat.updateJoined();
+        chat.activeChat = Props.room;
+    }
 </script>
 
 <style scoped>

@@ -6,11 +6,11 @@
         </h3>
         <div id="registerForm">
             <div id="imageCont">
-                <img :src="user.imageUrl" alt="bruh">
+                <img :src="store.user?.imgPath" alt="bruh">
                 <label for="file"><fa icon="file-arrow-up"/></label>
                 <input ref="imageInput" type="file" name="file" id="file" @change="changeImage">
             </div>
-            <input type="text" placeholder="change your name" id="usernameInput" name="username" v-model="user.username">
+            <input type="text" placeholder="change your name" id="usernameInput" name="username" v-model="store.user.displayName">
             <button id="faBtn" @click="redirectHome">activate 2FA</button>
             <button @click="submitForm" id="saveBtn">save</button>
         </div>
@@ -22,35 +22,27 @@
     /*eslint-disable*/
     import { ref,onMounted, reactive } from 'vue'
     // import Cookies from 'js-cookie'
-    import axios from 'axios'
     import { useRouter } from 'vue-router';
     import {$api} from '@/axios'
     import type { Ref } from 'vue'
-
-    const user = reactive({
-        id: 0,
-        username: '',
-        imageUrl: '',
-    });
+    import { useUserStore } from '@/stores/user';
+    const store = useUserStore();
+    // const user = reactive({
+    //     id: 0,
+    //     username: '',
+    //     imageUrl: '',
+    // });
     
     let img:any;
     let router = useRouter()
     let imageInput:Ref<any> = ref(null);
     onMounted(() => {
-        $api.get('user/me')
-            .then(response => {
-                user.id = response.data.id;
-                user.username = response.data.displayName;
-                user.imageUrl = response.data.imgPath;
-            })
-            .catch(error => {
-                console.log(error)
-            })
+        store.initUser();
     })
 
     function changeImage(e:any)
     {
-      user.imageUrl = URL.createObjectURL(e.target.files[0]);
+        store.user.imgPath = URL.createObjectURL(e.target.files[0]);
     }
 
     function redirectHome() {
@@ -61,7 +53,7 @@
     {
         var bodyFormData = new FormData();
         bodyFormData.append('file', imageInput.value.files[0]);
-        bodyFormData.append('displayName', user.username);
+        bodyFormData.append('displayName', store.user.displayName);
         console.log(bodyFormData)
         $api({
                 method: "patch",

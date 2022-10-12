@@ -142,7 +142,7 @@
         text-align: center;
         margin: 10px 0;
         word-wrap: break-word;
-        color: rgb(167, 167, 167);
+        color: rgb(168, 168, 168);
     }
 
 </style>

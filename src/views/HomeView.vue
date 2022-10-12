@@ -1,31 +1,27 @@
 <script lang="ts" setup>
     import { useUserStore } from '@/stores/user'
-    import { storeToRefs } from 'pinia'
     import SidebareItem from '@/components/SidebarItem.vue'
-    import {$api} from '@/axios';
+    import { $token} from '@/axios';
     import ProfileItem from '@/components/ProfileItem.vue';
-    import { reactive } from 'vue';
+    import { onMounted, reactive } from 'vue';
     import { useRouter } from 'vue-router';
     import MessageBox from '@/components/MessageBox.vue';
     import {useInterfaceStore} from '@/stores/interface';
     import FriendSearchItem from '@/components/FriendSearchItem.vue';
-import ChannelCreateBox from '@/components/ChannelCreateBox.vue';
+    import ChannelCreateBox from '@/components/ChannelCreateBox.vue';
+    import {useChatStore} from '@/stores/chat';
+    import { io } from "socket.io-client";
 
     let interfaceStore = useInterfaceStore();
+    const chatStore = useChatStore();
     const router = useRouter();
     const store = useUserStore();
-    const {user} = storeToRefs(store)
+    // const {user} = storeToRefs(store)
     let test = reactive({
         a:"PLAY",
         b:"WATCH",
         c:"LEADERBOARD"
     })
-    if(user.value === null){
-        $api.get('user/me')
-            .then((response:any) => {
-                user.value = response.data;
-            })
-    }
     var audio = new Audio(require('../assets/hover1.mp3'));
     function firstButton(){
         audio.play();
@@ -59,6 +55,24 @@ import ChannelCreateBox from '@/components/ChannelCreateBox.vue';
         }
     }
 
+    onMounted(() => {
+        store.initUser();
+        chatStore.socket = io("http://localhost:3000", {
+            extraHeaders: {
+                "token": $token
+            }
+        });
+        chatStore.socket.on("receive_message", (res:any) => {
+            chatStore.chatMessages.push(
+                {
+                from: "them",
+                channelId: res.channel.id,
+                content: res.content,
+            });
+        });
+    })
+
+
 </script>
 
 <template>
@@ -69,7 +83,7 @@ import ChannelCreateBox from '@/components/ChannelCreateBox.vue';
         <div @click="thirdButton" id="leaderboardBtn" class="menuBtn"><span>{{test.c}}</span></div>
     </div>
     <SidebareItem/>
-    <MessageBox v-if="interfaceStore.activeChat"/>
+    <MessageBox v-if="chatStore.activeChat"/>
     <ProfileItem v-if="interfaceStore.activeProfile !== 0"/>
     <FriendSearchItem v-if="interfaceStore.enableSearch"/>
     <ChannelCreateBox v-if="interfaceStore.enableChannelCreate"/>

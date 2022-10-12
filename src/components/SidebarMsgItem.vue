@@ -3,7 +3,7 @@
         <p id="msgHeader"> <fa :icon="icon"/> Messages</p>
     </div>
     <div id="messages" :style="`max-height:${scale}px`">
-            <channelPreviewItem v-for="c in channels" :key="c.id" :channel="c"/> 
+            <channelPreviewItem v-for="c in chatStore.joinedRooms" :key="c.id" :channel="c"/> 
     </div>
     
 </template>
@@ -11,13 +11,15 @@
 <script lang="ts" setup>
     import channelPreviewItem from './channelPreviewItem.vue';
     import {onMounted, ref} from 'vue';
-    import {$api} from '@/axios'
-    import type {Ref} from 'vue';
+    // import {$api} from '@/axios'
+    // import type {Ref} from 'vue';
+    import { useChatStore } from '@/stores/chat';
 
-    let channels:Ref<any> = ref([]);
+    // let channels:Ref<any> = ref([]);
     let enable = ref(true);
     let icon = ref("caret-right");
     let scale = ref(240);
+    const chatStore = useChatStore();
     function enableDiv(){
         enable.value = !enable.value;
         if(enable.value){
@@ -28,12 +30,13 @@
             icon.value = "caret-right";
         }
     }
-
-    onMounted(() => {
-        $api.get('/channel/joined').then((res) => {
-            channels.value = res.data;
-        })
-    }) 
+    function updateChannels(){
+        // $api.get('/channel/joined').then((res) => {
+        //     channels.value = res.data;
+        // })
+        chatStore.updateJoined();
+    }
+    onMounted(updateChannels) 
 </script>
 
 <style scoped>

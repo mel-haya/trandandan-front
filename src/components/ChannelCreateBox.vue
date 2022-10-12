@@ -86,16 +86,17 @@ function createGroup()
         }
         if(privacy.value == 'public' && password.value != ''){
             privacy.value = 'protected'
-            return
         }
         if(password.value != ''){
-            data['password'] = password.value
+            data.password = password.value
         }
-
-        $api.post('channel/create',data)
         console.log(data)
-        toast.success('Group created successfully')
-        store.enableChannelCreate = false
+        $api.post('channel/create',data).then(()=>{
+            toast.success('Group created successfully')
+            store.enableChannelCreate = false
+        }).catch((err)=>{
+            toast.error(err.response.data.message)
+        })  
     }
 }
 </script>

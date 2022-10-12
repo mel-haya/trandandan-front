@@ -9,7 +9,7 @@
             </div>
             <p>Create a new group</p>
         </div>
-        <RoomsItem v-for="r in publicRooms" :key="r.id" :room="r"/>
+        <RoomsItem v-for="r in chatStore.availableRooms" :key="r.id" :room="r"/>
         <!-- <RoomsItem :room="room2"/>
         <RoomsItem :room="room"/>
         <RoomsItem :room="room"/>
@@ -23,21 +23,23 @@
 <script lang="ts" setup>
     import RoomsItem from './RoomsItem.vue';
     import {onMounted, ref} from 'vue';
-    import type {Ref} from 'vue';
-    import {$api} from '@/axios';
+    // import type {Ref} from 'vue';
+    // import {$api} from '@/axios';
     import { useInterfaceStore } from '@/stores/interface';
+    import { useChatStore } from '@/stores/chat';
     // let room = {name: "1337", members: 5, img:"loading.jpg"};
     // let room2 = {name: "Eva fans", members: 22, img:"991.jpg"};
     const store = useInterfaceStore();
     const enable = ref(true);
-    const publicRooms:Ref<any> = ref([])
+    // const publicRooms:Ref<any> = ref([])
+    const chatStore = useChatStore();
 
     let icon = ref("caret-right");
-    let scale = ref(320);
+    let scale = ref(330);
     function enableDiv(){
         enable.value = !enable.value;
         if(enable.value){
-            scale.value = 320;
+            scale.value = 330;
             icon.value = "caret-down";
         }
         else{
@@ -47,9 +49,7 @@
     }
 
     onMounted(() => {
-        $api.get('/channel').then((res) => {
-            publicRooms.value = res.data;
-        })
+        chatStore.updateAvailable();
         // publicRooms.value = store.publicRooms;
 
     })

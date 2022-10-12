@@ -1,5 +1,5 @@
 <template>
-    <div id="msgItem" @click="changeActiveChat">
+    <div id="msgItem" @click="store.activeChat = props.channel">
         <div id="senderName">
             <p>{{props.channel.name}}
                  <!-- <span id="status" :style="`background: ${props.message.status}?green:grey`"></span> -->
@@ -13,9 +13,9 @@
 
 <script lang="ts" setup>
      
-    import { useInterfaceStore } from '@/stores/interface';
+    import { useChatStore } from '@/stores/chat';
     
-    let store = useInterfaceStore();
+    let store = useChatStore();
     
     
     const props = defineProps({
@@ -26,9 +26,6 @@
         }
     })
 
-    function changeActiveChat(){
-        store.setActiveChat(props.channel);
-    }
 
 </script>
 
