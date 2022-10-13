@@ -22,7 +22,7 @@ export const useChatStore = defineStore('chat', () =>
 
 
     function updateAvailable(){
-        $api.get('/channel').then((res) => {
+        $api.get('/channel/non-joined').then((res) => {
             availableRooms.value = res.data;
         })
     }

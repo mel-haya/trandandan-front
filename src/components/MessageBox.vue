@@ -35,10 +35,11 @@
 		</div>
 		<div id="chatBody">
 			<div id="chatMessages" ref="chatMessages">
-				<MessageBoxItem  body="Yo" by="me"/>
+				<MessageBoxItem v-for="m in chatStore.activeMessages" :key="m.id" :body="m.content" :by="m.from"/>
+
 			</div>
 			
-			<input type="text" placeholder="Message..." id="chatInput" v-model="messageBody">
+			<input type="text" placeholder="Message..." id="chatInput" v-model="messageBody" @keyup.enter="send_message">
 			<fa icon="paper-plane" id="sendButton" @click="send_message"/>
 		</div>
 	</div>

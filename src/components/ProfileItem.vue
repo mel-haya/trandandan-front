@@ -2,7 +2,9 @@
     <div id="profileBg" @click="closeDiv">
         <div id="profileContainer" @click = "enableMenu = false">
             <div id="profileHeader">
-                <div id="userImg" alt="bruh" v-if="profile?.profile.imgPath" :style="`background-image: url('${profile?.profile.imgPath}')`"><div id="userStatus"></div></div>
+                <div id="userImg" alt="bruh" v-if="profile?.profile.imgPath" :style="`background-image: url('${profile?.profile.imgPath}')`">
+                    <div id="userStatus" :style="`background-color: ${status === 'online' ? '#0f0': 'grey'}`"></div>
+                </div>
             </div>
             <div id="profileMenu" v-if="enableMenu">
                 <p class="text-red" @click="blockUser">Block</p>
@@ -44,13 +46,16 @@
 </template>
 
 <script lang="ts" setup>
+/* eslint-disable */
     import { useInterfaceStore } from '@/stores/interface';
     import { ref,onMounted } from 'vue';
     import { $api } from '@/axios'
     import { useUserStore } from '@/stores/user';
     import { useRouter } from 'vue-router';
     import { useToast } from 'vue-toastification';
+    import { useChatStore } from '@/stores/chat';
 
+    let chat = useChatStore();
     let store = useInterfaceStore();
     let user = useUserStore();
     let profile:any = ref(null)
@@ -59,6 +64,7 @@
     let friendshipStatus = ref("")
     let router = useRouter();
     let toast = useToast();
+    let status = ref("")
     
     function setStatus(){
         if(profile.value?.profile.id === user.user?.id){
@@ -152,8 +158,13 @@
             .then((response:any) => {
                 profile.value = response.data;
                 setStatus()
-                console.log(friendshipStatus.value)
             })
+        chat.socket.on('friends-status', (data:any) => {
+            status.value = data
+            console.log( status.value )
+        })
+        chat.socket.emit('user-status', store.activeProfile)
+        
     }
 
     onMounted(updateUser)
@@ -214,7 +225,7 @@
     }
 
     #userStatus{
-        background-color: #0f0;
+        
         border-radius: 15px;
         width: 30px;
         height: 30px;

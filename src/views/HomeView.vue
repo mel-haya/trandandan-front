@@ -63,8 +63,10 @@
             }
         });
         chatStore.socket.on("receive_message", (res:any) => {
+            
             chatStore.chatMessages.push(
                 {
+                id: res.id,
                 from: "them",
                 channelId: res.channel.id,
                 content: res.content,
