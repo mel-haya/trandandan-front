@@ -8,7 +8,7 @@
                 <table>
                     <tr>
                         <td>
-                            <label for="nameInput">Name*</label> 
+                            <label for="nameInput">Name</label> 
                         </td>
                         <td>
                             <span>:</span><input id="nameInput" type="text" placeholder="Group name" v-model="name"/>
@@ -16,17 +16,18 @@
                     </tr>
                     <tr>
                         <td>
-                            <label for="privateInput">Privacy*</label>
+                            <label for="privateInput">Privacy</label>
                         </td>
                         <td>
                             <span>:</span><select id="privateInput" v-model="privacy" required>
                                 <option value="" disabled selected hidden>Select your option</option>
                                 <option value="public">Public</option>
+                                <option value="protected">Protected</option>
                                 <option value="private">Private</option>
                             </select>
                         </td>
                     </tr>
-                    <tr>
+                    <tr v-if="privacy === 'protected'">
                         <td><label for="passInput">Password</label></td>
                         <td>
                             <span>:</span><input id="passInput" v-model="password" :type="passwordVisible" placeholder="Enter password"/>
@@ -52,13 +53,15 @@ import {ref} from 'vue'
 import {useInterfaceStore} from '@/stores/interface'
 import {useToast} from 'vue-toastification'
 import {$api} from '@/axios'
+import { useChatStore } from '@/stores/chat'
 
 const name = ref('')
 const privacy = ref('')
 const password = ref('')
-const passwordVisible = ref('text')
+const passwordVisible = ref('password')
 const store = useInterfaceStore();
 const toast = useToast();
+const chat = useChatStore();
 
 function enablePass(){
     if(passwordVisible.value == 'password'){
@@ -79,21 +82,26 @@ function createGroup()
         toast.error('Privacy field is required')
         return
     }
+    else if(privacy.value == 'protected' && password.value == ''){
+        toast.error('Password field is required')
+        return
+    }
     else{
         let data:any = {
             name: name.value,
             type: privacy.value,
         }
-        if(privacy.value == 'public' && password.value != ''){
-            privacy.value = 'protected'
-        }
-        if(password.value != ''){
+        // if(privacy.value == 'public' && password.value != ''){
+        //     privacy.value = 'protected'
+        // }
+        if(privacy.value == 'protected'){
             data.password = password.value
         }
         console.log(data)
         $api.post('channel/create',data).then(()=>{
             toast.success('Group created successfully')
             store.enableChannelCreate = false
+            chat.updateJoined()
         }).catch((err)=>{
             toast.error(err.response.data.message)
         })  

@@ -30,7 +30,7 @@
 				<hr/>
 				<p @click.stop="enableMembers = true">Members</p>
 				<hr/>
-				<p>Leave Group</p>
+				<p @click="leaveGroup">Leave Group</p>
 			</div>
 		</div>
 		<div id="chatBody">
@@ -112,6 +112,15 @@
             });
 		messageBody.value = '';
 	}
+
+	async function leaveGroup(){
+        chatStore.socket.emit("leave_channel", {"channelId": chatStore.activeChat.id, "userId": userStore.user.id});
+        await new Promise(r => setTimeout(r, 100));
+        chatStore.updateAvailable();
+        chatStore.updateJoined();
+        chatStore.activeChat = 0;
+    }
+
 	// TODO: list  messages from chatStore.chatMessages (needs key for v-for)
 	onMounted(() => {
 		chatMessages.value.scrollTop = chatMessages.value.scrollHeight;

@@ -20,15 +20,21 @@
 		</label>
 		<input type="text" id="passInput" placeholder="Password" ref="passInput">
         <div class="stupidBtn" id="saveBtn">Save changes</div>
-		<div class="stupidBtn" id="deleteBtn">Delete channel</div>
+		<div class="stupidBtn" id="deleteBtn" @click="deleteChannel">Delete channel</div>
 	</div>
 </template>
 
-<script setup>
-import { ref, onMounted } from 'vue';
+<script lang="ts" setup>
+	import { ref, onMounted } from 'vue';
+	import {useChatStore} from '@/stores/chat'
+	import {$api} from '@/axios'
+	import {useToast} from 'vue-toastification'
+	// TODO : update image on input change
 
 	let password = ref(false)
-	let passInput = ref(null)
+	let passInput = ref("null")
+	let toast = useToast()
+	const chatStore = useChatStore();
 
 	onMounted(()=>{
 		passInput.value.disabled = !password.value;
@@ -37,6 +43,23 @@ import { ref, onMounted } from 'vue';
 	function togglePassword(){
 		passInput.value.disabled = password.value;
 	}
+
+	function changeImage(e:any)
+    {
+        chatStore.activeChat.imgPath = URL.createObjectURL(e.target.files[0]);
+    }
+
+	function deleteChannel(){
+		$api.delete('channel/'+chatStore.activeChat.id).then(()=>{
+			toast.success("Channel deleted")
+			chatStore.activeChat = null;
+			chatStore.updateJoined()
+		}).catch(()=>{
+			toast.error("Something went wrong")
+		})
+	}
+
+
 </script>
 
 <style scoped>

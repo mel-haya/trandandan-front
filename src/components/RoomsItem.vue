@@ -12,6 +12,7 @@
     import { defineProps } from 'vue'
     import { useChatStore } from '@/stores/chat';
     import { useUserStore } from '@/stores/user';
+// import { Socket } from 'engine.io-client';
     const chat = useChatStore();
     const user = useUserStore();
     let Props = defineProps({
@@ -20,8 +21,9 @@
             required: true
         }
     });
-    function joinGroup(){
+    async function joinGroup(){
         chat.socket.emit("join_channel", {"channelId": Props.room.id, "userId": user.user.id});
+        await new Promise(r => setTimeout(r, 100));
         chat.updateAvailable();
         chat.updateJoined();
         chat.activeChat = Props.room;

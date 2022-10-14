@@ -3,7 +3,7 @@
         <div id="profileContainer" @click = "enableMenu = false">
             <div id="profileHeader">
                 <div id="userImg" alt="bruh" v-if="profile?.profile.imgPath" :style="`background-image: url('${profile?.profile.imgPath}')`">
-                    <div id="userStatus" :style="`background-color: ${status === 'online' ? '#0f0': 'grey'}`"></div>
+                    <div id="userStatus" :style="`background-color: ${status === 'online' ? '#0f0': '#aaa'}`"></div>
                 </div>
             </div>
             <div id="profileMenu" v-if="enableMenu">
@@ -48,7 +48,7 @@
 <script lang="ts" setup>
 /* eslint-disable */
     import { useInterfaceStore } from '@/stores/interface';
-    import { ref,onMounted } from 'vue';
+    import { ref,onMounted, onUnmounted } from 'vue';
     import { $api } from '@/axios'
     import { useUserStore } from '@/stores/user';
     import { useRouter } from 'vue-router';
@@ -65,6 +65,8 @@
     let router = useRouter();
     let toast = useToast();
     let status = ref("")
+    let onlineLoop:any;
+    
     
     function setStatus(){
         if(profile.value?.profile.id === user.user?.id){
@@ -161,13 +163,20 @@
             })
         chat.socket.on('friends-status', (data:any) => {
             status.value = data
-            console.log( status.value )
         })
         chat.socket.emit('user-status', store.activeProfile)
-        
+        onlineLoop = setInterval(() => {
+            chat.socket.emit('user-status', store.activeProfile);   
+        },5000);
     }
 
     onMounted(updateUser)
+
+    onUnmounted(() => {
+        chat.socket.off('friends-status')
+        clearInterval(onlineLoop)
+    })
+
 
 </script>
 

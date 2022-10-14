@@ -1,9 +1,11 @@
 import { io } from "socket.io-client";
+import { loadScript } from "vue-plugin-load-script";
+
 
 export const s = (p:any):any => {
-  const iio = io("http://127.0.0.1:3000");
 
-
+  const iio = io("http://127.0.0.1:3000/play");
+  
   let windw:number;
   if (window.innerWidth > 1400)
     windw = window.innerWidth - (window.innerWidth - 1400) - 100
@@ -13,7 +15,6 @@ export const s = (p:any):any => {
   let windh = (windw * 48) / 100;
 
   let drmouse = 0;
-  console.log(windh)
 
   iio.emit("connection", windh)
 
@@ -51,7 +52,6 @@ export const s = (p:any):any => {
     DEFAULT.name = "asdasdasdasda"
     iio.emit("somting", {...DEFAULT,oldw:0})
     iio.emit("somting", {...DEFAULT,name:"fasfasfasfas"})
-    console.log(data)
   });
 
   iio.on('mouse', (data) => {
@@ -97,7 +97,7 @@ export const s = (p:any):any => {
 //      p.rect((windw / 2) - 2, 0, 3, windh)
 //      p.ellipse((windw / 2), windh / 2, 2 * (windw / 100) + 2);
       //console.log(15 + (windw / 100))
-
+      
       bY = drmouse;
       // bmid = windw / (14 * 2)
       bmid = (LeftPaddleHeight - 10) / 2
