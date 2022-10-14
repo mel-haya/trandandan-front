@@ -162,10 +162,12 @@
                 setStatus()
             })
         chat.socket.on('friends-status', (data:any) => {
+            console.log(data)
             status.value = data
         })
         chat.socket.emit('user-status', store.activeProfile)
         onlineLoop = setInterval(() => {
+            console.log('emit')
             chat.socket.emit('user-status', store.activeProfile);   
         },5000);
     }

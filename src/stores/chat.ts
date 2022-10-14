@@ -20,7 +20,6 @@ export const useChatStore = defineStore('chat', () =>
     const availableRooms: any = ref([]);
     const joinedRooms: any = ref([]);
 
-
     function updateAvailable(){
         $api.get('/channel/non-joined').then((res) => {
             availableRooms.value = res.data;

@@ -1,8 +1,14 @@
 <template>
 	<div id="groupSettings">
-		<div id="groupImage" :style="`background-image: url('${require('@/assets/991.jpg')}')`">
+		
+		<div v-if="chatStore.activeChat.imgPath" id="groupImage" :style="`background-image: url('${chatStore.activeChat.imgPath}')`">
 			<label for="groupFile">Change</label>
-			<input id="groupFile" type="file" name="groupFile" @change="changeImage"/>
+			<input ref="imageInput" id="groupFile" type="file" name="groupFile" @change="changeImage"/>
+		</div>
+
+		<div id="groupImage" style="background: transparent" v-else>
+			<label for="groupFile">Change</label>
+			<input ref="imageInput" id="groupFile" type="file" name="groupFile" @change="changeImage"/>
 		</div>
 		<div id="groupName">
 			<input type="text" placeholder="Group name" value="ADHD and retarded group">
@@ -26,16 +32,18 @@
 
 <script lang="ts" setup>
 	import { ref, onMounted } from 'vue';
+	import type {Ref} from 'vue'
 	import {useChatStore} from '@/stores/chat'
 	import {$api} from '@/axios'
 	import {useToast} from 'vue-toastification'
 	// TODO : update image on input change
 
+	let imageInput:Ref<any> = ref(null);
 	let password = ref(false)
-	let passInput = ref("null")
+	let passInput:Ref<any> = ref(null)
 	let toast = useToast()
 	const chatStore = useChatStore();
-
+	
 	onMounted(()=>{
 		passInput.value.disabled = !password.value;
 	})
@@ -54,6 +62,7 @@
 			toast.success("Channel deleted")
 			chatStore.activeChat = null;
 			chatStore.updateJoined()
+			chatStore.activeChatSetting = false
 		}).catch(()=>{
 			toast.error("Something went wrong")
 		})
@@ -64,7 +73,7 @@
 
 <style scoped>
 
-#groupSettings{
+	#groupSettings{
 		height: 565px;
 		background-color: transparent;
 		border-top-left-radius: 10px;
