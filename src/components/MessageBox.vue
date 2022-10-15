@@ -26,7 +26,7 @@
 			<div id="groupOptions" v-else>
 				<p>Add a new user</p>
 				<hr/>
-				<p @click="chatStore.activeChatSetting = true">Group settings</p>
+				<p v-if="chatStore.activeChat.role === 'admin' || chatStore.activeChat.role === 'owner'"  @click="chatStore.activeChatSetting = true">Group settings</p>
 				<hr/>
 				<p @click.stop="enableMembers = true">Members</p>
 				<hr/>
@@ -59,6 +59,7 @@
 	import MessageboxSettingsVue from './MessageboxSettings.vue';
 	import {onMounted, ref} from 'vue'
 	import type { Ref } from 'vue'
+	import { useToast } from 'vue-toastification';
 	
 	let chatMessages:Ref<any> = ref(null);
 	const interfaceStore = useInterfaceStore();
@@ -68,6 +69,7 @@
 	let enableOptions = ref(false);
 	let enableMembers = ref(false);
 	let messageBody = ref('');
+	const toast = useToast();
 
 	function getClass(){
 		let ret = ''
@@ -103,14 +105,24 @@
 	function send_message(){
 		if(messageBody.value === '')
 			return;
-		chatStore.socket.emit('send_message', { userId: userStore.user.id, channelId: chatStore.activeChat.id , content: messageBody.value});
-		chatStore.chatMessages.push(
-			{
-				from: "me",
-                channelId: chatStore.activeChat.id,
-                content: messageBody.value
-            });
-		messageBody.value = '';
+		chatStore.socket.emit('send_message', { userId: userStore.user.id, channelId: chatStore.activeChat.id , content: messageBody.value}, 
+		(response:any) => {
+			if(response.success === true){
+				chatStore.chatMessages.push(
+				{
+					from: "me",
+					channelId: chatStore.activeChat.id,
+					content: messageBody.value
+				});
+				messageBody.value = '';
+			}
+			else{
+				toast.error(response.cause);
+				messageBody.value = '';
+			}
+		});
+		
+		
 	}
 
 	async function leaveGroup(){
@@ -121,7 +133,6 @@
         chatStore.activeChat = 0;
     }
 
-	// TODO: list  messages from chatStore.chatMessages (needs key for v-for)
 	onMounted(() => {
 		chatMessages.value.scrollTop = chatMessages.value.scrollHeight;
 		window.addEventListener('resize', () => {
@@ -129,8 +140,6 @@
 		});
 		
 		chatStore.socket.emit('join_channel', { userId: userStore.user.id, channelId: chatStore.activeChat.id});
-
-		
 
 	});
 

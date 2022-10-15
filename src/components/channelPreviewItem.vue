@@ -1,5 +1,5 @@
 <template>
-    <div id="msgItem" @click="store.activeChat = props.channel">
+    <div id="msgItem" @click="updateActiveChat">
         <div id="senderName">
             <p>{{props.channel.name}}
                  <!-- <span id="status" :style="`background: ${props.message.status}?green:grey`"></span> -->
@@ -14,6 +14,7 @@
 <script lang="ts" setup>
      
     import { useChatStore } from '@/stores/chat';
+    import {$api} from '@/axios'
     
     let store = useChatStore();
     
@@ -25,6 +26,13 @@
             required: true
         }
     })
+
+    function updateActiveChat(){
+        $api.get('/channel/'+ props.channel.id).then((res) => {
+            store.activeChat = res.data;
+            // console.log(res.data)
+        })
+    }
 
 
 </script>

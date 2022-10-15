@@ -32,9 +32,15 @@ export const useChatStore = defineStore('chat', () =>
         })
     }
 
+    function updateChat(){
+        $api.get('/channel/'+activeChat.value.id).then((res) => {
+            activeChat.value = res.data;
+        })
+    }
+
     const activeMessages = computed(() => {
         return chatMessages.value.filter((m:any) => m.channelId === activeChat.value.id);
     });
 
-    return({activeChat, chatMessages, activeMessages,activeChatSetting, enableMembersSettings,socket,availableRooms,joinedRooms,updateAvailable,updateJoined})
+    return({activeChat, chatMessages, activeMessages,activeChatSetting, enableMembersSettings,socket,availableRooms,joinedRooms,updateAvailable,updateJoined,updateChat})
 })
