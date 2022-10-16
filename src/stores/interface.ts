@@ -8,6 +8,7 @@ export const useInterfaceStore = defineStore('Interface', () =>
     const enableSidebar = ref(true);
     const enableSearch = ref(false);
     const enableChannelCreate = ref(false);
+    const enableMembersSettings:Ref<any> = ref(null);
 
     function setActiveProfile(p:number){
         activeProfile.value = p
@@ -17,6 +18,6 @@ export const useInterfaceStore = defineStore('Interface', () =>
         enableSidebar.value = !enableSidebar.value
     }
 
-    return({activeProfile,enableSidebar,enableSearch,enableChannelCreate,
+    return({activeProfile,enableSidebar,enableSearch,enableChannelCreate,enableMembersSettings,
             setActiveProfile,toggleSidebar});
 })

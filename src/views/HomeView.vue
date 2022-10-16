@@ -63,10 +63,10 @@
             }
         });
         chatStore.socket.on("receive_message", (res:any) => {
-            chatStore.chatMessages.push(
-                {
+            chatStore.chatMessages.push({
                 id: res.id, // for v-for
-                from: "them", // for style 
+                author: res.author.displayName,
+                from: res.author.id === store.user.id ? "me" : "them", // for style 
                 channelId: res.channel.id, // to filter with getter
                 content: res.content, // to display
             });

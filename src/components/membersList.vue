@@ -1,55 +1,91 @@
 <template>
     <div id="membersBG">
         <div id="membersContainer" @click.stop="" ref="rect">
-            <h3 @click="store.enableMembersSettings = false">Members</h3>
-            <div id="membersList" @click="store.enableMembersSettings = false">
-                <memberListItem :member="test"/>
-                <memberListItem :member="test"/>
-                <memberListItem :member="test"/>
-                <memberListItem :member="test"/>
-                <memberListItem :member="test"/>
-                <memberListItem :member="test"/>
-                <memberListItem :member="test"/>
-                <memberListItem :member="test"/>
-                <memberListItem :member="test"/>
-                <memberListItem :member="test"/>
-                <memberListItem :member="test"/>
-                <memberListItem :member="test"/>
+            <h3 @click="store.enableMembersSettings = null">Members</h3>
+            <div id="membersList" @click="store.enableMembersSettings = null">
+                <memberListItem v-for="m in members" :key="m.member.id" :member="m" :admin="isAdmin()"/>
             </div>
-            <div id="memberSettingsMenu" v-if="store.enableMembersSettings" :style="getSettingsCoords()">
-                <div id="settingItem">{{store.enableMembersSettings.username}}'s Profile</div><hr/>
-                <div id="settingItem">Mute {{store.enableMembersSettings.username}} for 1 hour</div><hr/>
-                <div id="settingItem">Ban {{store.enableMembersSettings.username}}</div><hr/>
-                <div id="settingItem">Set {{store.enableMembersSettings.username}} as Admin</div><hr/>
+            <div id="memberSettingsMenu" v-if="store.enableMembersSettings?.member.displayName" :style="getSettingsCoords()">
+                <div id="settingItem" v-if="store.enableMembersSettings?.role === 'member'" @click="mute">Mute {{store.enableMembersSettings?.member.displayName}} </div>
+                <div id="settingItem" v-if="store.enableMembersSettings?.role === 'member'">Ban {{store.enableMembersSettings?.member.displayName}} </div>
+                <div id="settingItem" v-if="store.enableMembersSettings?.role === 'member'" @click="premote">Set as Admin </div>
+                <div id="settingItem" v-if="chatStore.activeChat.role === 'owner' && store.enableMembersSettings?.role === 'admin'" @click="demote">Demote to a Member </div>
+                <div id="settingItem" v-if="isAdmin() && store.enableMembersSettings?.role === 'member'" @click="kick">Kick member </div>
+                
             </div>
         </div>
     </div>
 </template>
 
-<script setup>
+<script lang="ts" setup>
     import { useInterfaceStore } from '@/stores/interface';
+    import { useChatStore } from '@/stores/chat';
     import { onMounted, onUnmounted, ref } from 'vue';  
+    import {$api} from '@/axios';
     import memberListItem from './memberListItem.vue'
-    let rect = ref(null);
+    import {useToast} from 'vue-toastification';
+    import type { Ref } from 'vue'
+    const chatStore = useChatStore();
+    let rect:Ref<any | null> = ref(null);
+    let members:any = ref([]);
     let store = useInterfaceStore();
-    let test = {
-        username: 'Mouad',
-        level: 5,
-        status: 'online',
-        img: 'bruh.jpg'
-    }
-    let coords = ref(null);
+    let coords:any = null;
+    const toast = useToast();
     onMounted(() => {
-        coords.value = rect.value.getBoundingClientRect();
+        $api.get('/channel/members/'+ chatStore.activeChat.id).then((res) => {
+            members.value = res.data;
+        })
     })
 
     onUnmounted(() => {
-        store.enableMembersSettings = false;
+        store.enableMembersSettings = null;
     });
 
     function getSettingsCoords(){
-        return `top:${ store.enableMembersSettings.y - coords.value.top }px; left:${store.enableMembersSettings.x - coords.value.left - 250}px;`
+        coords = rect.value.getBoundingClientRect();
+        return `top:${ store.enableMembersSettings.y - coords.top }px; left:${store.enableMembersSettings.x - coords.left - 250}px;`
     }
+
+    function isAdmin(){
+        return chatStore.activeChat.role === 'admin' || chatStore.activeChat.role === 'owner';
+    }
+
+    function premote(){
+        $api.patch('/channel/add-admin/'+ chatStore.activeChat.id + '?member_id=' + store.enableMembersSettings.member.id)
+        .then(() => {
+            toast.success("Member promoted to admin");
+        }).catch((err) => {
+            console.log(err);
+        })
+    }
+
+    function demote(){
+        $api.patch('/channel/remove-admin/'+ chatStore.activeChat.id + '?member_id=' + store.enableMembersSettings.member.id)
+        .then(() => {
+            toast.success("Member demoted to member");
+        }).catch((err) => {
+            console.log(err);
+        })
+    }
+
+    function kick(){
+        $api.patch('/channel/remove-member/'+ chatStore.activeChat.id + '?member_id=' + store.enableMembersSettings.member.id)
+        .then(() => {
+            toast.success("Member kicked");
+        }).catch((err) => {
+            console.log(err);
+        })
+    }
+
+    function mute(){
+        $api.patch('/channel/mute-member/'+ chatStore.activeChat.id + '?member_id=' + store.enableMembersSettings.member.id + '&mute_time=10000')
+        .then(() => {
+            toast.success("Member muted for 10 seconds");
+        }).catch((err) => {
+            console.log(err);
+        })
+    }
+
 
 </script>
 
@@ -124,7 +160,12 @@
 	line-height: 50px;
 	text-align: left;
 	margin: 0;
-	padding-left: 15px;   
+	padding-left: 15px;  
+    border-bottom: 1px solid rgba(92, 34, 94, 0.995); 
+}
+
+#settingItem:last-child{
+    border-bottom: none;
 }
 
 #settingItem:hover{
@@ -132,10 +173,4 @@
 	background-color: rgba(92, 34, 94, 0.995);
 }
 
-#memberSettingsMenu hr{
-		width: 100%;
-		margin: 0;
-		border: none;
-		border-top: 1px solid rgba(92, 34, 94, 0.995);
-}
 </style>

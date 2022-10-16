@@ -1,14 +1,14 @@
 <template>
-    <div id="message" :class="Props.by">
-        <p>{{Props.body}}</p>
+    <div id="message" :class="Props.message?.from">
+        <p id="author">{{Props.message?.author}}</p>
+        <p>{{Props.message?.content}}</p>
     </div>
 </template>
 
-<script setup>
+<script lang="ts" setup>
     import {defineProps} from 'vue'
     let Props = defineProps({
-        body: String,
-        by: String,
+        message: Object,
     });
 </script>
 
@@ -50,6 +50,16 @@
         background-color: #e5e5ea;
         border-bottom-right-radius: 15px;
         color: black;
+    }
+
+    #author{
+        font-size: 12px;
+        font-weight: bolder;
+        margin-bottom: 5px;
+        color: #248bf5;
+    }
+    .me #author{
+        display: none;
     }
 
 </style>

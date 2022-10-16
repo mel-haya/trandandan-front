@@ -16,7 +16,7 @@ export const useChatStore = defineStore('chat', () =>
     const activeChat: any = ref(null);
     const activeChatSetting = ref(false);
     const chatMessages: Ref<any[]> = ref([]);
-    const enableMembersSettings = ref(false);
+    // const enableMembersSettings = ref(false);
     const availableRooms: any = ref([]);
     const joinedRooms: any = ref([]);
 
@@ -42,5 +42,5 @@ export const useChatStore = defineStore('chat', () =>
         return chatMessages.value.filter((m:any) => m.channelId === activeChat.value.id);
     });
 
-    return({activeChat, chatMessages, activeMessages,activeChatSetting, enableMembersSettings,socket,availableRooms,joinedRooms,updateAvailable,updateJoined,updateChat})
+    return({activeChat, chatMessages, activeMessages,activeChatSetting,socket,availableRooms,joinedRooms,updateAvailable,updateJoined,updateChat})
 })

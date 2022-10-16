@@ -2,8 +2,7 @@
 	<div class="messageContainer" :class="getClass()" v-if="chatStore.activeChatSetting === false">
 		<div id="chatHeader" @click="maximize">
 			<div id="chatUser" @click.stop="toggleOptions">
-				<div id="userImg">
-				</div>
+				
 				<div id="chatName" >
 					{{chatStore.activeChat.name}}
 				</div>
@@ -16,26 +15,21 @@
 			</div>
 		</div>
 		<div id="chatOptions" v-if="enableOptions">
-			<div id="directOptions" v-if="chatStore.activeChat.type === 'direct'">
+			<div id="groupOptions" v-if="chatStore.activeChat.type === 'direct'">
 				<p @click="interfaceStore.setActiveProfile(1)">Profile</p>
-				<hr/>
 				<p>Invite to a game</p>
-				<hr/>	
 				<p>Block {{chatStore.activeChat.name}}</p>
 			</div>
 			<div id="groupOptions" v-else>
 				<p>Add a new user</p>
-				<hr/>
 				<p v-if="chatStore.activeChat.role === 'admin' || chatStore.activeChat.role === 'owner'"  @click="chatStore.activeChatSetting = true">Group settings</p>
-				<hr/>
 				<p @click.stop="enableMembers = true">Members</p>
-				<hr/>
 				<p @click="leaveGroup">Leave Group</p>
 			</div>
 		</div>
 		<div id="chatBody">
 			<div id="chatMessages" ref="chatMessages">
-				<MessageBoxItem v-for="m in chatStore.activeMessages" :key="m.id" :body="m.content" :by="m.from"/>
+				<MessageBoxItem v-for="m in chatStore.activeMessages" :key="m.id" :message="m"/>
 
 			</div>
 			
@@ -57,7 +51,7 @@
 	import membersListVue from './membersList.vue';
 	import MessageBoxItem from '@/components/messageBoxItem.vue'
 	import MessageboxSettingsVue from './MessageboxSettings.vue';
-	import {onMounted, ref} from 'vue'
+	import {nextTick, onMounted, onUnmounted, ref} from 'vue'
 	import type { Ref } from 'vue'
 	import { useToast } from 'vue-toastification';
 	
@@ -70,6 +64,14 @@
 	let enableMembers = ref(false);
 	let messageBody = ref('');
 	const toast = useToast();
+
+
+	let listner = async () => {
+		await nextTick();
+		if(chatMessages.value !== null){
+			chatMessages.value.scrollTop = chatMessages.value.scrollHeight;
+		}
+	}
 
 	function getClass(){
 		let ret = ''
@@ -110,11 +112,14 @@
 			if(response.success === true){
 				chatStore.chatMessages.push(
 				{
+					id: userStore.user.id,
+					author: userStore.user.displayName,
 					from: "me",
 					channelId: chatStore.activeChat.id,
 					content: messageBody.value
 				});
 				messageBody.value = '';
+				listner()
 			}
 			else{
 				toast.error(response.cause);
@@ -140,14 +145,18 @@
 		});
 		
 		chatStore.socket.emit('join_channel', { userId: userStore.user.id, channelId: chatStore.activeChat.id});
+		chatStore.socket.on('receive_message', listner)
+	});
 
+	onUnmounted(() => {
+		chatStore.socket.off('receive_message', listner)
 	});
 
 	window.addEventListener('click', function () {
 		
 		enableOptions.value = false;
 		enableMembers.value = false;
-		chatStore.enableMembersSettings = false;
+		interfaceStore.enableMembersSettings = null;
 	});
 
 
@@ -196,6 +205,7 @@
 		overflow: hidden;
 		border-radius: 5px;
 		margin-right: auto;
+		justify-content: center;
 	}
 
 	.maximized #chatUser:hover, #chatMinimize:hover, #leaveChat:hover{
@@ -204,6 +214,7 @@
 	}
 
 	#chatName{
+		padding: 0px 10px;
 		margin-right: auto;
 		max-width: 250px;
 		line-height: 52px;
@@ -222,14 +233,6 @@
 		position: relative;
 		overflow: hidden;
 		transition: all 0.1s ease;
-	}
-
-	#userImg{
-		height: 40px;
-		width: 40px;
-		background-color: burlywood;
-		border-radius: 60px;
-		margin : 6px 5px;
 	}
 
 	
@@ -351,4 +354,11 @@
 		z-index: 99;
 	}
 
+	#groupOptions>p {
+		border-bottom: 1px solid rgba(92, 34, 94, 0.995);
+	}
+
+	#groupOptions>p:last-child {
+		border-bottom: none;
+	}
 </style>
