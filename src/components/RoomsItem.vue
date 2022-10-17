@@ -26,7 +26,7 @@
         await new Promise(r => setTimeout(r, 100));
         chat.updateAvailable();
         chat.updateJoined();
-        chat.activeChat = Props.room;
+        chat.updateChat(Props.room.id);
     }
 </script>
 

@@ -11,6 +11,7 @@
     import ChannelCreateBox from '@/components/ChannelCreateBox.vue';
     import {useChatStore} from '@/stores/chat';
     import { io } from "socket.io-client";
+    import {Message} from '@/types/message';
 
     let interfaceStore = useInterfaceStore();
     const chatStore = useChatStore();
@@ -62,17 +63,24 @@
                 "token": $token
             }
         });
+        
         chatStore.socket.on("receive_message", (res:any) => {
-            chatStore.chatMessages.push({
-                id: res.id, // for v-for
-                author: res.author.displayName,
-                from: res.author.id === store.user.id ? "me" : "them", // for style 
-                channelId: res.channel.id, // to filter with getter
-                content: res.content, // to display
-            });
+            if(chatStore.activeChat && res.channel.id == chatStore.activeChat.id){
+                console.log('2')
+                chatStore.activeChatMessages.push( 
+					new Message(res.id,res.channel.id,res.author.displayName,res.content, res.author.id === store.user.id ? "me" : "them")
+				);
+            }
+            else{
+                console.log('3')
+                let channel = chatStore.joinedRooms.find((a: any)=>(a.id === res.channel.id))
+                
+                if(chatStore.joinedRooms.some((a: any)=>(a.id === res.channel.id)) === false)
+                    chatStore.updateJoined()
+                channel!.unread += 1
+            }
         });
     })
-
 
 </script>
 

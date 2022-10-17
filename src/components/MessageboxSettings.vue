@@ -61,7 +61,7 @@
 	function deleteChannel(){
 		$api.delete('channel/'+chatStore.activeChat.id).then(()=>{
 			toast.success("Channel deleted")
-			chatStore.activeChat = null;
+			chatStore.updateChat(0);
 			chatStore.updateJoined()
 			chatStore.activeChatSetting = false
 		}).catch(()=>{
@@ -122,7 +122,7 @@
                 .then(function () {
                     toast.success("Channel updated")
 					chatStore.updateJoined()
-					chatStore.updateChat();
+					chatStore.updateChat(chatStore.activeChat.id);
 					chatStore.activeChatSetting = false
                 })
                 .catch(function (res) {
