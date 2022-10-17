@@ -4,14 +4,18 @@
 </template>
 
 <script setup>
-    import {onMounted, ref} from 'vue';
-    import {s} from '@/p5game';
+    import {onMounted, onUnmounted, ref} from 'vue';
+    import {s,iio} from '@/p5game';
     import p5 from 'p5';
 
     let game = ref('game');
-    
+
     onMounted(() => {
+        iio.connect();
         new p5(s, game.value);
+    });
+    onUnmounted(async () => {
+        iio.emit("disc", "");
     });
 </script>
 
