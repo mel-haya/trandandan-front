@@ -1,12 +1,8 @@
 <template>
-    <div id="msgItem" @click="updateActiveChat">
+    <div id="msgItem" @click="store.updateChat(props.channel.id)">
         <div id="senderName">
-            <p>{{props.channel.name}}
+            <p :class=" props.channel.unread === 0 ? 'empty' : ''">{{props.channel.name}}</p>
                  <!-- <span id="status" :style="`background: ${props.message.status}?green:grey`"></span> -->
-                </p>
-        </div>
-        <div id="msgBody">
-            <p>yo</p>
         </div>
     </div>
 </template>
@@ -14,11 +10,8 @@
 <script lang="ts" setup>
      
     import { useChatStore } from '@/stores/chat';
-    import {$api} from '@/axios'
-    
+
     let store = useChatStore();
-    
-    
     const props = defineProps({
         channel:
         {
@@ -26,15 +19,6 @@
             required: true
         }
     })
-
-    function updateActiveChat(){
-        $api.get('/channel/'+ props.channel.id).then((res) => {
-            store.activeChat = res.data;
-            // console.log(res.data)
-        })
-    }
-
-
 </script>
 
 <style scoped>
@@ -46,12 +30,17 @@
         margin: 0 auto;
         border-radius: 5px;
         width: 98%;
-        height: 80px;
+        height: 50px;
         background-color: transparent;
+        line-height: 50px;
+    }
+
+    .empty{
+        color: rgb(177, 177, 177);
     }
 
     #msgItem:hover{
-        background-color: rgba(255, 255, 255, 0.4);
+        background-color: rgba(124, 124, 124, 0.4);
     }
 
     #senderName{
@@ -59,7 +48,7 @@
         top: 0;
         left: 0;
         width: 100%;
-        height: 40px;
+        /* height: 40px; */
         display: flex;
         justify-content: space-between;
         align-items: center;
@@ -68,7 +57,7 @@
     #senderName p{
         font-size: 20px;
         font-weight: 600;
-        color: white;
+        
     }
     #status{
         width: 10px;
@@ -89,6 +78,17 @@
         font-size: 15px;
         font-weight: 500;
         text-align: left;
+        color: white;
+    }
+
+    #unread{
+        width: 20px;
+        height: 20px;
+        border-radius: 100vw;
+        display : inline-block;
+        background-color: rgb(255, 0, 0);
+        font-size: 12px;
+        line-height: 20px;
         color: white;
     }
 </style>

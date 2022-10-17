@@ -1,6 +1,6 @@
 <template>  
     <div id="sidebg" :class="[store.enableSidebar ? 'active' : '']">
-        <div @click="store.toggleSidebar(); chatStore.activeChat = null" id="slidebutton">
+        <div @click="store.toggleSidebar(); chatStore.updateChat(0)" id="slidebutton">
             <fa v-if="store.enableSidebar" icon="angle-left"/>
             <fa v-else icon="angle-right"/>
         </div>
@@ -14,7 +14,6 @@
 </template>
 
 <script setup>
-    // import {ref} from 'vue';
     import SidebarProfileItem from './SidebarProfileItem.vue';
     import SidebarfriendsItem from './SidebarfriendsItem.vue';
     import SidebarMsgItem from './SidebarMsgItem.vue';

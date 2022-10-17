@@ -10,7 +10,7 @@
 			<div id="chatMinimize" @click.stop="minimize()" v-if="active === true">
 				<fa icon="minus"/>
 			</div>
-			<div id="leaveChat" @click="chatStore.activeChat = 0">
+			<div id="leaveChat" @click="chatStore.updateChat(0)">
 				<fa icon="xmark"/>
 			</div>
 		</div>
@@ -29,7 +29,7 @@
 		</div>
 		<div id="chatBody">
 			<div id="chatMessages" ref="chatMessages">
-				<MessageBoxItem v-for="m in chatStore.activeMessages" :key="m.id" :message="m"/>
+				<MessageBoxItem v-for="m in chatStore.activeChatMessages" :key="m.id" :message="m"/>
 
 			</div>
 			
@@ -54,6 +54,8 @@
 	import {nextTick, onMounted, onUnmounted, ref} from 'vue'
 	import type { Ref } from 'vue'
 	import { useToast } from 'vue-toastification';
+	import { Message } from '@/types/message';
+	import { $api } from "@/axios"
 	
 	let chatMessages:Ref<any> = ref(null);
 	const interfaceStore = useInterfaceStore();
@@ -110,14 +112,9 @@
 		chatStore.socket.emit('send_message', { userId: userStore.user.id, channelId: chatStore.activeChat.id , content: messageBody.value}, 
 		(response:any) => {
 			if(response.success === true){
-				chatStore.chatMessages.push(
-				{
-					id: userStore.user.id,
-					author: userStore.user.displayName,
-					from: "me",
-					channelId: chatStore.activeChat.id,
-					content: messageBody.value
-				});
+				chatStore.activeChatMessages.push( 
+					new Message(userStore.user.id,chatStore.activeChat.id,userStore.user.displayName,messageBody.value, "me")
+				);
 				messageBody.value = '';
 				listner()
 			}
@@ -135,17 +132,26 @@
         await new Promise(r => setTimeout(r, 100));
         chatStore.updateAvailable();
         chatStore.updateJoined();
-        chatStore.activeChat = 0;
+        chatStore.updateChat(0);
     }
 
 	onMounted(() => {
-		chatMessages.value.scrollTop = chatMessages.value.scrollHeight;
-		window.addEventListener('resize', () => {
+		
+		window.addEventListener('resize',  () => {
 			enableMembers.value = false;
 		});
 		
 		chatStore.socket.emit('join_channel', { userId: userStore.user.id, channelId: chatStore.activeChat.id});
 		chatStore.socket.on('receive_message', listner)
+		$api.get('/message/'+ chatStore.activeChat.id).then( async (res) => {
+            console.log(res.data);
+            chatStore.activeChatMessages = res.data.map((a: any)=>{
+                return new Message(a.id, a.channel.id, a.author.displayName, a.content, (a.author.id === userStore.user.id ) ? "me" : "them");
+            })
+			await nextTick();
+			chatMessages.value.scrollTop = chatMessages.value.scrollHeight;
+        })
+
 	});
 
 	onUnmounted(() => {
