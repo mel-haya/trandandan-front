@@ -6,7 +6,9 @@
         <label for="nameInput">Name: </label>
         <input type="text" v-model="name" if="nameInput"/>
         <div class="btn" @click="submit">submit</div>
-        <div class="btn" @click="reset">delete all users</div>
+        <div class="btn" @click="reset_users">delete all users</div>
+        <div class="btn" @click="reset_channels">delete all groups</div>
+
     </div>
 </template>
 
@@ -32,12 +34,23 @@
         router.push('/')
     }
 
-    async function reset(){
+    function reset_users(){
         axios.delete('http://localhost:3000/user/all-users')
         .then(()=>{
             toast.success('all users deleted')
         })
     }
+
+    function reset_channels(){
+        axios.delete('http://localhost:3000/channel/all')
+        .then(()=>{
+            toast.success('all channels deleted')
+        }).catch((err)=>{
+            console.log(err)
+        })
+    }
+
+
 
 </script>
 

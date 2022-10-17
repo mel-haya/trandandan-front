@@ -1,9 +1,17 @@
 <template>
     <div id="memberItem">
         <div id="memberName">
-            <h3>{{props.member.username}}</h3>
+            <h3 @click="store.activeProfile = props.member.member.id">{{props.member.member.displayName}} 
+                <fa icon="crown" style="color: #FFD700" v-if="props.member.role === 'owner'"/>
+                <fa icon="shield" style="color: #C0C0C0" v-if="props.member.role === 'admin'"/>
+            </h3>
         </div>
-        <div id="memberSettings" @click.stop="settingsClick">
+        <div v-if="
+        props.admin //admin || owner
+        && userStore.user.id !== props.member.member.id // my profile
+        && props.member.role !== 'owner' // owner
+        && (props.member.role !== chatStore.activeChat.role)"
+         id="memberSettings" @click.stop="settingsClick">
             <fa icon="ellipsis-vertical" />
         </div>
     </div>
@@ -13,18 +21,26 @@
 <script setup>
     import { defineProps } from 'vue'
     import { useInterfaceStore } from '@/stores/interface'
+    import { useUserStore } from '@/stores/user'
+    import { useChatStore } from '@/stores/chat'
     let props = defineProps({
         member: {
             type: Object,
             required: true
-        }
+        },
+        admin: Boolean
     })
+    let chatStore = useChatStore()
+    let userStore = useUserStore()
     let store = useInterfaceStore()
     function settingsClick(e){
         store.enableMembersSettings = props.member;
         store.enableMembersSettings.x = e.clientX;
         store.enableMembersSettings.y = e.clientY;
     }
+
+    // function open 
+
 </script>
 
 <style scoped>
@@ -64,6 +80,10 @@
 #memberSettings:hover{
     cursor: pointer;
     background-color: rgba(92, 34, 94, 0.995);
+}
+
+h3:hover{
+    cursor: pointer;
 }
 
 </style>

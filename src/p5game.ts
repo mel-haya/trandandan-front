@@ -3,6 +3,8 @@ const iio = io("http://127.0.0.1:3000/play");
 
 const s = (p:any):any => {
 
+  const iio = io("http://127.0.0.1:3000/play");
+  
   let windw:number;
   if (window.innerWidth > 1400)
     windw = window.innerWidth - (window.innerWidth - 1400) - 100

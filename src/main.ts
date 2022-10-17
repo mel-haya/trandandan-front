@@ -10,10 +10,7 @@ import P5 from 'p5'
 import createRouter from './router'
 import Toast from "vue-toastification";
 import "vue-toastification/dist/index.css";
-// import VueCookies from 'vue3-cookies'
 
-// var script = require('./p5script.js')
-// const P5 = require('p5')
 const router = createRouter()
 const pinia = createPinia()
 

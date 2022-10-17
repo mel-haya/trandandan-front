@@ -63,13 +63,12 @@
             }
         });
         chatStore.socket.on("receive_message", (res:any) => {
-            
-            chatStore.chatMessages.push(
-                {
-                id: res.id,
-                from: "them",
-                channelId: res.channel.id,
-                content: res.content,
+            chatStore.chatMessages.push({
+                id: res.id, // for v-for
+                author: res.author.displayName,
+                from: res.author.id === store.user.id ? "me" : "them", // for style 
+                channelId: res.channel.id, // to filter with getter
+                content: res.content, // to display
             });
         });
     })

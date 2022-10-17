@@ -1,15 +1,21 @@
 <template>
 	<div id="groupSettings">
-		<div id="groupImage" :style="`background-image: url('${require('@/assets/991.jpg')}')`">
+		
+		<div id="groupImage" :style="chatStore.activeChat.imgPath ? `background-image: url('${chatStore.activeChat.imgPath}')` : 'background: transparent'">
 			<label for="groupFile">Change</label>
-			<input id="groupFile" type="file" name="groupFile" @change="changeImage"/>
+			<input ref="imageInput" id="groupFile" type="file" name="groupFile" @change="changeImage"/>
 		</div>
+
+		<!-- <div id="groupImage" style="background: transparent" v-else>
+			<label for="groupFile">Change</label>
+			<input  id="groupFile" type="file" name="groupFile" @change="changeImage"/>
+		</div> -->
 		<div id="groupName">
-			<input type="text" placeholder="Group name" value="ADHD and retarded group">
+			<input type="text" placeholder="Group name" v-model="name">
 		</div>
 		<h3>Settings</h3>
 		<label for="public" id="groupVisibility">
-			<input type="checkbox" id="public">
+			<input type="checkbox" id="public" v-model="privacy">
 			<i></i>
 			Make the group private
 		</label>
@@ -18,17 +24,26 @@
 			<i></i>
 			Protect channel with a password
 		</label>
-		<input type="text" id="passInput" placeholder="Password" ref="passInput">
-        <div class="stupidBtn" id="saveBtn">Save changes</div>
-		<div class="stupidBtn" id="deleteBtn">Delete channel</div>
+		<input type="password" id="passInput" placeholder="Password" ref="passInput">
+        <div class="stupidBtn" id="saveBtn" @click="submit">Save changes</div>
+		<div class="stupidBtn" id="deleteBtn" @click="deleteChannel">Delete channel</div>
 	</div>
 </template>
 
-<script setup>
-import { ref, onMounted } from 'vue';
+<script lang="ts" setup>
+	import { ref, onMounted, watch } from 'vue';
+	import type {Ref} from 'vue'
+	import {useChatStore} from '@/stores/chat'
+	import {$api} from '@/axios'
+	import {useToast} from 'vue-toastification'
 
-	let password = ref(false)
-	let passInput = ref(null)
+	const chatStore = useChatStore();
+	let imageInput:Ref<any> = ref(null);
+	let password = ref(chatStore.activeChat.type === "protected")
+	let passInput:Ref<any> = ref()
+	let toast = useToast()
+	let privacy = ref(chatStore.activeChat.type === "private")
+	let name = ref(chatStore.activeChat.name)
 
 	onMounted(()=>{
 		passInput.value.disabled = !password.value;
@@ -37,11 +52,92 @@ import { ref, onMounted } from 'vue';
 	function togglePassword(){
 		passInput.value.disabled = password.value;
 	}
+
+	function changeImage(e:any)
+    {
+        chatStore.activeChat.imgPath = URL.createObjectURL(e.target.files[0]);
+    }
+
+	function deleteChannel(){
+		$api.delete('channel/'+chatStore.activeChat.id).then(()=>{
+			toast.success("Channel deleted")
+			chatStore.activeChat = null;
+			chatStore.updateJoined()
+			chatStore.activeChatSetting = false
+		}).catch(()=>{
+			toast.error("Something went wrong")
+		})
+	}
+
+	
+
+	watch(privacy, (val)=>{
+		if(val){
+			password.value = false;
+			passInput.value.disabled = true;
+			passInput.value.value = "";
+		}
+	})
+
+	watch(password, (val)=>{
+		if(val){
+			privacy.value = false;
+		}
+	})
+
+	function submit(){
+		let data = new FormData();
+		if(password.value && passInput.value.value.length == 0){
+			toast.error("Password cannot be empty")
+			return;
+		}
+		if(name.value.length == 0){
+			toast.error("Name cannot be empty")
+			return;
+		}
+
+		
+		
+		if(password.value){
+			data.append("type", "protected")
+			data.append("password", passInput.value.value)
+		}
+		else if(privacy.value){
+			data.append("type", "private")
+		}
+		else{
+			data.append("type", "public")
+		}
+
+		data.append("name", name.value)
+		data.append('file', imageInput.value.files[0])
+		$api({
+                method: "patch",
+                url: "channel/" + chatStore.activeChat.id,
+                data: data,
+                headers: {
+                     "Content-Type": "multipart/form-data",
+                    },
+                })
+                .then(function () {
+                    toast.success("Channel updated")
+					chatStore.updateJoined()
+					chatStore.updateChat();
+					chatStore.activeChatSetting = false
+                })
+                .catch(function (res) {
+					console.log(res)
+                    toast.error(res.response.data.message[0]);
+        });
+
+	}
+
+
 </script>
 
 <style scoped>
 
-#groupSettings{
+	#groupSettings{
 		height: 565px;
 		background-color: transparent;
 		border-top-left-radius: 10px;
