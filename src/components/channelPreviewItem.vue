@@ -1,5 +1,5 @@
 <template>
-    <div id="msgItem" @click="store.updateChat(props.channel.id)">
+    <div id="msgItem" @click="handleClick">
         <div id="senderName">
             <p :class=" props.channel.unread === 0 ? 'empty' : ''">{{props.channel.name}}</p>
                  <!-- <span id="status" :style="`background: ${props.message.status}?green:grey`"></span> -->
@@ -10,7 +10,8 @@
 <script lang="ts" setup>
      
     import { useChatStore } from '@/stores/chat';
-
+    import { nextTick} from 'vue';
+    
     let store = useChatStore();
     const props = defineProps({
         channel:
@@ -19,6 +20,13 @@
             required: true
         }
     })
+
+    async function handleClick(){
+        store.updateChat(props.channel.id)
+        await nextTick();
+        store.updateMessages();
+    }
+
 </script>
 
 <style scoped>

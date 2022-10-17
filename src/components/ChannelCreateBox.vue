@@ -97,7 +97,6 @@ function createGroup()
         if(privacy.value == 'protected'){
             data.password = password.value
         }
-        console.log(data)
         $api.post('channel/create',data).then(()=>{
             toast.success('Group created successfully')
             store.enableChannelCreate = false

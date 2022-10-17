@@ -7,7 +7,7 @@
             </div>
             <div id="memberSettingsMenu" v-if="store.enableMembersSettings?.member.displayName" :style="getSettingsCoords()">
                 <div id="settingItem" v-if="store.enableMembersSettings?.role === 'member'" @click="mute">Mute {{store.enableMembersSettings?.member.displayName}} </div>
-                <div id="settingItem" v-if="store.enableMembersSettings?.role === 'member'">Ban {{store.enableMembersSettings?.member.displayName}} </div>
+                <div id="settingItem" v-if="store.enableMembersSettings?.role === 'member'" @click="ban">Ban {{store.enableMembersSettings?.member.displayName}} </div>
                 <div id="settingItem" v-if="store.enableMembersSettings?.role === 'member'" @click="premote">Set as Admin </div>
                 <div id="settingItem" v-if="chatStore.activeChat.role === 'owner' && store.enableMembersSettings?.role === 'admin'" @click="demote">Demote to a Member </div>
                 <div id="settingItem" v-if="isAdmin() && store.enableMembersSettings?.role === 'member'" @click="kick">Kick member </div>
@@ -31,10 +31,16 @@
     let store = useInterfaceStore();
     let coords:any = null;
     const toast = useToast();
-    onMounted(() => {
+
+
+    function updateMembers(){
         $api.get('/channel/members/'+ chatStore.activeChat.id).then((res) => {
             members.value = res.data;
         })
+    }
+
+    onMounted(() => {
+        updateMembers()
     })
 
     onUnmounted(() => {
@@ -72,6 +78,8 @@
         $api.patch('/channel/remove-member/'+ chatStore.activeChat.id + '?member_id=' + store.enableMembersSettings.member.id)
         .then(() => {
             toast.success("Member kicked");
+            updateMembers()
+            store.enableMembersSettings = null
         }).catch((err) => {
             console.log(err);
         })
@@ -81,6 +89,15 @@
         $api.patch('/channel/mute-member/'+ chatStore.activeChat.id + '?member_id=' + store.enableMembersSettings.member.id + '&mute_time=10000')
         .then(() => {
             toast.success("Member muted for 10 seconds");
+        }).catch((err) => {
+            console.log(err);
+        })
+    }
+
+    function ban(){
+        $api.patch('/channel/ban-member/'+ chatStore.activeChat.id + '?member_id=' + store.enableMembersSettings.member.id + '&mute_time=20000')
+        .then(() => {
+            toast.success("Member banned");
         }).catch((err) => {
             console.log(err);
         })

@@ -51,13 +51,13 @@
 	import membersListVue from './membersList.vue';
 	import MessageBoxItem from '@/components/messageBoxItem.vue'
 	import MessageboxSettingsVue from './MessageboxSettings.vue';
-	import {nextTick, onMounted, onUnmounted, ref} from 'vue'
+	import {nextTick, onMounted, onUnmounted, ref, watch} from 'vue'
 	import type { Ref } from 'vue'
 	import { useToast } from 'vue-toastification';
 	import { Message } from '@/types/message';
-	import { $api } from "@/axios"
+	import { storeToRefs } from 'pinia'
 	
-	let chatMessages:Ref<any> = ref(null);
+	let chatMessages:Ref<any> = ref();
 	const interfaceStore = useInterfaceStore();
 	const chatStore = useChatStore();
 	const userStore = useUserStore();
@@ -66,6 +66,7 @@
 	let enableMembers = ref(false);
 	let messageBody = ref('');
 	const toast = useToast();
+	const { activeChatMessages } = storeToRefs(chatStore)
 
 
 	let listner = async () => {
@@ -121,6 +122,9 @@
 			else{
 				toast.error(response.cause);
 				messageBody.value = '';
+				if(response.cause == 'kicked'){
+					leaveGroup()
+				}
 			}
 		});
 		
@@ -135,7 +139,7 @@
         chatStore.updateChat(0);
     }
 
-	onMounted(() => {
+	onMounted(async() => {
 		
 		window.addEventListener('resize',  () => {
 			enableMembers.value = false;
@@ -143,20 +147,19 @@
 		
 		chatStore.socket.emit('join_channel', { userId: userStore.user.id, channelId: chatStore.activeChat.id});
 		chatStore.socket.on('receive_message', listner)
-		$api.get('/message/'+ chatStore.activeChat.id).then( async (res) => {
-            console.log(res.data);
-            chatStore.activeChatMessages = res.data.map((a: any)=>{
-                return new Message(a.id, a.channel.id, a.author.displayName, a.content, (a.author.id === userStore.user.id ) ? "me" : "them");
-            })
-			await nextTick();
-			chatMessages.value.scrollTop = chatMessages.value.scrollHeight;
-        })
-
+		chatStore.updateMessages().then(() => {
+			listner()
+		});
+		
 	});
 
 	onUnmounted(() => {
 		chatStore.socket.off('receive_message', listner)
 	});
+
+	watch(activeChatMessages, async ()=>{
+		await listner()
+	})
 
 	window.addEventListener('click', function () {
 		

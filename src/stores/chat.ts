@@ -4,12 +4,14 @@ import type { Ref } from "vue"
 import { Message } from "@/types/message"
 import { Room } from "@/types/room";
 import { $api } from "@/axios"
+import { useUserStore } from "@/stores/user";
+import { toastInjectionKey, useToast } from "vue-toastification";
 
 // ref()s become state properties
 // computed()s become getters
 // function()s become actions
 
-
+const userStore = useUserStore();
 
 
 
@@ -36,7 +38,7 @@ export const useChatStore = defineStore('chat', () =>
     function updateJoined(){
         $api.get('/channel/joined').then((res) => {
             joinedRooms.value = res.data.map((a: any)=>{
-                return (joinedRooms.value.some((b: any)=>(b.id === a.id && b.name === a.name))) ? a : new Room(a.id, a.name, 0);
+                return new Room(a.id, a.name, joinedRooms.value.find((item)=> item.id == a.id)?.unread ?? 0)
             });
             // return new Room(a.id, a.name, joinedRooms.value.find((item)=> item.id == a.id)?.unread ?? 0); keep it in case some function doesn't work
         })
@@ -44,7 +46,6 @@ export const useChatStore = defineStore('chat', () =>
 
     function updateChat(id:number){
         activeChatMessages.value = [];
-        
         if(id === 0)
         {
             activeChat.value = null;
@@ -53,7 +54,25 @@ export const useChatStore = defineStore('chat', () =>
         $api.get('/channel/'+id).then((res) => {
             activeChat.value = res.data;
         })
-        joinedRooms.value.find((item)=> item.id == id)!.unread = 0;
+
+        if(joinedRooms.value.find((item)=> item.id == id))
+            joinedRooms.value.find((item)=> item.id == id)!.unread = 0;
+    }
+
+    async function updateMessages(){
+        if(activeChat.value === null)
+            return;
+        $api.get('/message/'+ activeChat.value.id).then( async (res) => {
+            activeChatMessages.value = res.data.map((a: any)=>{
+                return new Message(a.id, a.channel.id, a.author.displayName, a.content, (a.author.id === userStore.user.id ) ? "me" : "them");
+            })
+        }).catch((err) => {
+            if(err.response.status === 403)
+            {
+                activeChat.value = null;
+                useToast().error("You are banned from this channel");
+            }
+        })
     }
 
     // const activeMessages = computed(() => {
@@ -62,5 +81,5 @@ export const useChatStore = defineStore('chat', () =>
 
 
 
-    return({activeChat,activeChatSetting,socket,availableRooms,joinedRooms,activeChatMessages,updateAvailable,updateJoined,updateChat})
+    return({activeChat,activeChatSetting,socket,availableRooms,joinedRooms,activeChatMessages,updateMessages,updateAvailable,updateJoined,updateChat})
 })

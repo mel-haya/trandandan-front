@@ -54,7 +54,6 @@
         var bodyFormData = new FormData();
         bodyFormData.append('file', imageInput.value.files[0]);
         bodyFormData.append('displayName', store.user.displayName);
-        console.log(bodyFormData)
         $api({
                 method: "patch",
                 url: "user/update",

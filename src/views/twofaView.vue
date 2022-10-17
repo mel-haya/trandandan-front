@@ -53,7 +53,6 @@
             console.log(response);
             return response.data;})
         .catch((err) => console.log(err));
-        console.log("-------",res);
         if(code.value == res)
         {
             invalid.value = false;
