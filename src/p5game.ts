@@ -2,10 +2,10 @@ import { io } from "socket.io-client";
 const iio = io("http://127.0.0.1:3000/play");
 
 const s = (p:any):any => {
-
-  const iio = io("http://127.0.0.1:3000/play");
   
   let windw:number;
+  let imgwon:any;
+  let imglost:any;
   if (window.innerWidth > 1400)
     windw = window.innerWidth - (window.innerWidth - 1400) - 100
   else
@@ -13,8 +13,15 @@ const s = (p:any):any => {
   let oldwindw = windw;
   let windh = (windw * 48) / 100;
 
+  let variationw = windw / 1300;
+  let variationh = windh / 624;
+  console.log(variationw + " " + variationh);
+  
+
   let leftmouse = 0;
   let rightmouse = 0;
+  let originleftmouse = 0;
+  let originrightmouse = 0;
   // console.log(windh)
 
   const ball = {
@@ -23,9 +30,11 @@ const s = (p:any):any => {
     r:15,
     dx:5,
     dy:5,
+    p1:0,
+    p2:0,
   }
   
-  const DEFAULT  = {name:"hi", w:windh, oldw:oldwindw, mousepos:0, room:"", pos:0}
+  const DEFAULT  = {w:windh, oldw:oldwindw, mousepos:0, room:"", pos:0}
   const BALL = {room:"", ped1:0, ped2:0, ball_data:ball}
 
   let my_pos:number = 0;
@@ -34,6 +43,8 @@ const s = (p:any):any => {
   let paddle1Y:number;
   const gameEnded = false;
   let gameStart = false;
+  let isWon = false;
+  let isLost = false;
   // let gameWait = true;
   //Paddle Thickness
   const LeftPaddle:number=5;
@@ -50,7 +61,7 @@ const s = (p:any):any => {
   
   iio.on('fin', (data) => {
     data;
-    console.log("waaaaaaaaa3");
+    //console.log("waaaaaaaaa3");
     p.remove();
     iio.off('connection');
     iio.off('take_pos');
@@ -59,13 +70,15 @@ const s = (p:any):any => {
     iio.off('reset');
     iio.off('restart');
     iio.off('fin');
+    iio.off('done');
+    iio.off('won');
+    iio.off('lost');
     iio.disconnect();
   });
   
   iio.emit("connection", ball)
 
   iio.on('connection', (data) => {
-    DEFAULT.name = "asdasdasdasda"
     iio.emit("update_mouse", {...DEFAULT,oldw:0})
     // iio.emit("update_mouse", {...DEFAULT,name:"fasfasfasfas"})
     //console.log(data)
@@ -90,14 +103,20 @@ const s = (p:any):any => {
 
   iio.on('mouse', (data) => {
     if (data.pos === 1)
-      leftmouse = data.mousepos;
+    {
+      leftmouse = data.mousepos * variationh;
+      originleftmouse = data.mousepos;
+    }
     else
-      rightmouse = data.mousepos;
+    {
+      rightmouse = data.mousepos * variationh;
+      originrightmouse = data.mousepos;
+    }
   });
 
   iio.on('ball', (data) => {
-    BALL.ball_data.x = data.x;
-    BALL.ball_data.y = data.y;
+    BALL.ball_data.x = data.x * variationw;
+    BALL.ball_data.y = data.y * variationh;
     BALL.ball_data.dx = data.dx;
     BALL.ball_data.dy = data.dy;
   });
@@ -114,23 +133,41 @@ const s = (p:any):any => {
     data;
     p.noLoop();
   });
-
+  
   iio.on('restart', (data) => {
     // data;
     if (iio.id === data.room)
     {
-      BALL.ball_data.x = data.x;
-      BALL.ball_data.y = data.y;
+      BALL.ball_data.x = data.x * variationw;
+      BALL.ball_data.y = data.y * variationh;
       BALL.ball_data.dx = data.dx;
       BALL.ball_data.dy = data.dy;
       // console.log("abc");
       //reset();
       //BALL.stop = true;
     }
+    if (gameStart === true)
+      p.loop();
+  });
+  
+  iio.on('done', (data) => {
+    p.noLoop();
+    console.log(data);
+    console.log("you win");
+    gameStart = false;
+  });
+  
+  iio.on('won', (data) => {
+    data;
+    isWon = true;
     p.loop();
   });
 
-
+  iio.on('lost', (data) => {
+    data;
+    isLost = true;
+    p.loop();
+  });
 
 
 
@@ -236,13 +273,28 @@ const s = (p:any):any => {
  }
 //!end
 
-
+    
+    function preload() {
+      imgwon = p.loadImage('https://media.istockphoto.com/vectors/pixel-art-8bit-you-win-text-with-three-winner-golden-cups-on-black-vector-id1268272329?k=20&m=1268272329&s=170667a&w=0&h=79fO42ChPzO8gcIdzngCuag6_Y9ef2dUh1LWpaOkyXo=');
+      imglost = p.loadImage('https://elements-video-cover-images-0.imgix.net/files/961bcd50-cb8b-4632-b46c-3abb528c984d/inline_image_preview.jpg?auto=compress&crop=edges&fit=crop&fm=jpeg&h=800&w=1200&s=90f07628b0c40410c1e819e2da97c2b8');
+    }
 
 
 
 
     p.setup = function() {
       p.createCanvas(windw, windh);
+      preload();
+      if (windw <= 325)
+        ball.r = 4;
+      else if (windw <= 650)
+        ball.r = 7;
+      else if (windw <= 975)
+        ball.r = 11;
+      else
+        ball.r = 15;
+      // p.imageMode(p.CENTER);
+      // p.image(img, 50, 50, 80, 80);
     };
 
     let bmid = windw / (14 * 2)
@@ -250,9 +302,9 @@ const s = (p:any):any => {
   
     p.draw = function() {
       p.strokeWeight(windh / 100);
-      DEFAULT.mousepos = p.mouseY
-      DEFAULT.w = windw
-      iio.emit("update_mouse", DEFAULT)
+      DEFAULT.mousepos = p.mouseY / variationh;
+      DEFAULT.w = windw;
+      iio.emit("update_mouse", DEFAULT);
 
       p.clear();
       if (window.innerWidth > 1400)
@@ -301,8 +353,8 @@ const s = (p:any):any => {
       const RightPaddleY = bY - bmid;
       p.rect(RightPaddleX, RightPaddleY, RightPaddle, RightPaddleHeight - 10);
 
-      BALL.ped1 = paddle1Y;
-      BALL.ped2 = RightPaddleY;
+      BALL.ped1 = originleftmouse - 41;
+      BALL.ped2 = originrightmouse - 41;
 
       
       move();
@@ -318,6 +370,17 @@ const s = (p:any):any => {
         RightPaddleHeight = windw / 14;
         RightPaddleX = windw - 7;
         //console.log(windw)
+        variationw = windw / 1300;
+        variationh = windh / 624;
+        if (windw <= 325)
+          ball.r = 4;
+        else if (windw <= 650)
+          ball.r = 7;
+        else if (windw <= 975)
+          ball.r = 11;
+        else
+          ball.r = 15;
+        //1300 650 325 975 15 7 4 11
       }
       
       p.strokeWeight(windh / 100);
@@ -325,7 +388,20 @@ const s = (p:any):any => {
      
       p.cursor(p.CROSS);
       // p.noCursor();
-        
+      if (isWon == true)
+      {
+        console.log("Won");
+        p.imageMode(p.CENTER);
+        p.image(imgwon, windw / 2, windh / 2, windw / 4, windw / 4);
+        p.noLoop();
+      }
+      if (isLost == true)
+      {
+        console.log("Lost");
+        p.imageMode(p.CENTER);
+        p.image(imglost, windw / 2, windh / 2, windw / 4, windw / 4);
+        p.noLoop();
+      }
     };
 };
 
