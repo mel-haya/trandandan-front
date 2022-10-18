@@ -6,6 +6,7 @@ const s = (p:any):any => {
   let windw:number;
   let imgwon:any;
   let imglost:any;
+  let imgload:any;
   if (window.innerWidth > 1400)
     windw = window.innerWidth - (window.innerWidth - 1400) - 100
   else
@@ -28,10 +29,12 @@ const s = (p:any):any => {
     x:windw/2,
     y:windh/2,
     r:15,
-    dx:5,
-    dy:5,
+    dx:8,
+    dy:8,
     p1:0,
     p2:0,
+    score1:0,
+    score2:0,
   }
   
   const DEFAULT  = {w:windh, oldw:oldwindw, mousepos:0, room:"", pos:0}
@@ -43,6 +46,7 @@ const s = (p:any):any => {
   let paddle1Y:number;
   const gameEnded = false;
   let gameStart = false;
+  let isLoad = true;
   let isWon = false;
   let isLost = false;
   // let gameWait = true;
@@ -57,7 +61,8 @@ const s = (p:any):any => {
   let LeftPaddleHeight:number = windw / 14;
   let RightPaddleHeight:number = windw / 14;
   //Score of the AI. A.k.A the Number of tries
-  // let ComputerScore:number = 0;
+  let player1:number = 0;
+  let player2:number = 0;
   
   iio.on('fin', (data) => {
     data;
@@ -73,10 +78,11 @@ const s = (p:any):any => {
     iio.off('done');
     iio.off('won');
     iio.off('lost');
+    iio.off('testinter');
     iio.disconnect();
   });
   
-  iio.emit("connection", ball)
+  iio.emit("connection", ball);
 
   iio.on('connection', (data) => {
     iio.emit("update_mouse", {...DEFAULT,oldw:0})
@@ -84,11 +90,16 @@ const s = (p:any):any => {
     //console.log(data)
     console.log(data)
     if (data === "wait")
-      p.noLoop();
+    {
+      isLoad = true;
+      // p.loop();
+      //p.noLoop();
+    }
     else
     {
+      isLoad = false;
       gameStart = true;
-      p.loop();
+      // p.loop();
     }
   });
 
@@ -119,6 +130,7 @@ const s = (p:any):any => {
     BALL.ball_data.y = data.y * variationh;
     BALL.ball_data.dx = data.dx;
     BALL.ball_data.dy = data.dy;
+    // console.log("hiiiiiiiii");
   });
 
   // function reset(){
@@ -129,8 +141,9 @@ const s = (p:any):any => {
   // }
 
   iio.on('reset', (data) => {
-    //ComputerScore++;
-    data;
+    player1 = data.score1;
+    player2 = data.score2;
+    //p.text("score " + player1 + " : " + player2, windw / 2 + 10, 30);
     p.noLoop();
   });
   
@@ -159,14 +172,23 @@ const s = (p:any):any => {
   
   iio.on('won', (data) => {
     data;
-    isWon = true;
-    p.loop();
+    if (isLost === false)
+    {
+      isWon = true;
+      gameStart = false;
+      p.loop();
+    }
   });
 
   iio.on('lost', (data) => {
     data;
     isLost = true;
+    gameStart = false;
     p.loop();
+  });
+
+  iio.on('testinter', (data) => {
+    console.log(data);
   });
 
 
@@ -203,79 +225,15 @@ const s = (p:any):any => {
     else
       p.textSize(15);
     //  p.noStroke(23);
-    p.text("Difficulty:" + Math.abs(ball.dx), windw / 4, 30);
+    p.text("Difficulty:" + Math.abs(ball.dx), windw / 4 - windw / 20, 30);
+    p.text(player2 + " : " + player1, (windw * 3) / 4 - windw / 30, 30);
     p.fill('rgba(172,70,130,1)');
   }
-
-//!start
-  function move(){
-    //p.fill(250,250,250);
-   // p.stroke('rgba(172,70,130,1)');
-    //p.strokeWeight(1);
-    p.ellipse(BALL.ball_data.x, BALL.ball_data.y, BALL.ball_data.r, BALL.ball_data.r)
-    // ball.x = ball.x + ball.dx;
-    // ball.y = ball.y + ball.dy;
-    // if(ball.x+ball.r>=width){
-    //     ball.dx=-ball.dx-0;  
-    // }
-      //ellipse(ball.x,ball.y,ball.r,20)
- 
-   //To make sure tht when the ball hits the paddle it bounces off of the edge of the paddle and it wont go inside the the paddle.
-   // if (ball.x-2*ball.r/3< 0 ){
-    //TODO:
-    // if (ball.x-ball.r < 0 )
-    // {
-    //   if (ball.y >= paddle1Y && ball.y <= paddle1Y + LeftPaddleHeight) {
-    //     ball.dx = -ball.dx + 0; 
-    //   }
-    //   else
-    //   {//if (ball.x-5.5*ball.r/3< 0 ){
-    //     ComputerScore++;
-    
-    //     p.noLoop();
-    //     setTimeout(() => {
-    //         if (gameEnded == false) {
-            
-    //         reset();
-    //         navigator.vibrate(100);
-    //         p.loop();
-    //         }
-    //     }, 1000);
-    //   }
-    // }
-    //!
-    // ball.x = ball.x + ball.dx;
-    // ball.y = ball.y + ball.dy;
-    // if(ball.x+ball.r >= windw){
-    //     ball.dx=-ball.dx-0;  
-    // }
-    //TODO: 
-    // if(ComputerScore ==4){    //This last bit is for the scores and for when you loose it will tell you Gmae Over and Reload the page if you want to play more
-    //   p.fill(0,0,0);
-    //   gameEnded = true;
-    //   p.stroke(0)
-    //   p.rect(0, 0, windw, windh - 1);
-    //   p.fill(250, 250, 250);
-    //   p.stroke(250, 250, 250);
-    //   p.textSize(30)
-    //   p.text("Game Over!", windw / 2, windh / 2 - 30);
-    //   p.textSize(20)
-    //   p.text("Reload To Play MOre!", windw / 2, windh / 2)
-    //   p.noLoop();
-    //   ComputerScore = 0;
-    // }
-    //!
-    // if(ball.y + ball.r > windh || ball.y-ball.r < 0){
-    //     ball.dy =- ball.dy;
-    // }
-    if (gameStart == true)
-      iio.emit("ball_move", BALL)
- }
-//!end
 
     
     function preload() {
       imgwon = p.loadImage('https://media.istockphoto.com/vectors/pixel-art-8bit-you-win-text-with-three-winner-golden-cups-on-black-vector-id1268272329?k=20&m=1268272329&s=170667a&w=0&h=79fO42ChPzO8gcIdzngCuag6_Y9ef2dUh1LWpaOkyXo=');
+      imgload = p.loadImage(require('@/assets/waiting.jpg'));
       imglost = p.loadImage('https://elements-video-cover-images-0.imgix.net/files/961bcd50-cb8b-4632-b46c-3abb528c984d/inline_image_preview.jpg?auto=compress&crop=edges&fit=crop&fm=jpeg&h=800&w=1200&s=90f07628b0c40410c1e819e2da97c2b8');
     }
 
@@ -301,12 +259,12 @@ const s = (p:any):any => {
     let bY = p.mouseY - bmid;
   
     p.draw = function() {
+      p.clear();
       p.strokeWeight(windh / 100);
       DEFAULT.mousepos = p.mouseY / variationh;
       DEFAULT.w = windw;
       iio.emit("update_mouse", DEFAULT);
 
-      p.clear();
       if (window.innerWidth > 1400)
         windw = window.innerWidth - (window.innerWidth - 1400) - 100
       else
@@ -341,7 +299,7 @@ const s = (p:any):any => {
       p.rect(LeftPaddleX, paddle1Y, LeftPaddle, LeftPaddleHeight - 10);
 
 //to be modify
-      //pc computer paddle
+      //pc opp paddle
       bY = rightmouse;
       bmid = (LeftPaddleHeight - 10) / 2
       if (bY > windh - bmid)
@@ -357,8 +315,8 @@ const s = (p:any):any => {
       BALL.ped2 = originrightmouse - 41;
 
       
-      move();
-      
+      if (gameStart == true)
+        p.ellipse(BALL.ball_data.x, BALL.ball_data.y, BALL.ball_data.r, BALL.ball_data.r);
 
       
 
@@ -388,19 +346,26 @@ const s = (p:any):any => {
      
       p.cursor(p.CROSS);
       // p.noCursor();
-      if (isWon == true)
+      if (isLoad == true)
       {
-        console.log("Won");
+        //console.log("loading");
+        p.imageMode(p.CENTER);
+        p.image(imgload, windw / 2, windh / 2, (windw * 3) / (4 * 2), (windw * 2) / (4 * 2));
+        //p.noLoop();
+      }
+      if (isWon == true && isLost == false)
+      {
+        //console.log("Won");
         p.imageMode(p.CENTER);
         p.image(imgwon, windw / 2, windh / 2, windw / 4, windw / 4);
-        p.noLoop();
+        // p.noLoop();
       }
       if (isLost == true)
       {
-        console.log("Lost");
+        //console.log("Lost");
         p.imageMode(p.CENTER);
         p.image(imglost, windw / 2, windh / 2, windw / 4, windw / 4);
-        p.noLoop();
+        // p.noLoop();
       }
     };
 };
