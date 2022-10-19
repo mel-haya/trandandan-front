@@ -33,14 +33,14 @@
             test.c = "RETURN";
         }
         else
-            router.push('/play') 
+            router.push('/play?mode=classic') 
     }
     function secondButton(){
         audio.play();
         if(test.b === "WATCH")
             router.push('/watch')
         else
-            router.push('/play')
+            router.push('/play?mode=modern')
     }
     function thirdButton(){
         audio.play();
