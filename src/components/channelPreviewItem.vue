@@ -24,7 +24,7 @@
     async function handleClick(){
         store.updateChat(props.channel.id)
         await nextTick();
-        store.updateMessages();
+        await store.updateMessages();
     }
 
 </script>

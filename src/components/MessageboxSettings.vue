@@ -40,7 +40,7 @@
 	const chatStore = useChatStore();
 	let imageInput:Ref<any> = ref(null);
 	let password = ref(chatStore.activeChat.type === "protected")
-	let passInput:Ref<any> = ref()
+	let passInput:Ref<any> = ref("")
 	let toast = useToast()
 	let privacy = ref(chatStore.activeChat.type === "private")
 	let name = ref(chatStore.activeChat.name)

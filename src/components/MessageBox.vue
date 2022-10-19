@@ -110,6 +110,7 @@
 	function send_message(){
 		if(messageBody.value === '')
 			return;
+		console.log('sending message');
 		chatStore.socket.emit('send_message', { userId: userStore.user.id, channelId: chatStore.activeChat.id , content: messageBody.value}, 
 		(response:any) => {
 			if(response.success === true){

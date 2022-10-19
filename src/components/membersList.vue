@@ -14,6 +14,7 @@
                 
             </div>
         </div>
+        <MutePopup v-if="enableMute" :request="request" :message="enableMute" @close="enableMute = ''"/>
     </div>
 </template>
 
@@ -25,13 +26,16 @@
     import memberListItem from './memberListItem.vue'
     import {useToast} from 'vue-toastification';
     import type { Ref } from 'vue'
+    import MutePopup from './mutePopup.vue';
+
     const chatStore = useChatStore();
     let rect:Ref<any | null> = ref(null);
     let members:any = ref([]);
     let store = useInterfaceStore();
     let coords:any = null;
     const toast = useToast();
-
+    let enableMute = ref("");
+    let request = ref("");
 
     function updateMembers(){
         $api.get('/channel/members/'+ chatStore.activeChat.id).then((res) => {
@@ -60,6 +64,8 @@
         $api.patch('/channel/add-admin/'+ chatStore.activeChat.id + '?member_id=' + store.enableMembersSettings.member.id)
         .then(() => {
             toast.success("Member promoted to admin");
+            updateMembers()
+            store.enableMembersSettings = null
         }).catch((err) => {
             console.log(err);
         })
@@ -69,12 +75,15 @@
         $api.patch('/channel/remove-admin/'+ chatStore.activeChat.id + '?member_id=' + store.enableMembersSettings.member.id)
         .then(() => {
             toast.success("Member demoted to member");
+            updateMembers()
+            store.enableMembersSettings = null
         }).catch((err) => {
             console.log(err);
         })
     }
 
     function kick(){
+        
         $api.patch('/channel/remove-member/'+ chatStore.activeChat.id + '?member_id=' + store.enableMembersSettings.member.id)
         .then(() => {
             toast.success("Member kicked");
@@ -86,21 +95,27 @@
     }
 
     function mute(){
-        $api.patch('/channel/mute-member/'+ chatStore.activeChat.id + '?member_id=' + store.enableMembersSettings.member.id + '&mute_time=10000')
-        .then(() => {
-            toast.success("Member muted for 10 seconds");
-        }).catch((err) => {
-            console.log(err);
-        })
+        enableMute.value = "Mute";
+        request.value = '/channel/mute-member/'+ chatStore.activeChat.id + '?member_id=' + store.enableMembersSettings.member.id + '&mute_time=';
+        store.enableMembersSettings = null;
+        // $api.patch('/channel/mute-member/'+ chatStore.activeChat.id + '?member_id=' + store.enableMembersSettings.member.id + '&mute_time=10000')
+        // .then(() => {
+        //     toast.success("Member muted for 10 seconds");
+        // }).catch((err) => {
+        //     console.log(err);
+        // })
     }
 
     function ban(){
-        $api.patch('/channel/ban-member/'+ chatStore.activeChat.id + '?member_id=' + store.enableMembersSettings.member.id + '&mute_time=20000')
-        .then(() => {
-            toast.success("Member banned");
-        }).catch((err) => {
-            console.log(err);
-        })
+        enableMute.value = "Ban";
+        request.value = '/channel/ban-member/'+ chatStore.activeChat.id + '?member_id=' + store.enableMembersSettings.member.id + '&mute_time=';
+        store.enableMembersSettings = null;
+        // $api.patch('/channel/ban-member/'+ chatStore.activeChat.id + '?member_id=' + store.enableMembersSettings.member.id + '&mute_time=20000')
+        // .then(() => {
+        //     toast.success("Member banned");
+        // }).catch((err) => {
+        //     console.log(err);
+        // })
     }
 
 
@@ -169,6 +184,7 @@
     width: 250px;
     border-radius: 10px;
 	box-shadow: 2px 2px 10px 5px rgba(0,0,0,0.5);
+    overflow: hidden;
 }
 
 #settingItem{
