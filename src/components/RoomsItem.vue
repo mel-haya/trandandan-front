@@ -22,7 +22,9 @@
         }
     });
     async function joinGroup(){
-        chat.socket.emit("join_channel", {"channelId": Props.room.id, "userId": user.user.id});
+        chat.socket.emit("join_channel", {"channelId": Props.room.id, "userId": user.user.id}, (data:any) => {
+            console.log(data);
+        });
         await new Promise(r => setTimeout(r, 100));
         chat.updateAvailable();
         chat.updateJoined();

@@ -32,12 +32,12 @@
         const config = {
             headers: { "Authorization": `Bearer ${token}` }
         };
-        let res = await axios.get("http://localhost:3000/2fa/generate", config)
-        .then(function (response){ 
-            return response.data;
+        axios.get("http://localhost:3000/2fa/generate", config)
+        .then(function (response){
+            qrimg.value = response.data;
         })
         .catch((err) => console.log(err));
-        qrimg.value = res;
+        
     })
 
     async function validate()
@@ -48,7 +48,7 @@
         }
         };
         console.log(code.value)
-        let res = await axios.post("http://localhost:3000/2fa/authenticate", {code: code.value} ,config)
+        let res = await axios.post("http://localhost:3000/2fa/verify", {code: code.value} ,config)
         .then((response) => { 
             console.log(response);
             return response.data;})

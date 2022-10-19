@@ -51,6 +51,8 @@ export const useChatStore = defineStore('chat', () =>
         }
         $api.get('/channel/'+id).then((res) => {
             activeChat.value = res.data;
+        }).catch(err=> {
+            console.log(err);
         })
 
         if(joinedRooms.value.find((item)=> item.id == id))
