@@ -25,17 +25,30 @@ const s = (p:any):any => {
   let originrightmouse = 0;
   // console.log(windh)
 
+  function getRandomdy() {
+    let value:number = (Math.random() * 100000) % 24 - 12;
+    value =  (value < 1 && value > -1) ? 2: value;
+    return value;
+  }
+  
+  // console.log(getRandomdy());
+
   const ball = {
     x:windw/2,
     y:windh/2,
     r:15,
     dx:8,
-    dy:8,
+    dy:getRandomdy(),
     p1:0,
     p2:0,
     score1:0,
     score2:0,
+    playerleft:"",
+    playerright:"",
+    middleY:0,
   }
+
+  console.log(ball.dy);
   
   const DEFAULT  = {w:windh, oldw:oldwindw, mousepos:0, room:"", pos:0}
   const BALL = {room:"", ped1:0, ped2:0, ball_data:ball}
@@ -43,19 +56,19 @@ const s = (p:any):any => {
   let my_pos:number = 0;
   let my_room:string = "";
   
-  let paddle1Y:number;
   const gameEnded = false;
   let gameStart = false;
   let isLoad = true;
   let isWon = false;
   let isLost = false;
-  // let gameWait = true;
-  //Paddle Thickness
+  let isModern = false;
+  
+  
+  let paddle1Y:number;
   const LeftPaddle:number=5;
   const RightPaddle:number=5;
-  //X postition of the paddles
   const LeftPaddleX:number = 3;
-  let RightPaddleX:number = windw - 7; // don't forgot
+  let RightPaddleX:number = windw - 7;
   //the length of the paddles
   // let LeftPaddleHeight = 120;
   let LeftPaddleHeight:number = windw / 14;
@@ -66,7 +79,6 @@ const s = (p:any):any => {
   
   iio.on('fin', (data) => {
     data;
-    //console.log("waaaaaaaaa3");
     p.remove();
     iio.off('connection');
     iio.off('take_pos');
@@ -78,28 +90,34 @@ const s = (p:any):any => {
     iio.off('done');
     iio.off('won');
     iio.off('lost');
-    iio.off('testinter');
+    // iio.off('testinter');
     iio.disconnect();
   });
   
   iio.emit("connection", ball);
 
   iio.on('connection', (data) => {
-    iio.emit("update_mouse", {...DEFAULT,oldw:0})
-    // iio.emit("update_mouse", {...DEFAULT,name:"fasfasfasfas"})
-    //console.log(data)
+    //iio.emit("update_mouse", {...DEFAULT,oldw:0})
     console.log(data)
     if (data === "wait")
     {
       isLoad = true;
-      // p.loop();
-      //p.noLoop();
     }
-    else
+    else if (data === "start")
     {
       isLoad = false;
       gameStart = true;
-      // p.loop();
+    }
+    else if (data === "wait Modern")
+    {
+      isLoad = true;
+      isModern = true;
+    }
+    else if (data === "start Modern")
+    {
+      isLoad = false;
+      isModern = true;
+      gameStart = true;
     }
   });
 
@@ -133,13 +151,6 @@ const s = (p:any):any => {
     // console.log("hiiiiiiiii");
   });
 
-  // function reset(){
-  //   BALL.ball_data.x = windw/2 + 50;
-  //   BALL.ball_data.y = windh/2 + 50;
-  //   BALL.ball_data.dx = 6;
-  //   BALL.ball_data.dy = 6;
-  // }
-
   iio.on('reset', (data) => {
     player1 = data.score1;
     player2 = data.score2;
@@ -148,16 +159,12 @@ const s = (p:any):any => {
   });
   
   iio.on('restart', (data) => {
-    // data;
     if (iio.id === data.room)
     {
       BALL.ball_data.x = data.x * variationw;
       BALL.ball_data.y = data.y * variationh;
       BALL.ball_data.dx = data.dx;
       BALL.ball_data.dy = data.dy;
-      // console.log("abc");
-      //reset();
-      //BALL.stop = true;
     }
     if (gameStart === true)
       p.loop();
@@ -172,6 +179,7 @@ const s = (p:any):any => {
   
   iio.on('won', (data) => {
     data;
+    iio.emit('gamedone', data);
     if (isLost === false)
     {
       isWon = true;
@@ -187,9 +195,6 @@ const s = (p:any):any => {
     p.loop();
   });
 
-  iio.on('testinter', (data) => {
-    console.log(data);
-  });
 
 
 
@@ -208,15 +213,6 @@ const s = (p:any):any => {
     }
   }
 
-//to be filled
-  function drawScore(){
-    // p.textAlign(p.CENTER);
-    // p.textSize(20);
-    // p.fill(250,250,250);
-    // p.stroke(0,0,0)
-    // p.text("Number of tries:",3 * windw / 4 ,50)
-    // p.text(ComputerScore,3 * windw / 4 + 90,50)
-  }
 
   function  DifficultyLevel(){
     p.fill('rgba(232,190,251,1)');
@@ -225,7 +221,9 @@ const s = (p:any):any => {
     else
       p.textSize(15);
     //  p.noStroke(23);
-    p.text("Difficulty:" + Math.abs(ball.dx), windw / 4 - windw / 20, 30);
+    let level:number = Math.abs(ball.dx) - 7;
+    level = (level < 0) ? 0 : level;
+    p.text("Difficulty:" + level, windw / 4 - windw / 20, 30);
     p.text(player2 + " : " + player1, (windw * 3) / 4 - windw / 30, 30);
     p.fill('rgba(172,70,130,1)');
   }
@@ -273,7 +271,6 @@ const s = (p:any):any => {
 
 
       midline();
-      drawScore();
       DifficultyLevel();
       
       
@@ -298,8 +295,8 @@ const s = (p:any):any => {
       paddle1Y = bY - bmid;
       p.rect(LeftPaddleX, paddle1Y, LeftPaddle, LeftPaddleHeight - 10);
 
-//to be modify
-      //pc opp paddle
+//to be modify //done
+      //opp paddle
       bY = rightmouse;
       bmid = (LeftPaddleHeight - 10) / 2
       if (bY > windh - bmid)
@@ -311,13 +308,17 @@ const s = (p:any):any => {
       const RightPaddleY = bY - bmid;
       p.rect(RightPaddleX, RightPaddleY, RightPaddle, RightPaddleHeight - 10);
 
+      // to check
+      if (isModern == true)
+        p.rect(windw / 2 - 3, BALL.ball_data.middleY, 6, RightPaddleHeight - 10);
+
       BALL.ped1 = originleftmouse - 41;
       BALL.ped2 = originrightmouse - 41;
 
       
       if (gameStart == true)
         p.ellipse(BALL.ball_data.x, BALL.ball_data.y, BALL.ball_data.r, BALL.ball_data.r);
-
+      
       
 
       if (oldwindw != windw)
