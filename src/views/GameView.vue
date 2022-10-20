@@ -18,7 +18,10 @@
     //console.log(userStore.user)
     onMounted(() => {
         iio.connect();
-        iio.emit('getIDS', {id:userStore.user.id, socket:"", room:"", mode:route.query.mode})
+        if (route.query.mode === "classic" || route.query.mode === "modern")
+            iio.emit('getIDS', {id:userStore.user.id, socket:"", room:"", mode:route.query.mode, pos:0})
+        // else if (route.query.mode === "watch")
+        //     iio.emit('getIDS', {id:"id dyal li kayl3ab", socket:"", room:"", mode:route.query.mode, pos:0})
         new p5(s, game.value);
     });
     onUnmounted(async () => {
