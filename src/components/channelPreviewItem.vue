@@ -22,9 +22,9 @@
     })
 
     async function handleClick(){
-        store.updateChat(props.channel.id)
+        await store.updateChat(props.channel.id);
         await nextTick();
-        await store.updateMessages();
+		await store.updateMessages()
     }
 
 </script>

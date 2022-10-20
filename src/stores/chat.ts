@@ -42,18 +42,20 @@ export const useChatStore = defineStore('chat', () =>
         })
     }
 
-    function updateChat(id:number){
+    async function updateChat(id:number){
         activeChatMessages.value = [];
         if(id === 0)
         {
             activeChat.value = null;
             return;
         }
-        $api.get('/channel/'+id).then((res) => {
+        try{
+            const res = await $api.get('/channel/'+id)
             activeChat.value = res.data;
-        }).catch(err=> {
-            console.log(err);
-        })
+        }
+        catch(err){
+            console.log(err)
+        }
 
         if(joinedRooms.value.find((item)=> item.id == id))
             joinedRooms.value.find((item)=> item.id == id)!.unread = 0;

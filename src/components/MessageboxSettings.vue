@@ -85,7 +85,7 @@
 		}
 	})
 
-	function submit(){
+	async function submit(){
 		let data = new FormData();
 		if(password.value && passInput.value.value.length == 0){
 			toast.error("Password cannot be empty")
@@ -119,10 +119,11 @@
                      "Content-Type": "multipart/form-data",
                     },
                 })
-                .then(function () {
+                .then(async()=> {
                     toast.success("Channel updated")
 					chatStore.updateJoined()
-					chatStore.updateChat(chatStore.activeChat.id);
+					await chatStore.updateChat(chatStore.activeChat.id);
+					await chatStore.updateMessages()
 					chatStore.activeChatSetting = false
                 })
                 .catch(function (res) {

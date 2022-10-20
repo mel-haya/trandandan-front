@@ -145,8 +145,6 @@
 		window.addEventListener('resize',  () => {
 			enableMembers.value = false;
 		});
-		
-		chatStore.socket.emit('join_channel', { userId: userStore.user.id, channelId: chatStore.activeChat.id});
 		chatStore.socket.on('receive_message', listner)
 		chatStore.updateMessages().then(() => {
 			listner()
