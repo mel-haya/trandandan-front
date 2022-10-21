@@ -74,7 +74,14 @@
                 let channel = chatStore.joinedRooms.find((a: any)=>(a.id === res.channel.id))
                 if(chatStore.joinedRooms.some((a: any)=>(a.id === res.channel.id)) === false)
                     chatStore.updateJoined()
-                channel!.unread += 1
+                if(channel){
+                    channel.unread += 1
+                    let currentIndex = chatStore.joinedRooms.indexOf(channel);
+                    if(currentIndex === 0)
+                        return;
+                    chatStore.joinedRooms.splice(currentIndex, 1);
+                    chatStore.joinedRooms.unshift(channel)
+                }   
             }
         });
     })

@@ -29,6 +29,7 @@
         chat.updateAvailable();
         chat.updateJoined();
         chat.updateChat(Props.room.id);
+        await chat.updateMessages()
     }
 </script>
 

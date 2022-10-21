@@ -161,13 +161,12 @@
                 profile.value = response.data;
                 setStatus()
             })
-        chat.socket.on('friends-status', (data:any) => {
+        chat.socket.on('user-status', (data:any) => {
             console.log(data)
             status.value = data
         })
         chat.socket.emit('user-status', store.activeProfile)
         onlineLoop = setInterval(() => {
-            console.log('emit')
             chat.socket.emit('user-status', store.activeProfile);   
         },5000);
     }
@@ -175,7 +174,7 @@
     onMounted(updateUser)
 
     onUnmounted(() => {
-        chat.socket.off('friends-status')
+        chat.socket.off('user-status')
         clearInterval(onlineLoop)
     })
 

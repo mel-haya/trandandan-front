@@ -27,7 +27,6 @@ then
 	docker-machine create --driver virtualbox default
 fi
 
-
 echo	"export HOME_BREW=\"/goinfre/$USER\""	>> ~/.zshrc
 echo	"export PATH=$BREW_HOME/.brew/bin:$PATH"
 echo	"export MACHINE_STORAGE_PATH=\"/Users/$USER/goinfre/.docker\""	>> ~/.zshrc
