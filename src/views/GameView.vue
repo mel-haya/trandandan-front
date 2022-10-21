@@ -5,13 +5,12 @@
 
 <script lang="ts" setup>
     import {onMounted, onUnmounted, ref} from 'vue';
+    import {$token} from '@/axios';
     import {s,iio} from '@/p5game';
     import p5 from 'p5';
-    import {useUserStore} from '@/stores/user'
     import { useRoute } from 'vue-router'
 
     const game = ref();
-    const userStore = useUserStore()
     const route = useRoute()
     console.log(route.query.mode);
 
@@ -19,9 +18,12 @@
     onMounted(() => {
         iio.connect();
         if (route.query.mode === "classic" || route.query.mode === "modern")
-            iio.emit('getIDS', {id:userStore.user.id, socket:"", room:"", mode:route.query.mode, pos:0})
-        // else if (route.query.mode === "watch")
-        //     iio.emit('getIDS', {id:"id dyal li kayl3ab", socket:"", room:"", mode:route.query.mode, pos:0})
+            iio.emit('getIDS', {token:$token, id:0, socket:"", room:"", mode:route.query.mode, pos:0})
+        else if (route.query.mode === "watch")
+            iio.emit('getIDS', {token:$token, id:route.query.id, socket:"", room:"", mode:route.query.mode, pos:0})
+        else if (route.query.mode === "private")
+            iio.emit('getIDS', {token:$token, id:route.query.id, socket:"", room:"", mode:route.query.mode, pos:0})
+
         new p5(s, game.value);
     });
     onUnmounted(async () => {

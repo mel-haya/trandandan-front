@@ -156,7 +156,7 @@ const s = (p:any):any => {
   iio.on('reset', (data) => {
     player1 = data.score1;
     player2 = data.score2;
-    //p.text("score " + player1 + " : " + player2, windw / 2 + 10, 30);
+    p.text("score " + player1 + " : " + player2, windw / 2 + 10, 30);
     p.noLoop();
   });
   
