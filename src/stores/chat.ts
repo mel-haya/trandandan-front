@@ -7,12 +7,7 @@ import { $api } from "@/axios"
 import { useUserStore } from "@/stores/user";
 import { useToast } from "vue-toastification";
 
-// ref()s become state properties
-// computed()s become getters
-// function()s become actions
-
 const userStore = useUserStore();
-
 
 export const useChatStore = defineStore('chat', () =>
 {
@@ -20,12 +15,8 @@ export const useChatStore = defineStore('chat', () =>
     const activeChat: any = ref(null);
     const activeChatSetting = ref(false);
     const activeChatMessages:Ref<Message[]>= ref([]);
-    // const chatMessages: Ref<any[]> = ref([]);
-    // const enableMembersSettings = ref(false);
     const availableRooms: any = ref([]);
     const joinedRooms: Ref<Room[]> = ref([]);
-
-    
 
     function updateAvailable(){
         $api.get('/channel/non-joined').then((res) => {
@@ -38,7 +29,6 @@ export const useChatStore = defineStore('chat', () =>
             joinedRooms.value = res.data.map((a: any)=>{
                 return new Room(a.id, a.name, joinedRooms.value.find((item)=> item.id == a.id)?.unread ?? 0)
             });
-            // return new Room(a.id, a.name, joinedRooms.value.find((item)=> item.id == a.id)?.unread ?? 0); keep it in case some function doesn't work
         })
     }
 
@@ -64,7 +54,6 @@ export const useChatStore = defineStore('chat', () =>
     async function updateMessages(){
         if(activeChat.value === null)
             return;
-        console.log(activeChat.value)  
         $api.get('/message/'+ activeChat.value.id).then( async (res) => {
             activeChatMessages.value = res.data.map((a: any)=>{
                 return new Message(a.id, a.channel.id, a.author.displayName, a.content, (a.author.id === userStore.user.id ) ? "me" : "them");
@@ -77,12 +66,6 @@ export const useChatStore = defineStore('chat', () =>
             }
         })
     }
-
-    // const activeMessages = computed(() => {
-    //     return chatMessages.value.filter((m:any) => m.channelId === activeChat.value.id);
-    // });
-
-
 
     return({activeChat,activeChatSetting,socket,availableRooms,joinedRooms,activeChatMessages,updateMessages,updateAvailable,updateJoined,updateChat})
 })

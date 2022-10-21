@@ -68,8 +68,7 @@
 	const toast = useToast();
 	const { activeChatMessages } = storeToRefs(chatStore)
 
-
-	let listner = async () => {
+	let scrollDown = async () => {
 		await nextTick();
 		if(chatMessages.value !== null){
 			chatMessages.value.scrollTop = chatMessages.value.scrollHeight;
@@ -118,7 +117,7 @@
 					new Message(userStore.user.id,chatStore.activeChat.id,userStore.user.displayName,messageBody.value, "me")
 				);
 				messageBody.value = '';
-				listner()
+				scrollDown()
 			}
 			else{
 				toast.error(response.cause);
@@ -145,19 +144,16 @@
 		window.addEventListener('resize',  () => {
 			enableMembers.value = false;
 		});
-		chatStore.socket.on('receive_message', listner)
-		chatStore.updateMessages().then(() => {
-			listner()
-		});
+		chatStore.socket.on('receive_message', scrollDown)
 		
 	});
 
 	onUnmounted(() => {
-		chatStore.socket.off('receive_message', listner)
+		chatStore.socket.off('receive_message', scrollDown)
 	});
 
 	watch(activeChatMessages, async ()=>{
-		await listner()
+		await scrollDown()
 	})
 
 	window.addEventListener('click', function () {
