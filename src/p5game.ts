@@ -1,5 +1,10 @@
 import { io } from "socket.io-client";
-const iio = io("http://127.0.0.1:3000/play");
+import {$token} from '@/axios';
+const iio = io("http://127.0.0.1:3000/play", {
+  extraHeaders: {
+      "token": $token
+  }
+});
 
 const s = (p:any):any => {
   
