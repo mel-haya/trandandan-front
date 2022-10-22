@@ -1,6 +1,10 @@
 <template>
     <div id="messages">
-            <channelPreviewItem v-for="c in chatStore.joinedRooms" :key="c.id" :channel="c"/> 
+        <div id="msgEmptyState" v-if="!chatStore.joinedRooms.length">
+            <fa id="emptyIcon" :icon="['far','message']" size="3x"/>
+            <p id="emptyText">No messages</p>
+        </div>
+        <channelPreviewItem v-for="c in chatStore.joinedRooms" :key="c.id" :channel="c"/> 
     </div>  
 </template>
 
@@ -43,5 +47,10 @@
         border-radius: 10px;
     }
 
+    #msgEmptyState{
+        width: 100%;
+        padding: 30px;
+        color: rgb(173, 173, 173);
+    }
 
 </style>

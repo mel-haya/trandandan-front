@@ -16,7 +16,7 @@
 		</div>
 		<div id="chatOptions" v-if="enableOptions">
 			<div id="groupOptions" v-if="chatStore.activeChat.type === 'direct'">
-				<p @click="interfaceStore.setActiveProfile(1)">Profile</p>
+				<p @click="interfaceStore.setActiveProfile(chatStore.activeChat.id)">Profile</p>
 				<p>Invite to a game</p>
 				<p>Block {{chatStore.activeChat.name}}</p>
 			</div>
@@ -106,11 +106,9 @@
 			maximize();
 	}
 
-	function send_message(){
-		if(messageBody.value === '')
-			return;
-		console.log('sending message');
-		chatStore.socket.emit('send_message', { userId: userStore.user.id, channelId: chatStore.activeChat.id , content: messageBody.value}, 
+	function send_direct_message(){
+		
+		chatStore.socket.emit('send_direct_message', { receiverId: chatStore.activeChat.id , content: messageBody.value}, 
 		(response:any) => {
 			if(response.success === true){
 				chatStore.activeChatMessages.push( 
@@ -122,13 +120,35 @@
 			else{
 				toast.error(response.cause);
 				messageBody.value = '';
+			}
+		})
+	}
+
+	function send_message(){
+		if(messageBody.value === '')
+			return;
+		if(chatStore.activeChat.type === 'direct'){
+			send_direct_message();
+			return;
+		}
+
+		chatStore.socket.emit('send_message', {channelId: chatStore.activeChat.id , content: messageBody.value}, 
+		(response:any) => {
+			if(response.success === true){
+				chatStore.activeChatMessages.push( 
+					new Message(userStore.user.id,chatStore.activeChat.id,userStore.user.displayName,messageBody.value, "me")
+				);
+				scrollDown()
+				messageBody.value = '';
+			}
+			else{
+				toast.error(response.cause);
 				if(response.cause == 'kicked'){
 					leaveGroup()
 				}
+				messageBody.value = '';
 			}
-		});
-		
-		
+		})
 	}
 
 	async function leaveGroup(){
@@ -145,11 +165,12 @@
 			enableMembers.value = false;
 		});
 		chatStore.socket.on('receive_message', scrollDown)
-		
+		chatStore.socket.on('receive_direct_message', scrollDown)
 	});
 
 	onUnmounted(() => {
 		chatStore.socket.off('receive_message', scrollDown)
+		chatStore.socket.off('receive_direct_message', scrollDown)
 	});
 
 	watch(activeChatMessages, async ()=>{

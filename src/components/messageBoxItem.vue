@@ -1,6 +1,6 @@
 <template>
-    <div id="message" :class="Props.message?.from">
-        <p id="author">{{Props.message?.author}}</p>
+    <div id="message" :class="Props.message.from">
+        <p id="author" v-if="Props.message.author">{{Props.message.author}}</p>
         <p>{{Props.message?.content}}</p>
     </div>
 </template>
@@ -8,7 +8,10 @@
 <script lang="ts" setup>
     import {defineProps} from 'vue'
     let Props = defineProps({
-        message: Object,
+        message: {
+            type: Object,
+            required: true
+        }
     });
 </script>
 

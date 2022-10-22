@@ -4,6 +4,8 @@ import { createPinia, storeToRefs } from 'pinia'
 import { createApp } from 'vue'
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { fas } from '@fortawesome/free-solid-svg-icons'
+import { far} from '@fortawesome/free-regular-svg-icons'
+ 
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import App from './App.vue'
 import P5 from 'p5'
@@ -14,8 +16,8 @@ import "vue-toastification/dist/index.css";
 const router = createRouter()
 const pinia = createPinia()
 
-import { useUserStore } from '@/stores/user'
-library.add(fas)
+library.add(fas,far)
+
 createApp(App)
 .use(Toast, {
     transition: "Vue-Toastification__fade",

@@ -28,7 +28,7 @@
         await new Promise(r => setTimeout(r, 100));
         chat.updateAvailable();
         chat.updateJoined();
-        chat.updateChat(Props.room.id);
+        await chat.updateChat(Props.room.id);
         await chat.updateMessages()
     }
 </script>
@@ -60,7 +60,7 @@
 
     #GroupItem{
         position: relative;
-        width: calc(100% - 10px);
+        width: calc(100% - 20px);
         height: 120px;
         background-color: rgba(122, 51, 125, 0.995);
         color: white;
@@ -68,7 +68,6 @@
         font-weight: 600;
         text-align: center;
         padding: 10px;
-        margin: 10px;
         border-radius: 10px;
         overflow: hidden;
     }

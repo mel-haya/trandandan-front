@@ -1,5 +1,13 @@
+    <template>
+        <img src="../assets/pong-online.png" alt="">
+        <br>
+        <div id="loginButton">
+            <a @click="submit" href="http://localhost:3000/auth/42">Sign up with 42</a>
+        </div>
+    
+    </template>
 
-<script setup>
+<script lang="ts" setup>
     import axios from 'axios';
      function submit(){
         axios.get(`http://localhost:3000/auth/42`).catch((err) => console.log(err)) 
@@ -9,14 +17,6 @@
 
 
 
-<template>
-    <img src="../assets/pong-online.png" alt="">
-    <br>
-    <div id="loginButton">
-        <a @click="submit" href="http://localhost:3000/auth/42">Sign up with 42</a>
-    </div>
-
-</template>
 
 <style scoped>
 img{
