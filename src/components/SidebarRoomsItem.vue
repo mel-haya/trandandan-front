@@ -31,9 +31,10 @@
         #rooms{
             position: relative;
             width: 100%;
-            overflow-y: scroll;
+            overflow-y: auto;
             overflow-x: hidden;
-            transition: max-height 0.5s ease; 
+            transition: max-height 0.5s ease;
+            margin: 10px;
         }
         
         #rooms::-webkit-scrollbar {
@@ -53,7 +54,7 @@
 
         #createRoom{
             position: relative;
-            width: calc(100% - 10px);
+            width: calc(100% - 20px);
             height: 70px;
             display: flex;
             align-items: center;
@@ -61,8 +62,8 @@
             cursor: pointer;
             transition: background-color 0.2s ease;
             font-size: 20px;
-            margin-left: 10px;
             border-radius: 30px;
+            margin-bottom: 10px;
         }
 
         #createIcon{

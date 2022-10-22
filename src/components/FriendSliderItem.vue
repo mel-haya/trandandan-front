@@ -1,15 +1,21 @@
 <template>
-    <div class="sliderItem">
+    <div class="sliderItem" @click="chat.updateChatDirect(props.user.id, props.user.displayName)">
         <div class="sliderImg" :style="`background-image: url('${props.user?.imgPath}')`">
         </div>
-        <p>{{props.user?.displayName}}</p>
+        <p>{{props.user.displayName}}</p>
     </div>
 </template>
 
 <script lang="ts" setup>
     import {defineProps} from 'vue'
+    import {useChatStore} from '@/stores/chat';
+
+    const chat = useChatStore();
     let props = defineProps({
-        user: Object,
+        user:{
+            type: Object,
+            required: true
+        }
     });
 </script>
 

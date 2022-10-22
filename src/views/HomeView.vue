@@ -84,6 +84,14 @@
                 }   
             }
         });
+
+        chatStore.socket.on("receive_direct_message", (res:any) => {
+            if(chatStore.activeChat && res.author.id == chatStore.activeChat.id && chatStore.activeChat.type === 'direct'){
+                chatStore.activeChatMessages.push( 
+					new Message(res.id,res.author.id,"",res.content,"them")
+				);
+            }
+        });
     })
 
 </script>

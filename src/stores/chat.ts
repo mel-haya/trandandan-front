@@ -51,8 +51,31 @@ export const useChatStore = defineStore('chat', () =>
             joinedRooms.value.find((item)=> item.id == id)!.unread = 0;
     }
 
+    async function updateChatDirect(id:number, name?:String){
+        console.log('yolo1')
+        activeChatMessages.value = [];
+        if(id === 0)
+        {
+            activeChat.value = null;
+            return;
+        }
+        activeChat.value = {
+            'id': id,
+            'name': name,
+            'type': 'direct'
+        }
+        $api.get('/message/direct/'+ id).then( async (res) => {
+            // activeChatMessages.value = res.data.map((a: any)=>{
+            //     return new Message(a.id, a.author.id, a.author.displayName, a.content, (a.author.id === userStore.user.id ) ? "me" : "them");
+            // })
+        }).catch((err) => {
+            console.log(err)
+        })
+    }
+
     async function updateMessages(){
-        if(activeChat.value === null)
+        console.log('yolo2')
+        if(activeChat.value === null || activeChat.value.type === 'direct')
             return;
         $api.get('/message/'+ activeChat.value.id).then( async (res) => {
             activeChatMessages.value = res.data.map((a: any)=>{
@@ -67,5 +90,5 @@ export const useChatStore = defineStore('chat', () =>
         })
     }
 
-    return({activeChat,activeChatSetting,socket,availableRooms,joinedRooms,activeChatMessages,updateMessages,updateAvailable,updateJoined,updateChat})
+    return({updateChatDirect,activeChat,activeChatSetting,socket,availableRooms,joinedRooms,activeChatMessages,updateMessages,updateAvailable,updateJoined,updateChat})
 })
