@@ -17,7 +17,16 @@ export const useChatStore = defineStore('chat', () =>
     const activeChatMessages:Ref<Message[]>= ref([]);
     const availableRooms: any = ref([]);
     const joinedRooms: Ref<Room[]> = ref([]);
+    const friendRequests: Ref<any[]> = ref([])
 
+    function updateFriendRequests(){
+        $api.get("user/received-requests")
+        .then(response => { 
+            friendRequests.value = response.data;
+        })
+        .catch((err) => console.log(err));
+    }
+    
     function updateAvailable(){
         $api.get('/channel/non-joined').then((res) => {
             availableRooms.value = res.data;
@@ -90,5 +99,5 @@ export const useChatStore = defineStore('chat', () =>
         })
     }
 
-    return({updateChatDirect,activeChat,activeChatSetting,socket,availableRooms,joinedRooms,activeChatMessages,updateMessages,updateAvailable,updateJoined,updateChat})
+    return({updateChatDirect,updateFriendRequests,friendRequests,activeChat,activeChatSetting,socket,availableRooms,joinedRooms,activeChatMessages,updateMessages,updateAvailable,updateJoined,updateChat})
 })

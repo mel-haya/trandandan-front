@@ -92,6 +92,12 @@
 				);
             }
         });
+
+        chatStore.socket.on("update-friends", ()=>{
+            //TODO: update friends
+            console.log("rak nadi")
+            chatStore.updateFriendRequests()
+        })
     })
 
 </script>

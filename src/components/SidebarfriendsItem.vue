@@ -10,9 +10,9 @@
             </div>
         </div>
         <div id="notifContainer" :style="`max-height:${notificationHeight}px`">
-            <h2 id="requestEmpty" v-if="!friendRequests.length">No friend requests</h2>
+            <h2 id="requestEmpty" v-if="!chat.friendRequests.length">No friend requests</h2>
             <!-- <NotifItem :user="req" @update="updateRequests()"/> -->
-            <div id="notifItem" v-for="req in friendRequests" :key="req?.id">
+            <div id="notifItem" v-for="req in chat.friendRequests" :key="req?.id">
                 <p id="notifBody"><span>{{req.displayName}}</span> Sent you a friend request</p>
                 <div id="approveBtn" @click="acceptReq(req.id)"><fa icon="check"/></div>
                 <div id="denyBtn" @click="denyReq(req.id)"><fa icon="xmark"/></div>
@@ -33,9 +33,10 @@
     import type { Ref } from 'vue'
     import {useInterfaceStore} from '@/stores/interface';
     import {$api} from '@/axios'
-    import {useToast} from 'vue-toastification'
+    // import {useToast} from 'vue-toastification'
+    import {useChatStore} from '@/stores/chat'
 
-    const toast = useToast();
+    // const toast = useToast();
     let notificationHeight = ref(0);
     let innerSlider = ref("innerSlider");
     let slider:Ref<any|null> = ref(null);
@@ -43,16 +44,12 @@
     let startX:any;
     let scrollLeft:any;
     let interfaceStore = useInterfaceStore();
-    let friendRequests:Ref<any> = ref([]);
     let friends:Ref<any> = ref([]);
+    const chat = useChatStore();
 
     function updateRequests()
     {   
-        $api.get("user/received-requests")
-        .then(function (response){ 
-            friendRequests.value = response.data;
-        })
-        .catch((err) => console.log(err));
+        chat.updateFriendRequests()
         updateFriends()
     }
 
@@ -67,6 +64,7 @@
 
     onMounted(() => {
         updateRequests()
+        console.log(chat.socket)
     });
 
     function sliderClick(e:any){
@@ -96,20 +94,14 @@
     }
 
     function acceptReq(id:number){
-        $api.post('user/accept-friend', {
-            "target_id": id
-        }).then((r) => {
-            updateRequests()
-            toast.success(r.data)
+        chat.socket.emit('accept-friend-request', id, () => {
+            chat.updateFriendRequests()
         })
     }
 
     function denyReq(id:number){
-        $api.post('user/remove-friend', {
-            "target_id": id
-        }).then((r) => {
-            updateRequests()
-            toast.success(r.data)
+        chat.socket.emit('remove-relationship', id, () => {
+            chat.updateFriendRequests()
         })
     }
 

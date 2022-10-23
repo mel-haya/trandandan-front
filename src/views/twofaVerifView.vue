@@ -2,12 +2,10 @@
     <div id="registercontainer">
         <p><fa icon="lock"/> Two-factor authentication</p>
         <div id="twofaForm">
-            <img :src="qrimg" alt="bruh">
             <input type="text" @keyup.enter="validate" placeholder="enter code" id="usernameInput" name="code" v-model="code">
             <p v-if="invalid" id="invalidErr">Invalid code</p>
             <div>
-                <button @click="validate">Save</button>
-                <button @click="router.go(-1)">cancel</button>
+                <button @click="validate">Validate</button>
             </div>
         </div>
     </div> 
@@ -15,45 +13,37 @@
 
 
 <script lang="ts" setup>
+/* eslint-disable */
     // import {toDataURL} from 'qrcode';
     import {onMounted, ref} from 'vue'
     import { useRouter } from 'vue-router';
-    import {$api} from '@/axios'
     import Cookies from 'js-cookie'
+    import axios from 'axios'
+    import {$api} from '@/axios'
 
-    let qrimg = ref('');
     let invalid = ref(false);
     let code = ref('');
     let router = useRouter();
+    let token = Cookies.get('accessToken')
     
-    onMounted( async () => {
-        $api.get("http://localhost:3000/2fa/generate")
-        .then(function (response){
-            qrimg.value = response.data;
-        })
-        .catch((err) => console.log(err));
-        
-    })
 
     async function validate()
     {
         $api.post("http://localhost:3000/2fa/verify", {code: code.value})
-        .then((res) => { 
-            console.log(res.data.accessToken);
-            Cookies.set('accessToken', res.data.accessToken);
-            router.go(-1);
-            // if(code.value == res.data)
-            // {
-            //     invalid.value = false;
-            //     return true;
-            // }
-            // else
-            // {
-            //     invalid.value = true;
-            //     return false;
-            // }
+        .then((response) => { 
+            console.log(response);
         })
         .catch((err) => console.log(err));
+        // if(code.value == res)
+        // {
+        //     invalid.value = false;
+        //     return true;
+        // }
+        // else
+        // {
+        //     invalid.value = true;
+        //     return false;
+        // }
     }
     
 </script>
