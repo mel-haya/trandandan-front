@@ -93,12 +93,17 @@
     }
 
     function sendRequest(){
-        $api.post('/user/add-friend', {'target_id': profile.value?.profile.id}).then( (r) => {
-            updateUser()
-            toast.success(r.data)
-        }).catch(() => {
-            console.log("error")
+        // $api.post('/user/add-friend', {'target_id': profile.value?.profile.id}).then( (r) => {
+        //     updateUser()
+        //     toast.success(r.data)
+        // }).catch(() => {
+        //     console.log("error")
+        // })
+
+        chat.socket.emit('send-friend-request', profile.value?.profile.id, (res:any) => {
+            console.log(res)
         })
+
     }
 
     function removeFriend(){
@@ -366,6 +371,4 @@
     .text-red{
         color: rgb(255, 32, 32);
     }
-
-
 </style>

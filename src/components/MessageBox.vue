@@ -118,7 +118,7 @@
 				scrollDown()
 			}
 			else{
-				toast.error(response.cause);
+				console.log(response);
 				messageBody.value = '';
 			}
 		})

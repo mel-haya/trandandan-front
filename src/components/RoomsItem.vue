@@ -4,15 +4,14 @@
         <p id="GroupName">{{Props.room.name}}</p>
         <!-- <p id="GroupCount">{{Props.room.members}} members</p> -->
         <p id="GroupCount">{{Props.room.membersCount}} members</p>
-        <div id="JoinBtn" @click="joinGroup">Join</div>
+        <div id="JoinBtn" @click.stop="joinGroup">Join</div>
     </div>
 </template>
 
 <script lang="ts" setup>
-    import { defineProps } from 'vue'
     import { useChatStore } from '@/stores/chat';
     import { useUserStore } from '@/stores/user';
-// import { Socket } from 'engine.io-client';
+
     const chat = useChatStore();
     const user = useUserStore();
     let Props = defineProps({
@@ -21,7 +20,13 @@
             required: true
         }
     });
+    let emit = defineEmits(['selected']);
+
     async function joinGroup(){
+        if(Props.room.type === 'protected'){
+            emit('selected')
+            return
+        }
         chat.socket.emit("join_channel", {"channelId": Props.room.id, "userId": user.user.id}, (data:any) => {
             console.log(data);
         });
@@ -60,7 +65,7 @@
 
     #GroupItem{
         position: relative;
-        width: calc(100% - 20px);
+        width: calc(100% - 10px);
         height: 120px;
         background-color: rgba(122, 51, 125, 0.995);
         color: white;
@@ -70,9 +75,8 @@
         padding: 10px;
         border-radius: 10px;
         overflow: hidden;
+        margin-bottom: 10px;
     }
-
-
 
     #GroupName{
         position: relative;

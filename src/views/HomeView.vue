@@ -92,6 +92,11 @@
 				);
             }
         });
+
+        chatStore.socket.on("update-requests", (res:any)=>{
+            console.log("new request: ", res)
+            chatStore.friendRequests.push(res)
+        })
     })
 
 </script>
