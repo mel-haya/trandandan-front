@@ -17,22 +17,25 @@
             <span> Settings</span>
         </div>
         <hr>
-        <div id="context-menu-item">
+        <div id="context-menu-item" @click="logout">
             <fa icon="sign-out"/>
             <span> Sign out</span>
         </div>
     </div>
 </template>
 
-<script setup>
+<script lang="ts" setup>
     import { onMounted, ref } from 'vue';
     import { useInterfaceStore } from '../stores/interface';
     import { useRouter } from 'vue-router';
     import {$api} from '@/axios';
+    import Cookies from 'js-cookie';
+    import {useChatStore} from '@/stores/chat';
 
     let router = useRouter();
     let store = useInterfaceStore();
-    let contextMenu = ref(null);
+    let contextMenu = ref();
+    const chat = useChatStore();
     let Profile = ref({
         id: 0,
         username: '',
@@ -58,7 +61,12 @@
         Profile.value.imageUrl = res.data.imgPath;
     })
 
-
+    function logout(){
+        chat.socket.emit("logout", {});
+        Cookies.remove("accessToken");
+        chat.socket.disconnect();
+        router.push('/login');
+    }
 
 </script>
 

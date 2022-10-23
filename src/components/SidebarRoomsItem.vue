@@ -57,6 +57,7 @@
                 password.value = '';
             }
             else{
+                console.log(data)
                 toast.error(data.error)
             }
         });

@@ -107,38 +107,52 @@
     }
 
     function removeFriend(){
-        $api.post('/user/remove-friend', {'target_id': profile.value?.profile.id}).then( (r) => {
-            updateUser()
-            toast.success(r.data)
-        }).catch(() => {
-            console.log("error")
+        // $api.post('/user/remove-friend', {'target_id': profile.value?.profile.id}).then( (r) => {
+        //     updateUser()
+        //     toast.success(r.data)
+        // }).catch(() => {
+        //     console.log("error")
+        // })
+        chat.socket.emit('remove-relationship', profile.value?.profile.id, () => {
+            chat.updateFriendRequests()
         })
+        
     }
 
     function acceptRequest(){
-        $api.post('/user/accept-friend', {'target_id': profile.value?.profile.id}).then( (r) => {
-            updateUser()
-            toast.success(r.data)
-        }).catch(() => {
-            console.log("error")
+        // $api.post('/user/accept-friend', {'target_id': profile.value?.profile.id}).then( (r) => {
+        //     updateUser()
+        //     toast.success(r.data)
+        // }).catch(() => {
+        //     console.log("error")
+        // })
+        chat.socket.emit('accept-friend-request', profile.value?.profile.id, () => {
+            chat.updateFriendRequests()
         })
     }
 
     function blockUser(){
-        $api.post('/user/block-user', {'target_id': profile.value?.profile.id}).then((r) => {
-            updateUser()
-            toast.success(r.data)
-        }).catch(() => {
-            console.log("error")
+        // $api.post('/user/block-user', {'target_id': profile.value?.profile.id}).then((r) => {
+        //     updateUser()
+        //     toast.success(r.data)
+        // }).catch(() => {
+        //     console.log("error")
+        // })
+        // 'block-user'
+        chat.socket.emit('block-user', profile.value?.profile.id, () => {
+            chat.updateFriendRequests()
         })
     }
 
     function unblockUser(){
-        $api.post('/user/unblock-user', {'target_id': profile.value?.profile.id}).then((r) => {
-            updateUser()
-            toast.success(r.data)
-        }).catch(() => {
-            console.log("error")
+        // $api.post('/user/unblock-user', {'target_id': profile.value?.profile.id}).then((r) => {
+        //     updateUser()
+        //     toast.success(r.data)
+        // }).catch(() => {
+        //     console.log("error")
+        // })
+        chat.socket.emit('remove-relationship', profile.value?.profile.id, () => {
+            chat.updateFriendRequests()
         })
     }
 

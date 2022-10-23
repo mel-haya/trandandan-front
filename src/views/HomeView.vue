@@ -93,9 +93,10 @@
             }
         });
 
-        chatStore.socket.on("update-requests", (res:any)=>{
-            console.log("new request: ", res)
-            chatStore.friendRequests.push(res)
+        chatStore.socket.on("update-friends", ()=>{
+            //TODO: update friends
+            console.log("rak nadi")
+            chatStore.updateFriendRequests()
         })
     })
 

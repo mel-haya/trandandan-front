@@ -33,10 +33,10 @@
     import type { Ref } from 'vue'
     import {useInterfaceStore} from '@/stores/interface';
     import {$api} from '@/axios'
-    import {useToast} from 'vue-toastification'
+    // import {useToast} from 'vue-toastification'
     import {useChatStore} from '@/stores/chat'
 
-    const toast = useToast();
+    // const toast = useToast();
     let notificationHeight = ref(0);
     let innerSlider = ref("innerSlider");
     let slider:Ref<any|null> = ref(null);
@@ -94,21 +94,14 @@
     }
 
     function acceptReq(id:number){
-        // $api.post('user/accept-friend', {
-        //     "target_id": id
-        // }).then((r) => {
-        //     updateRequests()
-        //     toast.success(r.data)
-        // })
-        chat.socket.emit('accept-friend-request', id)
+        chat.socket.emit('accept-friend-request', id, () => {
+            chat.updateFriendRequests()
+        })
     }
 
     function denyReq(id:number){
-        $api.post('user/remove-friend', {
-            "target_id": id
-        }).then((r) => {
-            updateRequests()
-            toast.success(r.data)
+        chat.socket.emit('remove-relationship', id, () => {
+            chat.updateFriendRequests()
         })
     }
 
