@@ -13,6 +13,11 @@ const s = (p:any):any => {
   let imglost:any;
   let imgload:any;
   let imgwait:any;
+  let imgingame:any;
+  let imgwry:any;
+  let imgnM:any;
+  let imgcongratulations:any;
+  
   if (window.innerWidth > 1400)
     windw = window.innerWidth - (window.innerWidth - 1400) - 100
   else
@@ -31,14 +36,6 @@ const s = (p:any):any => {
   let originrightmouse = 0;
   // console.log(windh)
 
-  // function getRandomdy() {
-  //   let value:number = (Math.random() * 100000) % 24 - 12;
-  //   value =  (value < 1 && value > -1) ? 2: value;
-  //   return value;
-  // }
-  
-  // console.log(getRandomdy());
-
   const ball = {
     x:windw/2,
     y:windh/2,
@@ -56,19 +53,22 @@ const s = (p:any):any => {
     mDY:0,
   }
 
-  // console.log(ball.dy);
   
   const DEFAULT  = {mousepos:0, room:"", pos:0}
   const BALL = {ball_data:ball}
 
   
-  const gameEnded = false;
+  // const gameEnded = false;
   let gameStart = false;
   let isLoad = true;
   let isWait = false;
   let isWon = false;
   let isLost = false;
   let isModern = false;
+  let inGame = false;
+  let wry = false;
+  let noMatch = false;
+  let iscongratulations = false;
   
   
   let paddle1Y:number;
@@ -94,17 +94,17 @@ const s = (p:any):any => {
     iio.off('reset');
     iio.off('restart');
     iio.off('fin');
-    // iio.off('done');
+    iio.off('done');
     iio.off('won');
     iio.off('lost');
     iio.off('watch_wait');
     iio.off('watch_work');
     iio.off('watch_modern');
-    // iio.off('testinter');
+    iio.off('inGame');
+    iio.off('start_connection');
     iio.disconnect();
   });
   
-  iio.emit("connection", "");
 
   iio.on('connection', (data) => {
     if (data === "wait")
@@ -114,6 +114,7 @@ const s = (p:any):any => {
     else if (data === "start")
     {
       isLoad = false;
+      isWait = false;
       gameStart = true;
     }
     else if (data === "wait Modern")
@@ -124,6 +125,7 @@ const s = (p:any):any => {
     else if (data === "start Modern")
     {
       isLoad = false;
+      isWait = false;
       isModern = true;
       gameStart = true;
     }
@@ -177,13 +179,6 @@ const s = (p:any):any => {
       p.loop();
   });
   
-  // iio.on('done', (data) => {
-  //   p.noLoop();
-  //   console.log(data);
-  //   console.log("you win");
-  //   gameStart = false;
-  // });
-  
   iio.on('won', (data) => {
     data;
     //iio.emit('gamedone', data);
@@ -200,6 +195,11 @@ const s = (p:any):any => {
     isLost = true;
     gameStart = false;
     p.loop();
+  });
+  
+  iio.on('done', (data) => {
+    data;
+    iscongratulations = true;
   });
 
   iio.on('watch_wait', (data) => {
@@ -222,8 +222,53 @@ const s = (p:any):any => {
     isModern = true;
     p.loop();
   });
-
-
+  
+  iio.on('inGame', (data) => {
+    data;
+    inGame = true;
+    isLoad = false;
+    if (data === 2)
+    {
+      wry = true;
+    }
+    else if (data === 3)
+    {
+      isWait = false;
+      noMatch = true;
+    }
+    // isModern = true;
+    // p.loop();
+    //data;
+    //p.remove();
+    // if (data !== 3)
+    // {
+    iio.off('connection');
+    iio.off('takePosition');
+    iio.off('mouse');
+    iio.off('ball');
+    iio.off('reset');
+    iio.off('restart');
+    //iio.off('fin');
+    iio.off('done');
+    iio.off('won');
+    iio.off('lost');
+    iio.off('watch_wait');
+    iio.off('watch_work');
+    iio.off('watch_modern');
+    iio.off('inGame');
+    //iio.disconnect();
+    // }
+  });
+  
+  
+  
+  iio.on('start_connection', (data) => {
+    data;
+    if (inGame === false)
+    {
+      iio.emit("connection", "");
+    }
+  });
 
 
 
@@ -261,6 +306,10 @@ const s = (p:any):any => {
       imgwon = p.loadImage('https://media.istockphoto.com/vectors/pixel-art-8bit-you-win-text-with-three-winner-golden-cups-on-black-vector-id1268272329?k=20&m=1268272329&s=170667a&w=0&h=79fO42ChPzO8gcIdzngCuag6_Y9ef2dUh1LWpaOkyXo=');
       imgload = p.loadImage(require('@/assets/waiting.jpg'));
       imgwait = p.loadImage(require('@/assets/game_wait.jpg'));
+      imgingame = p.loadImage(require('@/assets/inaGame.jpeg'));
+      imgwry = p.loadImage(require('@/assets/wryou.jpeg'));
+      imgnM = p.loadImage(require('@/assets/noMatch.jpeg'));
+      imgcongratulations = p.loadImage(require('@/assets/congratulations.jpeg'));
       imglost = p.loadImage('https://elements-video-cover-images-0.imgix.net/files/961bcd50-cb8b-4632-b46c-3abb528c984d/inline_image_preview.jpg?auto=compress&crop=edges&fit=crop&fm=jpeg&h=800&w=1200&s=90f07628b0c40410c1e819e2da97c2b8');
     }
 
@@ -379,27 +428,50 @@ const s = (p:any):any => {
      
       p.cursor(p.CROSS);
       // p.noCursor();
-      if (isWait == true)
+      if (iscongratulations == true)
       {
+        p.imageMode(p.CENTER);
+        p.image(imgcongratulations, windw / 2, windh / 2, (windw * 3) / (4 * 2), (windw * 2) / (4 * 2));
+      }
+      if (wry == true)
+      {
+        p.imageMode(p.CENTER);
+        p.image(imgwry, windw / 2, windh / 2, (windw * 3) / (4 * 2), (windw * 2) / (4 * 2));
+      }
+      else if (noMatch == true)
+      {
+        p.imageMode(p.CENTER);
+        p.image(imgnM, windw / 2, windh / 2, (windw * 3) / (4 * 2), (windw * 2) / (4 * 2));
+      }
+      else if (inGame == true)
+      {
+        p.imageMode(p.CENTER);
+        p.image(imgingame, windw / 2, windh / 2, (windw * 3) / (4 * 2), (windw * 2) / (4 * 2));
+      }
+      if (isWait == true && inGame == false)
+      {
+        //console.log("hi hih hi");
         p.imageMode(p.CENTER);
         p.image(imgwait, windw / 2, windh / 2, (windw * 3) / (4 * 2), (windw * 2) / (4 * 2));
       }
-      if (isLoad == true)
+      if (isLoad == true && inGame == false)
       {
-        //console.log("loading");
+        // console.log("loading");
         p.imageMode(p.CENTER);
         p.image(imgload, windw / 2, windh / 2, (windw * 3) / (4 * 2), (windw * 2) / (4 * 2));
         //p.noLoop();
       }
-      if (isWon == true && isLost == false)
+      if (isWon == true && isLost == false && inGame == false)
       {
+        iscongratulations = false;
         //console.log("Won");
         p.imageMode(p.CENTER);
         p.image(imgwon, windw / 2, windh / 2, windw / 4, windw / 4);
         // p.noLoop();
       }
-      if (isLost == true)
+      if (isLost == true && inGame == false)
       {
+        iscongratulations = false;
         //console.log("Lost");
         p.imageMode(p.CENTER);
         p.image(imglost, windw / 2, windh / 2, windw / 4, windw / 4);
