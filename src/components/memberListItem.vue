@@ -18,7 +18,7 @@
     
 </template>
 
-<script setup>
+<script lang="ts" setup>
     import { defineProps } from 'vue'
     import { useInterfaceStore } from '@/stores/interface'
     import { useUserStore } from '@/stores/user'
@@ -33,7 +33,7 @@
     let chatStore = useChatStore()
     let userStore = useUserStore()
     let store = useInterfaceStore()
-    function settingsClick(e){
+    function settingsClick(e:any){
         store.enableMembersSettings = props.member;
         store.enableMembersSettings.x = e.clientX;
         store.enableMembersSettings.y = e.clientY;

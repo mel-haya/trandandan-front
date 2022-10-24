@@ -12,7 +12,7 @@
     </div>
 </template>
 
-<script setup>
+<script lang="ts" setup>
     /* eslint-disable */
     import { ref } from 'vue'
     import axios from 'axios'

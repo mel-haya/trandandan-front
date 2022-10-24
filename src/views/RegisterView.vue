@@ -8,7 +8,7 @@
             <div id="imageCont">
                 <img :src="store.user?.imgPath" alt="bruh">
                 <label for="file"><fa icon="file-arrow-up"/></label>
-                <input ref="imageInput" type="file" name="file" id="file" @change="changeImage">
+                <input ref="imageInput" type="file" name="file" id="file" accept=".jpg,.jpeg,.png,.gif" @change="changeImage">
             </div>
             <input type="text" placeholder="change your name" id="usernameInput" name="username" v-model="store.user.displayName">
             <button id="faBtn" @click="redirectHome">activate 2FA</button>
@@ -23,7 +23,7 @@
     import { ref,onMounted, reactive } from 'vue'
     // import Cookies from 'js-cookie'
     import { useRouter } from 'vue-router';
-    import {$api} from '@/axios'
+    import {$api, $token, updateToken} from '@/axios'
     import type { Ref } from 'vue'
     import { useUserStore } from '@/stores/user';
     const store = useUserStore();
@@ -84,7 +84,7 @@
 
     #registercontainer{
         position: relative;
-        width: 30%;
+        width: 500px;
         padding: 1em 0.5em;
         top: 50%;
         left: 50%;

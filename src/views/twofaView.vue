@@ -15,10 +15,9 @@
 
 
 <script lang="ts" setup>
-    // import {toDataURL} from 'qrcode';
     import {onMounted, ref} from 'vue'
     import { useRouter } from 'vue-router';
-    import {$api} from '@/axios'
+    import {$api,updateToken} from '@/axios'
     import Cookies from 'js-cookie'
 
     let qrimg = ref('');
@@ -36,24 +35,15 @@
     })
 
     async function validate()
-    {
-        $api.post("http://localhost:3000/2fa/verify", {code: code.value})
-        .then((res) => { 
+    {   try{
+            const res = await $api.post("http://localhost:3000/2fa/verify", {code: code.value})
             console.log(res.data.accessToken);
             Cookies.set('accessToken', res.data.accessToken);
+            updateToken()
             router.go(-1);
-            // if(code.value == res.data)
-            // {
-            //     invalid.value = false;
-            //     return true;
-            // }
-            // else
-            // {
-            //     invalid.value = true;
-            //     return false;
-            // }
-        })
-        .catch((err) => console.log(err));
+        } catch (err) {
+            invalid.value = true;
+        }
     }
     
 </script>
@@ -75,7 +65,7 @@
 
     #registercontainer{
         position: relative;
-        width: 30%;
+        width: 500px;
         padding: 1em 0.5em;
         top: 50%;
         left: 50%;

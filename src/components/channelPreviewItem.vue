@@ -2,7 +2,6 @@
     <div id="msgItem" @click="handleClick">
         <div id="senderName">
             <p :class=" props.channel.unread === 0 ? 'empty' : ''">{{props.channel.name}}</p>
-                 <!-- <span id="status" :style="`background: ${props.message.status}?green:grey`"></span> -->
         </div>
     </div>
 </template>

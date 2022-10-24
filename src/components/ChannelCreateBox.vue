@@ -97,12 +97,14 @@ function createGroup()
         if(privacy.value == 'protected'){
             data.password = password.value
         }
-        $api.post('channel/create',data).then(()=>{
+        $api.post('channel/create',data).then((res:any)=>{
             toast.success('Group created successfully')
             store.enableChannelCreate = false
             chat.updateJoined()
+            chat.socket.emit('join_channel', {"channelId": res.data.id})
+            console.log()
         }).catch((err)=>{
-            console.log(err)
+            toast.error(err.response.data.message)
             // toast.error(err.response.data.message)
         })  
     }
