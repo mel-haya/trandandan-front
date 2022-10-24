@@ -54,6 +54,7 @@
     import { useRouter } from 'vue-router';
     import { useToast } from 'vue-toastification';
     import { useChatStore } from '@/stores/chat';
+    import { iio } from '@/p5game';
 
     let chat = useChatStore();
     let store = useInterfaceStore();
@@ -66,6 +67,7 @@
     let toast = useToast();
     let status = ref("")
     let onlineLoop:any;
+    let watchPath = ref("");
     
     
     function setStatus(){
@@ -93,67 +95,41 @@
     }
 
     function sendRequest(){
-        // $api.post('/user/add-friend', {'target_id': profile.value?.profile.id}).then( (r) => {
-        //     updateUser()
-        //     toast.success(r.data)
-        // }).catch(() => {
-        //     console.log("error")
-        // })
-
         chat.socket.emit('send-friend-request', profile.value?.profile.id, (res:any) => {
             console.log(res)
         })
-
     }
 
     function removeFriend(){
-        // $api.post('/user/remove-friend', {'target_id': profile.value?.profile.id}).then( (r) => {
-        //     updateUser()
-        //     toast.success(r.data)
-        // }).catch(() => {
-        //     console.log("error")
-        // })
         chat.socket.emit('remove-relationship', profile.value?.profile.id, () => {
             chat.updateFriendRequests()
+            chat.updateFriends()
         })
-        
+        updateUser()
     }
 
     function acceptRequest(){
-        // $api.post('/user/accept-friend', {'target_id': profile.value?.profile.id}).then( (r) => {
-        //     updateUser()
-        //     toast.success(r.data)
-        // }).catch(() => {
-        //     console.log("error")
-        // })
         chat.socket.emit('accept-friend-request', profile.value?.profile.id, () => {
             chat.updateFriendRequests()
+            chat.updateFriends()
         })
+        updateUser()
     }
 
     function blockUser(){
-        // $api.post('/user/block-user', {'target_id': profile.value?.profile.id}).then((r) => {
-        //     updateUser()
-        //     toast.success(r.data)
-        // }).catch(() => {
-        //     console.log("error")
-        // })
-        // 'block-user'
         chat.socket.emit('block-user', profile.value?.profile.id, () => {
             chat.updateFriendRequests()
+            chat.updateFriends()
         })
+        updateUser()
     }
 
     function unblockUser(){
-        // $api.post('/user/unblock-user', {'target_id': profile.value?.profile.id}).then((r) => {
-        //     updateUser()
-        //     toast.success(r.data)
-        // }).catch(() => {
-        //     console.log("error")
-        // })
         chat.socket.emit('remove-relationship', profile.value?.profile.id, () => {
+            chat.updateFriends()
             chat.updateFriendRequests()
         })
+        updateUser()
     }
 
 
@@ -176,24 +152,36 @@
 
     function updateUser(){
         $api.get('user/profile/' + store.activeProfile)
-            .then((response:any) => {
-                profile.value = response.data;
-                setStatus()
-            })
-        chat.socket.on('user-status', (data:any) => {
-            console.log(data)
-            status.value = data
-        })
-        chat.socket.emit('user-status', store.activeProfile)
-        onlineLoop = setInterval(() => {
-            chat.socket.emit('user-status', store.activeProfile);   
-        },5000);
+        .then((response:any) => {
+            profile.value = response.data;
+            setStatus()
+        })  
     }
 
-    onMounted(updateUser)
+    onMounted(()=>{
+        updateUser()
+
+        chat.socket.emit('user-status', store.activeProfile, (res:any) => {
+            status.value = res.status
+        })
+        onlineLoop = setInterval(() => {
+            iio.emit('game-status', store.activeProfile, (res:any) => {
+                status.value = res.status
+                watchPath.value = res.path
+            })
+            if(status.value === "in-game"){
+                return
+            }
+            chat.socket.emit('user-status', store.activeProfile, (res:any) => {
+                status.value = res.status
+                watchPath.value = ""
+            })
+        },5000);
+    })
 
     onUnmounted(() => {
         chat.socket.off('user-status')
+        iio.off('game-status')
         clearInterval(onlineLoop)
     })
 

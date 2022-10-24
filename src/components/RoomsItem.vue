@@ -23,6 +23,15 @@
     let emit = defineEmits(['selected']);
 
     async function joinGroup(){
+        // try{
+        //     let room = await $api.get("/channel/" + Props.room.id);
+        //     console.log(room)
+        // }
+        // catch(err){
+        //     console.log(err)
+        // }
+        
+        //TODO: check if channel privacy was changed
         if(Props.room.type === 'protected'){
             emit('selected')
             return

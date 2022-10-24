@@ -19,7 +19,7 @@
     import { useRouter } from 'vue-router';
     import Cookies from 'js-cookie'
     import axios from 'axios'
-    import {$api} from '@/axios'
+    import {$api,updateToken} from '@/axios'
 
     let invalid = ref(false);
     let code = ref('');
@@ -30,8 +30,11 @@
     async function validate()
     {
         $api.post("http://localhost:3000/2fa/verify", {code: code.value})
-        .then((response) => { 
-            console.log(response);
+        .then((res) => { 
+            Cookies.set('accessToken', res.data.accessToken);
+            updateToken()
+            router.push('/');
+
         })
         .catch((err) => console.log(err));
         // if(code.value == res)
@@ -65,7 +68,7 @@
 
     #registercontainer{
         position: relative;
-        width: 30%;
+        width: 500px;
         padding: 1em 0.5em;
         top: 50%;
         left: 50%;

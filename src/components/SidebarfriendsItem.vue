@@ -20,8 +20,8 @@
         </div>
         <div ref="slider" id="slider" @mouseup="sliderLeave" @mouseleave="sliderLeave" @mousedown="sliderClick" @mousemove="sliderMove">
             <div ref="innerSlider" id="innerSlider">
-                <h2 id="requestEmpty" v-if="!friends.length">No friends yet</h2>
-                <FriendSliderItem v-for="friend in friends" :key="friend?.id" :user="friend"/>
+                <h2 id="requestEmpty" v-if="!chat.friends.length">No friends yet</h2>
+                <FriendSliderItem v-for="friend in chat.friends" :key="friend?.id" :user="friend"/>
             </div>
         </div>
     </div>
@@ -32,7 +32,7 @@
     import FriendSliderItem from './FriendSliderItem.vue'
     import type { Ref } from 'vue'
     import {useInterfaceStore} from '@/stores/interface';
-    import {$api} from '@/axios'
+    // import {$api} from '@/axios'
     // import {useToast} from 'vue-toastification'
     import {useChatStore} from '@/stores/chat'
 
@@ -44,27 +44,26 @@
     let startX:any;
     let scrollLeft:any;
     let interfaceStore = useInterfaceStore();
-    let friends:Ref<any> = ref([]);
+    // let friends:Ref<any> = ref([]);
     const chat = useChatStore();
 
     function updateRequests()
     {   
         chat.updateFriendRequests()
-        updateFriends()
+        chat.updateFriends()
     }
 
-    function updateFriends()
-    {
-        $api.get("user/friends")
-        .then(function (response){ 
-            friends.value = response.data;
-        })
-        .catch((err) => console.log(err));
-    }
+    // function updateFriends()
+    // {
+    //     $api.get("user/friends")
+    //     .then((response) =>{ 
+    //         friends.value = response.data;
+    //     })
+    //     .catch((err) => console.log(err));
+    // }
 
     onMounted(() => {
         updateRequests()
-        console.log(chat.socket)
     });
 
     function sliderClick(e:any){
@@ -95,13 +94,13 @@
 
     function acceptReq(id:number){
         chat.socket.emit('accept-friend-request', id, () => {
-            chat.updateFriendRequests()
+            updateRequests()
         })
     }
 
     function denyReq(id:number){
         chat.socket.emit('remove-relationship', id, () => {
-            chat.updateFriendRequests()
+            updateRequests()
         })
     }
 

@@ -18,6 +18,14 @@ export const useChatStore = defineStore('chat', () =>
     const availableRooms: any = ref([]);
     const joinedRooms: Ref<Room[]> = ref([]);
     const friendRequests: Ref<any[]> = ref([])
+    const friends:Ref<any[]> = ref([])
+
+    function updateFriends(){
+        $api.get("user/friends")
+        .then((res)=>{
+            friends.value = res.data
+        })
+    }
 
     function updateFriendRequests(){
         $api.get("user/received-requests")
@@ -60,30 +68,29 @@ export const useChatStore = defineStore('chat', () =>
             joinedRooms.value.find((item)=> item.id == id)!.unread = 0;
     }
 
-    async function updateChatDirect(id:number, name?:String){
-        console.log('yolo1')
+    async function updateChatDirect(user:any){
         activeChatMessages.value = [];
-        if(id === 0)
+        if(user === 0)
         {
             activeChat.value = null;
             return;
         }
         activeChat.value = {
-            'id': id,
-            'name': name,
-            'type': 'direct'
+            'id': user.channelId,
+            'name': user.displayName,
+            'type': 'direct',
+            'userId': user.id
         }
-        $api.get('/message/direct/'+ id).then( async (res) => {
-            // activeChatMessages.value = res.data.map((a: any)=>{
-            //     return new Message(a.id, a.author.id, a.author.displayName, a.content, (a.author.id === userStore.user.id ) ? "me" : "them");
-            // })
+        $api.get('/message/dm/'+ user.channelId).then( async (res) => {
+            activeChatMessages.value = res.data.map((a: any)=>{
+                return new Message(a.id, a.author.id, a.author.displayName, a.content, (a.author.id === userStore.user.id ) ? "me" : "them");
+            })
         }).catch((err) => {
             console.log(err)
         })
     }
 
     async function updateMessages(){
-        console.log('yolo2')
         if(activeChat.value === null || activeChat.value.type === 'direct')
             return;
         $api.get('/message/'+ activeChat.value.id).then( async (res) => {
@@ -99,5 +106,5 @@ export const useChatStore = defineStore('chat', () =>
         })
     }
 
-    return({updateChatDirect,updateFriendRequests,friendRequests,activeChat,activeChatSetting,socket,availableRooms,joinedRooms,activeChatMessages,updateMessages,updateAvailable,updateJoined,updateChat})
+    return({updateFriends,updateChatDirect,updateFriendRequests,friends,friendRequests,activeChat,activeChatSetting,socket,availableRooms,joinedRooms,activeChatMessages,updateMessages,updateAvailable,updateJoined,updateChat})
 })

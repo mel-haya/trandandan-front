@@ -1,5 +1,5 @@
 <template>
-    <div class="sliderItem" @click="chat.updateChatDirect(props.user.id, props.user.displayName)">
+    <div class="sliderItem" @click="chat.updateChatDirect(props.user)">
         <div class="sliderImg" :style="`background-image: url('${props.user?.imgPath}')`">
         </div>
         <p>{{props.user.displayName}}</p>

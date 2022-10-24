@@ -16,9 +16,8 @@
 		</div>
 		<div id="chatOptions" v-if="enableOptions">
 			<div id="groupOptions" v-if="chatStore.activeChat.type === 'direct'">
-				<p @click="interfaceStore.setActiveProfile(chatStore.activeChat.id)">Profile</p>
+				<p @click="interfaceStore.setActiveProfile(chatStore.activeChat.userId)">Profile</p>
 				<p>Invite to a game</p>
-				<p>Block {{chatStore.activeChat.name}}</p>
 			</div>
 			<div id="groupOptions" v-else>
 				<p>Add a new user</p>
@@ -107,8 +106,7 @@
 	}
 
 	function send_direct_message(){
-		
-		chatStore.socket.emit('send_direct_message', { receiverId: chatStore.activeChat.id , content: messageBody.value}, 
+		chatStore.socket.emit('send_direct_message', { "channelId": chatStore.activeChat.id , "content": messageBody.value}, 
 		(response:any) => {
 			if(response.success === true){
 				chatStore.activeChatMessages.push( 
@@ -118,7 +116,7 @@
 				scrollDown()
 			}
 			else{
-				console.log(response);
+				toast.error(response.error);
 				messageBody.value = '';
 			}
 		})
@@ -131,7 +129,6 @@
 			send_direct_message();
 			return;
 		}
-
 		chatStore.socket.emit('send_message', {channelId: chatStore.activeChat.id , content: messageBody.value}, 
 		(response:any) => {
 			if(response.success === true){
@@ -142,8 +139,8 @@
 				messageBody.value = '';
 			}
 			else{
-				toast.error(response.cause);
-				if(response.cause == 'kicked'){
+				toast.error(response.error);
+				if(response.cause == 'kicked' || response.cause == 'banned'){
 					leaveGroup()
 				}
 				messageBody.value = '';

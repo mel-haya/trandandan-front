@@ -3,7 +3,7 @@
     import SidebareItem from '@/components/SidebarItem.vue'
     import { $token} from '@/axios';
     import ProfileItem from '@/components/ProfileItem.vue';
-    import { onMounted, reactive } from 'vue';
+    import { onMounted, reactive , onUnmounted } from 'vue';
     import { useRouter } from 'vue-router';
     import MessageBox from '@/components/MessageBox.vue';
     import {useInterfaceStore} from '@/stores/interface';
@@ -56,6 +56,10 @@
         }
     }
 
+    onUnmounted(() => {
+        chatStore.socket.removeAllListeners();
+    })
+
     onMounted(() => {
         store.initUser();
         chatStore.socket = io("http://localhost:3000", {
@@ -86,16 +90,16 @@
         });
 
         chatStore.socket.on("receive_direct_message", (res:any) => {
-            if(chatStore.activeChat && res.author.id == chatStore.activeChat.id && chatStore.activeChat.type === 'direct'){
+            if(chatStore.activeChat && res.channel.id == chatStore.activeChat.id){
                 chatStore.activeChatMessages.push( 
-					new Message(res.id,res.author.id,"",res.content,"them")
+					new Message(res.id,res.author.id,res.author.displayName,res.content,res.author.id === store.user.id ? "me" : "them")
 				);
             }
         });
 
         chatStore.socket.on("update-friends", ()=>{
-            //TODO: update friends
-            console.log("rak nadi")
+            console.log("update-friends")
+            chatStore.updateFriends()
             chatStore.updateFriendRequests()
         })
     })
