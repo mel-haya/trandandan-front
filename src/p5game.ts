@@ -17,6 +17,7 @@ const s = (p:any):any => {
   let imgwry:any;
   let imgnM:any;
   let imgcongratulations:any;
+  let imgbad:any;
   
   if (window.innerWidth > 1400)
     windw = window.innerWidth - (window.innerWidth - 1400) - 100
@@ -69,6 +70,7 @@ const s = (p:any):any => {
   let wry = false;
   let noMatch = false;
   let iscongratulations = false;
+  let isBad = false;
   
   
   let paddle1Y:number;
@@ -237,6 +239,13 @@ const s = (p:any):any => {
       noMatch = true;
       inGame = false;
     }
+    else if (data === 4)
+    {
+      isWait = false;
+      noMatch = false;
+      inGame = false;
+      isBad = true;
+    }
     // isModern = true;
     // p.loop();
     //data;
@@ -310,6 +319,7 @@ const s = (p:any):any => {
       imgingame = p.loadImage(require('@/assets/inaGame.jpeg'));
       imgwry = p.loadImage(require('@/assets/wryou.jpeg'));
       imgnM = p.loadImage(require('@/assets/noMatch.jpeg'));
+      imgbad = p.loadImage(require('@/assets/badlink.jpg'));
       imgcongratulations = p.loadImage(require('@/assets/congratulations.jpeg'));
       imglost = p.loadImage('https://elements-video-cover-images-0.imgix.net/files/961bcd50-cb8b-4632-b46c-3abb528c984d/inline_image_preview.jpg?auto=compress&crop=edges&fit=crop&fm=jpeg&h=800&w=1200&s=90f07628b0c40410c1e819e2da97c2b8');
     }
@@ -438,6 +448,11 @@ const s = (p:any):any => {
       {
         p.imageMode(p.CENTER);
         p.image(imgwry, windw / 2, windh / 2, (windw * 3) / (4 * 2), (windw * 2) / (4 * 2));
+      }
+      else if (isBad == true)
+      {
+        p.imageMode(p.CENTER);
+        p.image(imgbad, windw / 2, windh / 2, (windw * 3) / (4 * 2), (windw * 2) / (4 * 2));
       }
       else if (noMatch == true && isWon == false && isLost == false)
       {
