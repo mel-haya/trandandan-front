@@ -235,6 +235,7 @@ const s = (p:any):any => {
     {
       isWait = false;
       noMatch = true;
+      inGame = false;
     }
     // isModern = true;
     // p.loop();
@@ -426,8 +427,8 @@ const s = (p:any):any => {
       p.strokeWeight(windh / 100);
       
      
-      p.cursor(p.CROSS);
-      // p.noCursor();
+      // p.cursor(p.CROSS);
+      p.noCursor();
       if (iscongratulations == true)
       {
         p.imageMode(p.CENTER);
@@ -438,12 +439,12 @@ const s = (p:any):any => {
         p.imageMode(p.CENTER);
         p.image(imgwry, windw / 2, windh / 2, (windw * 3) / (4 * 2), (windw * 2) / (4 * 2));
       }
-      else if (noMatch == true)
+      else if (noMatch == true && isWon == false && isLost == false)
       {
         p.imageMode(p.CENTER);
         p.image(imgnM, windw / 2, windh / 2, (windw * 3) / (4 * 2), (windw * 2) / (4 * 2));
       }
-      else if (inGame == true)
+      else if (inGame == true)// && isWon == false && isLost == false)
       {
         p.imageMode(p.CENTER);
         p.image(imgingame, windw / 2, windh / 2, (windw * 3) / (4 * 2), (windw * 2) / (4 * 2));
