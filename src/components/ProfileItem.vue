@@ -3,7 +3,7 @@
         <div id="profileContainer" @click = "enableMenu = false">
             <div id="profileHeader">
                 <div id="userImg" alt="bruh" v-if="profile?.profile.imgPath" :style="`background-image: url('${profile?.profile.imgPath}')`">
-                    <div id="userStatus" :style="`background-color: ${status === 'online' ? '#0f0': '#aaa'}`"></div>
+                    <div id="userStatus" :style="`background-color: ${activityUpdate()}`"></div>
                 </div>
             </div>
             <div id="profileMenu" v-if="enableMenu">
@@ -14,6 +14,7 @@
             <div id="userInfo">
                 <p>{{profile?.profile.displayName}}</p>
                 <div id="options">
+                    <div id="watchBtn" v-if="status === 'in-game'" @click="router.push(`/play?mode=watch&id=${profile?.profile.id}`)">Watch</div>
                     <div id="reqBtn" v-if="friendshipStatus === 'none'" @click="sendRequest">Send friend request</div>
                     <div id="reqBtn" v-if="friendshipStatus === 'pending'">Friend request sent</div>
                     <div id="reqBtn" v-if="friendshipStatus === 'friend'">Send a message</div>
@@ -28,14 +29,31 @@
             <div id="userBio">
                 <div id="bioHeader">
                     <div :class="`bioBtn ${(activePointer === 0) ? 'activeBio' : ''}`" id="statsBtn" @click="loadStats" >Stats</div>
-                    <div :class="`bioBtn ${(activePointer === 100) ? 'activeBio' : ''}`" id="historyBtn" @click="loadHistory" >History</div>
-                    <div id="activePointer" :style="`transform: translateX(${activePointer}%)`"></div>
+                    <div :class="`bioBtn ${(activePointer === 1) ? 'activeBio' : ''}`" id="historyBtn" @click="loadHistory" >History</div>
+                    <div id="activePointer" :style="`transform: translateX(${activePointer * 100}%)`"></div>
                 </div>
                 <div id="bioBody">
-                    <div id="stats">
+                    <div id="stats" v-if="activePointer === 0">
                         level: 10 <br/>
                         Games won: 8 / 50 <br/>
                         win streak: 3 <br/>
+                    </div>
+                    <div id="history" v-else>
+                        <div class="matchItem winner">
+                            <div class="player">Mourad</div>
+                            <div class="score">2-3</div>
+                            <div class="player">Mouad</div>
+                        </div>
+                        <div class="matchItem loser">
+                            <div class="player">Mourad</div>
+                            <div class="score">2-3</div>
+                            <div class="player">Mouad</div>
+                        </div>
+                        <div class="matchItem winner">
+                            <div class="player">Mourad</div>
+                            <div class="score">2-3</div>
+                            <div class="player">Mouad</div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -56,19 +74,31 @@
     import { useChatStore } from '@/stores/chat';
     import { iio } from '@/p5game';
 
-    let chat = useChatStore();
-    let store = useInterfaceStore();
-    let user = useUserStore();
-    let profile:any = ref(null)
-    let activePointer = ref(0);
-    let enableMenu = ref(false);
-    let friendshipStatus = ref("")
-    let router = useRouter();
-    let toast = useToast();
-    let status = ref("")
+    const chat = useChatStore();
+    const store = useInterfaceStore();
+    const user = useUserStore();
+    const profile:any = ref(null)
+    const activePointer = ref(0);
+    const enableMenu = ref(false);
+    const friendshipStatus = ref("")
+    const router = useRouter();
+    const toast = useToast();
+    const status = ref("")
+    const stats = ref(null)
+    const history = ref([])
     let onlineLoop:any;
-    let watchPath = ref("");
-    
+
+    function activityUpdate(){
+        if(status.value === "online"){
+            return '#0f0'
+        }
+        else if(status.value === "in-game"){
+            return "orange"
+        }
+        else{
+            return '#aaa'
+        }
+    }
     
     function setStatus(){
         if(profile.value?.profile.id === user.user?.id){
@@ -139,11 +169,19 @@
     function loadStats(){
         // TODO: get stats from api
         activePointer.value = 0;
+        $api(`/game/user-profile/${profile.value?.profile.id}`).then((res:any) => {
+            stats.value = res.data
+            console.log(stats.value)
+        })
     }
 
     function loadHistory(){
         // TODO: get history from api
-        activePointer.value = 100;
+        activePointer.value = 1;
+        $api(`/game/user-games/${profile.value?.profile.id}`).then((res:any) => {
+            history.value = res.data
+            console.log(history.value)
+        })
     }
 
 
@@ -165,20 +203,19 @@
         chat.socket.on('update-friends', updateUser)
         chat.socket.emit('user-status', store.activeProfile, (res:any) => {
             status.value = res.status
+            activityUpdate()
         })
 
-        
         onlineLoop = setInterval(() => {
+            //TODO get game online status from
             iio.emit('game-status', store.activeProfile, (res:any) => {
                 status.value = res.status
-                watchPath.value = res.path
-            })
-            if(status.value === "in-game"){
-                return
-            }
-            chat.socket.emit('user-status', store.activeProfile, (res:any) => {
-                status.value = res.status
-                watchPath.value = ""
+                if(status.value === "in-game"){
+                    return
+                }
+                chat.socket.emit('user-status', store.activeProfile, (res:any) => {
+                    status.value = res.status
+                })
             })
         },5000);
     })
@@ -377,5 +414,47 @@
 
     .text-red{
         color: rgb(255, 32, 32);
+    }
+
+    #watchBtn{
+        position: relative;
+        padding: 10px 20px;
+        background-color: rgb(0, 137, 23);
+        border-radius: 10px;
+        font-size: 16px;
+        cursor: pointer;
+        margin-right: 10px;
+        display: inline-block;
+    }
+
+    .matchItem{
+        position: relative;
+        width: 100%;
+        height: 70px;
+        display: flex;
+        align-items: center;
+        cursor: pointer;
+        transition: all 0.5s ease;
+        font-size: 30px;
+    }
+
+    .matchItem:hover{
+        background-color: rgb(99, 38, 101);
+    }
+
+    .player{
+        width: 40%;
+    }
+
+
+    .score{
+        width: 20%;
+    }
+
+    .winner{
+        background: linear-gradient(325deg, rgba(255,255,255,0) 0%, rgba(34,187,42,0) 50%, rgba(34,187,42,1) 100%);
+    }
+    .loser{
+        background: linear-gradient(325deg, rgba(255,255,255,0) 0%, rgba(255,0,0,0) 50%, rgba(255,0,0,1) 100%);
     }
 </style>
