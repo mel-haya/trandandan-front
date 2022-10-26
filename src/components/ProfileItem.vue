@@ -95,8 +95,8 @@
     }
 
     function sendRequest(){
-        chat.socket.emit('send-friend-request', profile.value?.profile.id, (res:any) => {
-            console.log(res)
+        chat.socket.emit('send-friend-request', profile.value?.profile.id, () => {
+            updateUser()
         })
     }
 
@@ -104,32 +104,34 @@
         chat.socket.emit('remove-relationship', profile.value?.profile.id, () => {
             chat.updateFriendRequests()
             chat.updateFriends()
+            updateUser()
         })
-        updateUser()
+        
     }
 
     function acceptRequest(){
         chat.socket.emit('accept-friend-request', profile.value?.profile.id, () => {
             chat.updateFriendRequests()
             chat.updateFriends()
+            updateUser()
         })
-        updateUser()
+        
     }
 
     function blockUser(){
         chat.socket.emit('block-user', profile.value?.profile.id, () => {
             chat.updateFriendRequests()
             chat.updateFriends()
+            updateUser()
         })
-        updateUser()
     }
 
     function unblockUser(){
         chat.socket.emit('remove-relationship', profile.value?.profile.id, () => {
             chat.updateFriends()
             chat.updateFriendRequests()
+            friendshipStatus.value = "none"
         })
-        updateUser()
     }
 
 
@@ -160,10 +162,12 @@
 
     onMounted(()=>{
         updateUser()
-
+        chat.socket.on('update-friends', updateUser)
         chat.socket.emit('user-status', store.activeProfile, (res:any) => {
             status.value = res.status
         })
+
+        
         onlineLoop = setInterval(() => {
             iio.emit('game-status', store.activeProfile, (res:any) => {
                 status.value = res.status
@@ -181,6 +185,7 @@
 
     onUnmounted(() => {
         chat.socket.off('user-status')
+        chat.socket.off('update-friends', updateUser)
         iio.off('game-status')
         clearInterval(onlineLoop)
     })

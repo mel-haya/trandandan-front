@@ -1,7 +1,21 @@
+<template>
+    <div id="menuWrapper">
+        <div id="logo"></div>
+        <div @click="firstButton" id="playBtn" class="menuBtn"><span>{{label.a}}</span></div>
+        <div @click="secondButton" id="watchBtn" class="menuBtn" v-if="label.b"><span>{{label.b}}</span></div>
+        <div @click="thirdButton" id="leaderboardBtn" class="menuBtn"><span>{{label.c}}</span></div>
+    </div>
+    <SidebareItem/>
+    <MessageBox v-if="chatStore.activeChat"/>
+    <ProfileItem v-if="interfaceStore.activeProfile !== 0"/>
+    <FriendSearchItem v-if="interfaceStore.enableSearch"/>
+    <ChannelCreateBox v-if="interfaceStore.enableChannelCreate"/>
+</template>
+
 <script lang="ts" setup>
     import { useUserStore } from '@/stores/user'
     import SidebareItem from '@/components/SidebarItem.vue'
-    import { $token} from '@/axios';
+    import {$api, $token} from '@/axios';
     import ProfileItem from '@/components/ProfileItem.vue';
     import { onMounted, reactive , onUnmounted } from 'vue';
     import { useRouter } from 'vue-router';
@@ -12,43 +26,45 @@
     import {useChatStore} from '@/stores/chat';
     import { io } from "socket.io-client";
     import {Message} from '@/types/message';
+    import { useToast } from 'vue-toastification';
 
     let interfaceStore = useInterfaceStore();
     const chatStore = useChatStore();
     const router = useRouter();
     const store = useUserStore();
+    const toast = useToast();
     // const {user} = storeToRefs(store)
-    let test = reactive({
+    let label = reactive({
         a:"PLAY",
-        b:"WATCH",
+        b:"",
         c:"LEADERBOARD"
     })
     var audio = new Audio(require('../assets/hover1.mp3'));
     function firstButton(){
         audio.play();
-        if(test.a === "PLAY")
+        if(label.a === "PLAY")
         {
-            test.a = "EASY";
-            test.b = "HARD";
-            test.c = "RETURN";
+            label.a = "EASY";
+            label.b = "HARD";
+            label.c = "RETURN";
         }
         else
             router.push('/play?mode=classic') 
     }
     function secondButton(){
         audio.play();
-        if(test.b === "WATCH")
+        if(label.b === "WATCH")
             router.push('/watch')
         else
             router.push('/play?mode=modern')
     }
     function thirdButton(){
         audio.play();
-        if(test.c === "RETURN")
+        if(label.c === "RETURN")
         {
-            test.a = "PLAY";
-            test.b = "WATCH";
-            test.c = "LEADERBOARD";
+            label.a = "PLAY";
+            label.b = "";
+            label.c = "LEADERBOARD";
         }
         else
         {
@@ -57,11 +73,17 @@
     }
 
     onUnmounted(() => {
-        chatStore.socket.removeAllListeners();
+        chatStore.socket.disconnect();
     })
 
-    onMounted(() => {
-        store.initUser();
+    onMounted(async () => {
+        try{
+            store.user = (await $api.get('/user/me')).data;
+        }
+        catch(e){
+            toast.error('Failed to fetch user data');
+            router.push('/login');
+        }
         chatStore.socket = io("http://localhost:3000", {
             extraHeaders: {
                 "token": $token
@@ -101,24 +123,11 @@
             console.log("update-friends")
             chatStore.updateFriends()
             chatStore.updateFriendRequests()
+            
         })
     })
 
 </script>
-
-<template>
-    <div id="menuWrapper">
-        <div id="logo"></div>
-        <div @click="firstButton" id="playBtn" class="menuBtn"><span>{{test.a}}</span></div>
-        <div @click="secondButton" id="watchBtn" class="menuBtn"><span>{{test.b}}</span></div>
-        <div @click="thirdButton" id="leaderboardBtn" class="menuBtn"><span>{{test.c}}</span></div>
-    </div>
-    <SidebareItem/>
-    <MessageBox v-if="chatStore.activeChat"/>
-    <ProfileItem v-if="interfaceStore.activeProfile !== 0"/>
-    <FriendSearchItem v-if="interfaceStore.enableSearch"/>
-    <ChannelCreateBox v-if="interfaceStore.enableChannelCreate"/>
-</template>
 
 <style  scoped>
 

@@ -4,6 +4,7 @@
             <p>Friends</p>
             <div id="notification" @click="toggleNotification">
                 <fa icon="user-group"/>
+                <span v-if="chat.friendRequests.length">{{chat.friendRequests.length}}</span>
             </div>
             <div id="filter" @click="toggleSearch">
                 <fa icon="search"/>

@@ -18,18 +18,27 @@
     import {onMounted, ref} from 'vue'
     import { useRouter } from 'vue-router';
     import Cookies from 'js-cookie'
-    import axios from 'axios'
     import {$api,updateToken} from '@/axios'
+    import { useToast } from 'vue-toastification';
 
+    const toast = useToast();
     let invalid = ref(false);
     let code = ref('');
     let router = useRouter();
-    let token = Cookies.get('accessToken')
     
+    onMounted(async () => {
+        try{
+            await $api.get('/user/me');
+        }
+        catch(e){
+            toast.error('Failed to fetch user data');
+            router.push('/login');
+        }
+    })
 
     async function validate()
     {
-        $api.post("http://localhost:3000/2fa/verify", {code: code.value})
+        $api.post("/2fa/verify", {code: code.value})
         .then((res) => { 
             Cookies.set('accessToken', res.data.accessToken);
             updateToken()

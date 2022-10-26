@@ -1,6 +1,7 @@
 import { defineStore } from "pinia";
 import { ref } from "vue"
 import {$api} from "@/axios"
+import { useRouter } from "vue-router";
 
 // ref()s become state properties
 // computed()s become getters
@@ -8,10 +9,14 @@ import {$api} from "@/axios"
 
 export const useUserStore = defineStore('user', () =>
 {
-    const user: any = ref({"id":0,"username":"","email":"","displayName":"","imgPath":""});
-    function initUser(){
+    const router = useRouter()
+    const user: any = ref({"id":-1,"username":"","email":"","displayName":"","imgPath":""});
+    async function initUser() {
         $api.get('/user/me').then((res) => {
             user.value = res.data;
+        }).catch((err:any) =>{
+            
+            console.log(err);
         })
     }
 

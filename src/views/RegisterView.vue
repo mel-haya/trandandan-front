@@ -10,7 +10,7 @@
                 <label for="file"><fa icon="file-arrow-up"/></label>
                 <input ref="imageInput" type="file" name="file" id="file" accept=".jpg,.jpeg,.png,.gif" @change="changeImage">
             </div>
-            <input type="text" placeholder="change your name" id="usernameInput" name="username" v-model="store.user.displayName">
+            <input type="text" placeholder="change your name" id="usernameInput" name="username" v-model="newName">
             <button id="faBtn" @click="redirectHome">activate 2FA</button>
             <button @click="submitForm" id="saveBtn">save</button>
         </div>
@@ -20,24 +20,28 @@
 
 <script lang="ts" setup>
     /*eslint-disable*/
-    import { ref,onMounted, reactive } from 'vue'
+    import { ref,onMounted } from 'vue'
     // import Cookies from 'js-cookie'
     import { useRouter } from 'vue-router';
     import {$api, $token, updateToken} from '@/axios'
     import type { Ref } from 'vue'
     import { useUserStore } from '@/stores/user';
+    import { useToast } from 'vue-toastification';
+
     const store = useUserStore();
-    // const user = reactive({
-    //     id: 0,
-    //     username: '',
-    //     imageUrl: '',
-    // });
-    
+    const newName = ref(store.user.displayName);
+    const toast = useToast();
     let img:any;
     let router = useRouter()
     let imageInput:Ref<any> = ref(null);
-    onMounted(() => {
-        store.initUser();
+    onMounted(async () => {
+        try{
+            store.user = (await $api.get('/user/me')).data;
+        }
+        catch(e){
+            toast.error('Failed to fetch user data');
+            router.push('/login');
+        }
     })
 
     function changeImage(e:any)
@@ -51,9 +55,14 @@
 
     function submitForm()
     {
+        if(newName.value == "")
+        {
+            toast.error('Please enter a username')
+            return;
+        }
         var bodyFormData = new FormData();
         bodyFormData.append('file', imageInput.value.files[0]);
-        bodyFormData.append('displayName', store.user.displayName);
+        bodyFormData.append('displayName', newName.value);
         $api({
                 method: "patch",
                 url: "user/update",
@@ -66,6 +75,7 @@
                     router.push('/')
                 })
                 .catch(function (response) {
+                    toast.error(response.response.data.message)
                     console.log(response);
                 });
     }

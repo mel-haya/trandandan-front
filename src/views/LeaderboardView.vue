@@ -6,12 +6,12 @@
             <tr>
                 <th id="rankCell">Rank</th>
                 <th id="nameCell">Name</th>
-                <th>Score</th>
+                <th>Level</th>
             </tr>
             <tr v-for="(member, index) in leaderboard" :key="index">
                 <td id="rankCell">{{index + 1}}</td>
-                <td id="nameCell">{{member.username}}</td>
-                <td>{{member.xp}}</td>
+                <td id="nameCell">{{member.displayName}}</td>
+                <td>{{member.lvl}}</td>
             </tr>
         </table>
     </div>
@@ -19,18 +19,35 @@
 
 <script lang="ts" setup>
 
+// TODO :localhost:3000/game/leaderboard
+
 import { useRouter } from 'vue-router'
-let router = useRouter();
-let leaderboard = [{username: "Mourad", level: 5, xp: 9000},
-                {username: "not Mourad", level: 3, xp: 200},
-                {username: "not Mourad", level: 3, xp: 200},
-                {username: "not Mourad", level: 3, xp: 200},
-                {username: "not Mourad", level: 3, xp: 200},
-                {username: "not Mourad", level: 3, xp: 200},
-                {username: "not Mourad", level: 3, xp: 200},
-                {username: "not Mourad", level: 3, xp: 200},
-                {username: "not Mourad", level: 3, xp: 200},
-                {username: "not Mourad", level: 3, xp: 200}]
+import { onMounted, ref } from 'vue'
+import { $api } from '@/axios'
+import { useUserStore } from '@/stores/user'
+import { useToast } from 'vue-toastification'
+import type { Ref } from 'vue'
+
+const router = useRouter();
+const store = useUserStore()
+const toast = useToast()
+const leaderboard:Ref<any> = ref([])
+
+onMounted(async()=>{
+    try{
+        store.user = (await $api.get('/user/me')).data;
+    }
+    catch(e){
+        toast.error('Failed to fetch user data');
+        router.push('/login');
+    }
+    $api.get('/game/leaderboard').then(res=>{
+        leaderboard.value = res.data
+    }).catch(() =>{
+        toast.error('Failed to fetch leaderboard')
+    })
+})
+
 </script>
 
 <style scoped>
@@ -44,9 +61,6 @@ let leaderboard = [{username: "Mourad", level: 5, xp: 9000},
     width: 50%;
     height: 100%;
     margin: auto;
-    /* display: flex;
-    justify-content: center;
-    align-items: center; */
 }
 
 table{

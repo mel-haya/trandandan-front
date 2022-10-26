@@ -21,7 +21,7 @@
 			</div>
 			<div id="groupOptions" v-else>
 				<p>Add a new user</p>
-				<p v-if="chatStore.activeChat.role === 'admin' || chatStore.activeChat.role === 'owner'"  @click="chatStore.activeChatSetting = true">Group settings</p>
+				<p v-if="chatStore.activeChat.role === 'owner'"  @click="chatStore.activeChatSetting = true">Group settings</p>
 				<p @click.stop="enableMembers = true">Members</p>
 				<p @click="leaveGroup">Leave Group</p>
 			</div>
@@ -181,9 +181,6 @@
 		interfaceStore.enableMembersSettings = null;
 	});
 
-
-
-	
 </script>
 
 <style scoped>

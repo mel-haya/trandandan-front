@@ -1,13 +1,13 @@
 <template>
     <div id="sideProfile">
-        <div id="userImg" :style="`background-image: url('${Profile.imageUrl}')`"></div>
-        <div id="userName">{{Profile.username}}</div>
+        <div id="userImg" :style="`background-image: url('${userStore.user.imgPath}')`"></div>
+        <div id="userName">{{userStore.user.displayName}}</div>
         <div id="settings" @click.stop="togglemenu">
             <fa id="settings-icon" icon="ellipsis-vertical"/>
         </div>
     </div>
     <div id="context-menu" ref="contextMenu">
-        <div id="context-menu-item" @click="store.setActiveProfile(Profile.id)">
+        <div id="context-menu-item" @click="store.setActiveProfile(userStore.user.id)">
             <fa icon="user"/>
             <span> My profile</span>
         </div>
@@ -25,22 +25,18 @@
 </template>
 
 <script lang="ts" setup>
-    import { onMounted, ref } from 'vue';
+    import { ref } from 'vue';
     import { useInterfaceStore } from '../stores/interface';
     import { useRouter } from 'vue-router';
-    import {$api} from '@/axios';
     import Cookies from 'js-cookie';
     import {useChatStore} from '@/stores/chat';
+    import { useUserStore } from '@/stores/user';
 
-    let router = useRouter();
-    let store = useInterfaceStore();
-    let contextMenu = ref();
+    const router = useRouter();
+    const store = useInterfaceStore();
+    const contextMenu = ref();
+    const userStore = useUserStore();
     const chat = useChatStore();
-    let Profile = ref({
-        id: 0,
-        username: '',
-        imageUrl: '',
-    });
 
     function togglemenu(){
         if(contextMenu.value.style.display === 'none')
@@ -54,12 +50,20 @@
             contextMenu.value.style.display = 'none';
     });
     
-    onMounted(async () => {
-        let res = await $api.get('http://localhost:3000/user/me')
-        Profile.value.id = res.data.id;
-        Profile.value.username = res.data.displayName;
-        Profile.value.imageUrl = res.data.imgPath;
-    })
+    // try{
+    //         let res = await $api.get('/user/me')
+    //         Profile.value = {
+    //             id: res.data.id,
+    //             username: res.data.displayName,
+    //             imageUrl: res.data.imgPath,
+    //         };
+    //     }
+    // catch (e:any) {
+    //         console.log(e);
+    //         if(e.response.data.statusCode === 401)
+    //             router.push('/login')
+    //     }
+    // }
 
     function logout(){
         chat.socket.emit("logout", {});

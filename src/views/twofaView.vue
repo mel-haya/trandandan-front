@@ -19,14 +19,23 @@
     import { useRouter } from 'vue-router';
     import {$api,updateToken} from '@/axios'
     import Cookies from 'js-cookie'
+    import { useToast } from 'vue-toastification';
 
     let qrimg = ref('');
     let invalid = ref(false);
     let code = ref('');
     let router = useRouter();
+    const toast = useToast();
     
     onMounted( async () => {
-        $api.get("http://localhost:3000/2fa/generate")
+        try{
+            await $api.get('/user/me');
+        }
+        catch(e){
+            toast.error('Failed to fetch user data');
+            router.push('/login');
+        }
+        $api.get("/2fa/generate")
         .then(function (response){
             qrimg.value = response.data;
         })

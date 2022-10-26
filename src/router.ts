@@ -49,6 +49,11 @@ export default () => createRouter({
       name: '2fa-verification',
       path: '/2fa-verification',
       component: ()=> import('./views/twofaVerifView.vue')
+    },
+    {
+      name: "notFound",
+      path: "/:catchAll(.*)",
+      component: ()=> import("./views/NotFoundView.vue")
     }
 
   ]
