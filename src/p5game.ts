@@ -18,6 +18,7 @@ const s = (p:any):any => {
   let imgnM:any;
   let imgcongratulations:any;
   let imgbad:any;
+  let imgprob:any;
   
   if (window.innerWidth > 1400)
     windw = window.innerWidth - (window.innerWidth - 1400) - 100
@@ -60,8 +61,10 @@ const s = (p:any):any => {
 
   
   // const gameEnded = false;
+  let conProb = true;
+  let isconnected = false;
   let gameStart = false;
-  let isLoad = true;
+  let isLoad = false;
   let isWait = false;
   let isWon = false;
   let isLost = false;
@@ -86,7 +89,7 @@ const s = (p:any):any => {
   let player1:number = 0;
   let player2:number = 0;
   
-  iio.on('fin', (data) => {
+  iio.on('fin', (data:any) => {
     data;
     p.remove();
     iio.off('connection');
@@ -108,7 +111,8 @@ const s = (p:any):any => {
   });
   
 
-  iio.on('connection', (data) => {
+  iio.on('connection', (data:any) => {
+    conProb = false;
     if (data === "wait")
     {
       isLoad = true;
@@ -133,13 +137,13 @@ const s = (p:any):any => {
     }
   });
 
-  iio.on('takePosition', (data) => {
+  iio.on('takePosition', (data:any) => {
     DEFAULT.pos = data.yourplace;
     DEFAULT.room = data.room;
     console.log(data.yourplace + " " + data.room);
   });
 
-  iio.on('mouse', (data) => {
+  iio.on('mouse', (data:any) => {
     if (data.pos === 1)
     {
       leftmouse = data.mousepos * variationh;
@@ -152,7 +156,7 @@ const s = (p:any):any => {
     }
   });
 
-  iio.on('ball', (data) => {
+  iio.on('ball', (data:any) => {
     // console.log(isModern);
     BALL.ball_data.x = data.x * variationw;
     BALL.ball_data.y = data.y * variationh;
@@ -162,14 +166,14 @@ const s = (p:any):any => {
       BALL.ball_data.middleY = data.middleY * variationh;
   });
 
-  iio.on('reset', (data) => {
+  iio.on('reset', (data:any) => {
     player1 = data.score1;
     player2 = data.score2;
     p.text("score " + player1 + " : " + player2, windw / 2 + 10, 30);
     p.noLoop();
   });
   
-  iio.on('restart', (data) => {
+  iio.on('restart', (data:any) => {
     if (iio.id === data.room)
     {
       BALL.ball_data.x = data.x * variationw;
@@ -181,7 +185,8 @@ const s = (p:any):any => {
       p.loop();
   });
   
-  iio.on('won', (data) => {
+  iio.on('won', (data:any) => {
+    conProb = false;
     data;
     //iio.emit('gamedone', data);
     if (isLost === false)
@@ -192,26 +197,33 @@ const s = (p:any):any => {
     }
   });
 
-  iio.on('lost', (data) => {
+  iio.on('lost', (data:any) => {
+    conProb = false;
     data;
     isLost = true;
     gameStart = false;
     p.loop();
   });
   
-  iio.on('done', (data) => {
+  iio.on('done', (data:any) => {
+    conProb = false;
     data;
+    isLoad = false;
+    isWait = false;
     iscongratulations = true;
+    p.loop();
   });
 
-  iio.on('watch_wait', (data) => {
+  iio.on('watch_wait', (data:any) => {
+    conProb = false;
     data;
     isLoad = false;
     isWait = true;
     p.loop();
   });
   
-  iio.on('watch_work', (data) => {
+  iio.on('watch_work', (data:any) => {
+    conProb = false;
     data;
     isLoad = false;
     isWait = false;
@@ -219,13 +231,15 @@ const s = (p:any):any => {
     p.loop();
   });
 
-  iio.on('watch_modern', (data) => {
+  iio.on('watch_modern', (data:any) => {
+    conProb = false;
     data;
     isModern = true;
     p.loop();
   });
   
-  iio.on('inGame', (data) => {
+  iio.on('inGame', (data:any) => {
+    conProb = false;
     data;
     inGame = true;
     isLoad = false;
@@ -272,10 +286,12 @@ const s = (p:any):any => {
   
   
   
-  iio.on('start_connection', (data) => {
+  iio.on('start_connection', (data:any) => {
+    conProb = false;
     data;
     if (inGame === false)
     {
+      isconnected = true;
       iio.emit("connection", "");
     }
   });
@@ -320,6 +336,7 @@ const s = (p:any):any => {
       imgwry = p.loadImage(require('@/assets/wryou.jpeg'));
       imgnM = p.loadImage(require('@/assets/noMatch.jpeg'));
       imgbad = p.loadImage(require('@/assets/badlink.jpg'));
+      imgprob = p.loadImage(require('@/assets/conprob.jpeg'));
       imgcongratulations = p.loadImage(require('@/assets/congratulations.jpeg'));
       imglost = p.loadImage('https://elements-video-cover-images-0.imgix.net/files/961bcd50-cb8b-4632-b46c-3abb528c984d/inline_image_preview.jpg?auto=compress&crop=edges&fit=crop&fm=jpeg&h=800&w=1200&s=90f07628b0c40410c1e819e2da97c2b8');
     }
@@ -349,7 +366,8 @@ const s = (p:any):any => {
       p.clear();
       p.strokeWeight(windh / 100);
       DEFAULT.mousepos = p.mouseY / variationh;
-      iio.emit("update_mouse", DEFAULT);
+      if (isconnected == true)
+        iio.emit("update_mouse", DEFAULT);
 
       if (window.innerWidth > 1400)
         windw = window.innerWidth - (window.innerWidth - 1400) - 100
@@ -442,39 +460,39 @@ const s = (p:any):any => {
       if (iscongratulations == true)
       {
         p.imageMode(p.CENTER);
-        p.image(imgcongratulations, windw / 2, windh / 2, (windw * 3) / (4 * 2), (windw * 2) / (4 * 2));
+        p.image(imgcongratulations, windw / 2, windh / 2, (windw * 3) / (4 * 2), windw / 4);
       }
       if (wry == true)
       {
         p.imageMode(p.CENTER);
-        p.image(imgwry, windw / 2, windh / 2, (windw * 3) / (4 * 2), (windw * 2) / (4 * 2));
+        p.image(imgwry, windw / 2, windh / 2, (windw * 3) / (4 * 2), windw / 4);
       }
       else if (isBad == true)
       {
         p.imageMode(p.CENTER);
-        p.image(imgbad, windw / 2, windh / 2, (windw * 3) / (4 * 2), (windw * 2) / (4 * 2));
+        p.image(imgbad, windw / 2, windh / 2, (windw * 3) / (4 * 2), windw / 4);
       }
       else if (noMatch == true && isWon == false && isLost == false)
       {
         p.imageMode(p.CENTER);
-        p.image(imgnM, windw / 2, windh / 2, (windw * 3) / (4 * 2), (windw * 2) / (4 * 2));
+        p.image(imgnM, windw / 2, windh / 2, (windw * 3) / (4 * 2), windw / 4);
       }
       else if (inGame == true)// && isWon == false && isLost == false)
       {
         p.imageMode(p.CENTER);
-        p.image(imgingame, windw / 2, windh / 2, (windw * 3) / (4 * 2), (windw * 2) / (4 * 2));
+        p.image(imgingame, windw / 2, windh / 2, (windw * 3) / (4 * 2), windw / 4);
       }
       if (isWait == true && inGame == false)
       {
         //console.log("hi hih hi");
         p.imageMode(p.CENTER);
-        p.image(imgwait, windw / 2, windh / 2, (windw * 3) / (4 * 2), (windw * 2) / (4 * 2));
+        p.image(imgwait, windw / 2, windh / 2, (windw * 3) / (4 * 2), windw / 4);
       }
       if (isLoad == true && inGame == false)
       {
         // console.log("loading");
         p.imageMode(p.CENTER);
-        p.image(imgload, windw / 2, windh / 2, (windw * 3) / (4 * 2), (windw * 2) / (4 * 2));
+        p.image(imgload, windw / 2, windh / 2, (windw * 3) / (4 * 2), windw / 4);
         //p.noLoop();
       }
       if (isWon == true && isLost == false && inGame == false)
@@ -493,7 +511,25 @@ const s = (p:any):any => {
         p.image(imglost, windw / 2, windh / 2, windw / 4, windw / 4);
         // p.noLoop();
       }
+      if (conProb == true)
+      {
+        p.imageMode(p.CENTER);
+        p.image(imgprob, windw / 2, windh / 2, (windw * 3) / (4 * 2), windw / 4);
+      }
     };
 };
 
-export {s,iio}
+function disconnectSocket(){
+  iio.emit("disc", "");
+}
+
+function connectSocket(){
+  if (iio.connected == false)
+    iio.connect();
+}
+
+function setMetadata(_id:any, _mode:string){
+  iio.emit('getIDS', {token:$token, id:_id, socket:"", room:"", mode:_mode, pos:0})
+}
+
+export {s,disconnectSocket,setMetadata,connectSocket}

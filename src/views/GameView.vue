@@ -18,30 +18,50 @@
 </template>
 
 <script lang="ts" setup>
-    import {onMounted, onUnmounted, ref} from 'vue';
-    import {$token} from '@/axios';
-    import {s,iio} from '@/p5game';
+    import {onMounted, onUnmounted, ref, nextTick} from 'vue';
+    import { useUserStore } from '@/stores/user'
+    import { $api } from '@/axios';
+    import {s,disconnectSocket,setMetadata,connectSocket} from '@/p5game';
     import p5 from 'p5';
     import { useRouter, useRoute } from 'vue-router'
+    import { useToast } from 'vue-toastification';
 
     const game = ref();
     const route = useRoute()
+    const store = useUserStore();
+    const toast = useToast();
     console.log(route.query.mode);
     const router = useRouter();
-    //console.log(userStore.user)
-    onMounted(() => {
-        iio.connect();
-        if (route.query.mode === "classic" || route.query.mode === "modern")
-            iio.emit('getIDS', {token:$token, id:0, socket:"", room:"", mode:route.query.mode, pos:0})
-        else if (route.query.mode === "watch")
-            iio.emit('getIDS', {token:$token, id:route.query.id, socket:"", room:"", mode:route.query.mode, pos:0})
-        else if (route.query.mode === "private")
-            iio.emit('getIDS', {token:$token, id:route.query.id, socket:"", room:"", mode:route.query.mode, pos:0})
-
+    
+    onMounted(async () => {
+        try{
+            store.user = (await $api.get('/user/me')).data;
+        }
+        catch(e){
+            toast.error('Failed to fetch user data');
+            router.push('/login');
+        }
         new p5(s, game.value);
+        connectSocket()
+        await nextTick()
+        // iio.connect();
+        // if (iio.connected == false)
+        // {
+        //     toast.error("Something went wrong")
+        //     router.push('/')
+        // }
+        // console.log(iio.connected);
+
+        if (route.query.mode === "classic" || route.query.mode === "modern")
+            setMetadata(0, route.query.mode)
+        else if (route.query.mode === "watch")
+            setMetadata(route.query.id, route.query.mode)
+        else if (route.query.mode === "private")
+            setMetadata(route.query.id, route.query.mode)
+
     });
     onUnmounted(async () => {
-        iio.emit("disc", "");
+        disconnectSocket()
     });
 </script>
 

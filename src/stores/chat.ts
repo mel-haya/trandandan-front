@@ -3,8 +3,9 @@ import { ref } from "vue"
 import type { Ref } from "vue"
 import { Message } from "@/types/message"
 import { Room } from "@/types/room";
-import { $api } from "@/axios"
+import { $api, $token } from "@/axios"
 import { useUserStore } from "@/stores/user";
+import { io } from "socket.io-client";
 import { useToast } from "vue-toastification";
 
 const userStore = useUserStore();
@@ -12,6 +13,11 @@ const userStore = useUserStore();
 export const useChatStore = defineStore('chat', () =>
 {
     const socket:any|null = ref(null);
+    const gameSocket:any = ref( io("http://127.0.0.1:3000/play", {
+        extraHeaders: {
+            "token": $token
+        }
+    }))
     const activeChat: any = ref(null);
     const activeChatSetting = ref(false);
     const activeChatMessages:Ref<Message[]>= ref([]);
@@ -106,5 +112,5 @@ export const useChatStore = defineStore('chat', () =>
         })
     }
 
-    return({updateFriends,updateChatDirect,updateFriendRequests,friends,friendRequests,activeChat,activeChatSetting,socket,availableRooms,joinedRooms,activeChatMessages,updateMessages,updateAvailable,updateJoined,updateChat})
+    return({updateFriends,updateChatDirect,updateFriendRequests,gameSocket,friends,friendRequests,activeChat,activeChatSetting,socket,availableRooms,joinedRooms,activeChatMessages,updateMessages,updateAvailable,updateJoined,updateChat})
 })

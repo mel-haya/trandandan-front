@@ -66,15 +66,18 @@
 <script lang="ts" setup>
 /* eslint-disable */
     import { useInterfaceStore } from '@/stores/interface';
-    import { ref,onMounted, onUnmounted } from 'vue';
+    import { ref, onMounted, onUnmounted } from 'vue';
     import { $api } from '@/axios'
     import { useUserStore } from '@/stores/user';
     import { useRouter } from 'vue-router';
     import { useToast } from 'vue-toastification';
     import { useChatStore } from '@/stores/chat';
-    import { iio } from '@/p5game';
+    // import { iio } from '@/p5game';
+    //const chatStore = useChatStore()
 
+    
     const chat = useChatStore();
+    const iio = chat.gameSocket
     const store = useInterfaceStore();
     const user = useUserStore();
     const profile:any = ref(null)
