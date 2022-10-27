@@ -29,7 +29,7 @@
     import { useToast } from 'vue-toastification';
 
     const store = useUserStore();
-    const newName = ref(store.user.displayName);
+    const newName = ref("");
     const toast = useToast();
     let img:any;
     let router = useRouter()
@@ -37,6 +37,7 @@
     onMounted(async () => {
         try{
             store.user = (await $api.get('/user/me')).data;
+            newName.value = store.user.displayName
         }
         catch(e){
             toast.error('Failed to fetch user data');

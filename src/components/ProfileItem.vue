@@ -1,8 +1,9 @@
 <template>
     <div id="profileBg" @click="closeDiv">
-        <div id="profileContainer" @click = "enableMenu = false">
+        <div id="profileContainer" @click.stop= "enableMenu = false">
             <div id="profileHeader">
                 <div id="userImg" alt="bruh" v-if="profile?.profile.imgPath" :style="`background-image: url('${profile?.profile.imgPath}')`">
+                    <div id="levelStar" :style="`background-image: url('${require('@/assets/star.png')}')`">{{stats.lvl}}</div>
                     <div id="userStatus" :style="`background-color: ${activityUpdate()}`"></div>
                 </div>
             </div>
@@ -14,7 +15,7 @@
             <div id="userInfo">
                 <p>{{profile?.profile.displayName}}</p>
                 <div id="options">
-                    <div id="watchBtn" v-if="status === 'in-game'" @click="router.push(`/play?mode=watch&id=${profile?.profile.id}`)">Watch</div>
+                    <div id="watchBtn" v-if="status === 'in-game'" @click="watchGame(profile?.profile.id)">Watch</div>
                     <div id="reqBtn" v-if="friendshipStatus === 'none'" @click="sendRequest">Send friend request</div>
                     <div id="reqBtn" v-if="friendshipStatus === 'pending'">Friend request sent</div>
                     <div id="reqBtn" v-if="friendshipStatus === 'friend'">Send a message</div>
@@ -34,31 +35,33 @@
                 </div>
                 <div id="bioBody">
                     <div id="stats" v-if="activePointer === 0">
-                        level: 10 <br/>
-                        Games won: 8 / 50 <br/>
-                        win streak: 3 <br/>
+                        <div class="statsItem">
+                            <span class="statsLabel">Wins </span>: {{stats.totalWins}}
+                        </div>
+                        <div class="statsItem">
+                            <span class="statsLabel">loses </span>: {{stats.totalDefeats}}
+                        </div>
+                        <div class="statsItem">
+                            <span class="statsLabel">Goals  </span>: {{stats.totalGoals}}
+                        </div>
+                        <div class="achivContain">
+                            <div id="achivHeader">Achievement</div>
+                            <div id="achivList">
+                                <div class="achivItem">bruh</div>
+                                <div class="achivItem">test</div>
+                                <div class="achivItem">test2</div>
+                            </div>
+                        </div>
                     </div>
                     <div id="history" v-else>
-                        <div class="matchItem winner">
-                            <div class="player">Mourad</div>
-                            <div class="score">2-3</div>
-                            <div class="player">Mouad</div>
-                        </div>
-                        <div class="matchItem loser">
-                            <div class="player">Mourad</div>
-                            <div class="score">2-3</div>
-                            <div class="player">Mouad</div>
-                        </div>
-                        <div class="matchItem winner">
-                            <div class="player">Mourad</div>
-                            <div class="score">2-3</div>
-                            <div class="player">Mouad</div>
+                        <div v-for="item in history" :key="item.id" :class="`matchItem ${item.result}`">
+                            <div class="player">{{item.player1}}</div>
+                            <div class="score">{{item.score}}</div>
+                            <div class="player">{{item.player2}}</div>
                         </div>
                     </div>
                 </div>
-            </div>
-                
-                     
+            </div>        
         </div>
     </div>
 </template>
@@ -73,6 +76,7 @@
     import { useToast } from 'vue-toastification';
     import { useChatStore } from '@/stores/chat';
     import { iio } from '@/p5game';
+    import type { Ref } from 'vue';
 
     const chat = useChatStore();
     const store = useInterfaceStore();
@@ -84,9 +88,14 @@
     const router = useRouter();
     const toast = useToast();
     const status = ref("")
-    const stats = ref(null)
-    const history = ref([])
+    const stats:Ref<any> = ref({lvl: 0, totalWins: 0, totalGamesPlayed: 0, totalGoals: 0})
+    const history:Ref<any> = ref([])
     let onlineLoop:any;
+
+    function watchGame(id:number){
+        router.push(`/play?mode=watch&id=${id}`)
+        closeDiv()
+    }
 
     function activityUpdate(){
         if(status.value === "online"){
@@ -164,14 +173,18 @@
         })
     }
 
-
+// lvl: 4
+// totalDefeats: 19
+// totalGamesPlayed: 26
+// totalGoals: 19
+// totalWins: 7
+// xp: 2
 
     function loadStats(){
         // TODO: get stats from api
         activePointer.value = 0;
         $api(`/game/user-profile/${profile.value?.profile.id}`).then((res:any) => {
             stats.value = res.data
-            console.log(stats.value)
         })
     }
 
@@ -179,15 +192,22 @@
         // TODO: get history from api
         activePointer.value = 1;
         $api(`/game/user-games/${profile.value?.profile.id}`).then((res:any) => {
-            history.value = res.data
+            history.value = res.data.map((item:any) => {
+                return {
+                    "id": item.id,
+                    "result": (profile.value?.profile.id === item.winner.id) ? "winner" : "loser",
+                    "player1": item.winner.displayName,
+                    "player2": item.opponent.displayName,
+                    "score": `${item.score.winnerScore} - ${item.score.opponentScore}`
+                }
+            })
             console.log(history.value)
         })
     }
 
 
-    function closeDiv(e:any){
-        if(e.target.id === 'profileBg')
-            store.setActiveProfile(0);
+    function closeDiv(){
+        store.setActiveProfile(0);
     }
 
     function updateUser(){
@@ -195,29 +215,28 @@
         .then((response:any) => {
             profile.value = response.data;
             setStatus()
+            loadStats()
         })  
     }
 
-    onMounted(()=>{
-        updateUser()
-        chat.socket.on('update-friends', updateUser)
-        chat.socket.emit('user-status', store.activeProfile, (res:any) => {
-            status.value = res.status
-            activityUpdate()
-        })
 
-        onlineLoop = setInterval(() => {
-            //TODO get game online status from
-            iio.emit('game-status', store.activeProfile, (res:any) => {
-                status.value = res.status
-                if(status.value === "in-game"){
-                    return
-                }
+    function checkOnline(){
+        iio.emit('game-status', store.activeProfile, (res:any) => {
+            status.value = res.status
+            if(status.value !== "in-game"){
                 chat.socket.emit('user-status', store.activeProfile, (res:any) => {
                     status.value = res.status
                 })
-            })
-        },5000);
+            }
+        })
+    }
+
+    onMounted(()=>{
+        iio.connect()
+        updateUser()
+        chat.socket.on('update-friends', updateUser)
+        checkOnline()
+        onlineLoop = setInterval(checkOnline,5000);
     })
 
     onUnmounted(() => {
@@ -370,6 +389,7 @@
     #bioBody{
         width: 100%;
         height: 340px;
+        overflow-y: auto;
         background-color: rgb(99, 38, 101);
     }
 
@@ -457,4 +477,54 @@
     .loser{
         background: linear-gradient(325deg, rgba(255,255,255,0) 0%, rgba(255,0,0,0) 50%, rgba(255,0,0,1) 100%);
     }
+
+    .statsItem{
+        position: relative;
+        width: 100%;
+        height: 50px;
+        display: flex;
+        align-items: flex-end;
+        font-size: 30px;
+        font-weight: 500;
+        border-bottom: 2px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .statsLabel{
+        width: 15%;
+        color: rgb(255, 132, 0);
+        font-weight: 600;
+    }
+
+    #levelStar{
+        position: absolute;
+        top: -10px;
+        left: -10px;
+        width: 50px;
+        height: 50px;
+        background: url('@/assets/star.png');
+        background-size: cover;
+        background-repeat: no-repeat;
+        background-position: center;
+        font-size: 30px;
+        display: flex;
+        justify-content: center;
+        line-height: 55px;
+    }
+
+    #achivList{
+        position: relative;
+        width: 100%;
+        padding: 10px;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: flex-start;
+        gap: 15px;
+    }
+
+    .achivItem{
+        width: 100px;
+        height: 100px;
+        background-color: red;
+    }
+
 </style>
