@@ -26,15 +26,15 @@
     let code = ref('');
     let router = useRouter();
     
-    onMounted(async () => {
-        try{
-            await $api.get('/user/me');
-        }
-        catch(e){
-            toast.error('Failed to fetch user data');
-            router.push('/login');
-        }
-    })
+    // onMounted(async () => {
+    //     try{
+    //         await $api.get('/user/me');
+    //     }
+    //     catch(e){
+    //         toast.error('Failed to fetch user data');
+    //         router.push('/login');
+    //     }
+    // })
 
     async function validate()
     {

@@ -89,6 +89,10 @@
                 "token": $token
             }
         });
+
+        chatStore.socket.on("error", (err:any) => {
+            toast.error(err)
+        });
         
         chatStore.socket.on("receive_message", (res:any) => {
             if(chatStore.activeChat && res.channel.id == chatStore.activeChat.id){
