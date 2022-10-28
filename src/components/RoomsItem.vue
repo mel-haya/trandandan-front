@@ -11,9 +11,13 @@
 <script lang="ts" setup>
     import { useChatStore } from '@/stores/chat';
     import { useUserStore } from '@/stores/user';
+    import { useToast } from 'vue-toastification';
+    import { $api } from '@/axios'
 
     const chat = useChatStore();
     const user = useUserStore();
+    const toast = useToast();
+
     let Props = defineProps({
         room: {
             type: Object,
@@ -23,27 +27,29 @@
     let emit = defineEmits(['selected']);
 
     async function joinGroup(){
-        // try{
-        //     let room = await $api.get("/channel/" + Props.room.id);
-        //     console.log(room)
-        // }
-        // catch(err){
-        //     console.log(err)
-        // }
+        try{
+            let room:any =  (await $api.get("/channel/find/" + Props.room.id)).data;
+            console.log(room)
+            if(room.type === 'protected'){ 
+                emit('selected')
+                return
+            }
+            chat.socket.emit("join_channel", {"channelId": room.id, "userId": user.user.id}, async (data:any) => {
+                if(data.success === false){
+                    toast.error(data.error)
+                    return
+                }
+                chat.updateAvailable();
+                chat.updateJoined();
+                await chat.updateChat(room.id);
+                await chat.updateMessages()
+            }); 
+        }
+        catch(err){
+            console.log(err)
+        }
         
         //TODO: check if channel privacy was changed
-        if(Props.room.type === 'protected'){
-            emit('selected')
-            return
-        }
-        chat.socket.emit("join_channel", {"channelId": Props.room.id, "userId": user.user.id}, (data:any) => {
-            console.log(data);
-        });
-        await new Promise(r => setTimeout(r, 100));
-        chat.updateAvailable();
-        chat.updateJoined();
-        await chat.updateChat(Props.room.id);
-        await chat.updateMessages()
     }
 </script>
 

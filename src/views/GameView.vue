@@ -5,12 +5,10 @@
         </div>
         <div id="players">
             <div class="player">
-                <div id="playerImg"></div>
-                <div id="playerName">Player1</div>
+                <div id="playerName">{{player1}}</div>
             </div>
             <div class="player">
-                <div id="playerImg"></div>
-                <div id="playerName">Player2</div>
+                <div id="playerName">{{player2}}</div>
             </div>
         </div>
         <div ref="game" id="game"></div>
@@ -32,6 +30,8 @@
     const toast = useToast();
     console.log(route.query.mode);
     const router = useRouter();
+    const player1 = ref('Player1');
+    const player2 = ref('Abdo');
     
     onMounted(async () => {
         try{
@@ -42,8 +42,14 @@
             router.push('/login');
         }
         new p5(s, game.value);
-        connectSocket()
         await nextTick()
+        connectSocket()
+
+        // Socket.emit("getPlayers", (data:any)=>{
+        //     player1.value = data.player1
+        //     player2.value = data.player2
+        // })
+        
         // iio.connect();
         // if (iio.connected == false)
         // {

@@ -63,7 +63,7 @@ export const useChatStore = defineStore('chat', () =>
             return;
         }
         try{
-            const res = await $api.get('/channel/'+id)
+            const res = await $api.get('/channel/channel-role/'+id)
             activeChat.value = res.data;
         }
         catch(err){
@@ -89,7 +89,7 @@ export const useChatStore = defineStore('chat', () =>
         }
         $api.get('/message/dm/'+ user.channelId).then( async (res) => {
             activeChatMessages.value = res.data.map((a: any)=>{
-                return new Message(a.id, a.author.id, a.author.displayName, a.content, (a.author.id === userStore.user.id ) ? "me" : "them");
+                return new Message(a.id, a.author.id, a.author.displayName, a.content, (a.author.id === userStore.user.id ) ? "me" : "them",a.type);
             })
         }).catch((err) => {
             console.log(err)
@@ -99,9 +99,9 @@ export const useChatStore = defineStore('chat', () =>
     async function updateMessages(){
         if(activeChat.value === null || activeChat.value.type === 'direct')
             return;
-        $api.get('/message/'+ activeChat.value.id).then( async (res) => {
+        $api.get('/message/channel/'+ activeChat.value.id).then( async (res) => {
             activeChatMessages.value = res.data.map((a: any)=>{
-                return new Message(a.id, a.channel.id, a.author.displayName, a.content, (a.author.id === userStore.user.id ) ? "me" : "them");
+                return new Message(a.id, a.channel.id, a.author.displayName, a.content, (a.author.id === userStore.user.id ) ? "me" : "them", 'message');
             })
         }).catch((err) => {
             if(err.response.status === 403)

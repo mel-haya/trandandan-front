@@ -97,7 +97,7 @@
         chatStore.socket.on("receive_message", (res:any) => {
             if(chatStore.activeChat && res.channel.id == chatStore.activeChat.id){
                 chatStore.activeChatMessages.push( 
-					new Message(res.id,res.channel.id,res.author.displayName,res.content, res.author.id === store.user.id ? "me" : "them")
+					new Message(res.id,res.channel.id,res.author.displayName,res.content, res.author.id === store.user.id ? "me" : "them","message")
 				);
             }
             else{
@@ -118,7 +118,7 @@
         chatStore.socket.on("receive_direct_message", (res:any) => {
             if(chatStore.activeChat && res.channel.id == chatStore.activeChat.id){
                 chatStore.activeChatMessages.push( 
-					new Message(res.id,res.author.id,res.author.displayName,res.content,res.author.id === store.user.id ? "me" : "them")
+					new Message(res.id,res.author.id,res.author.displayName,res.content,res.author.id === store.user.id ? "me" : "them", res.type)
 				);
             }
         });

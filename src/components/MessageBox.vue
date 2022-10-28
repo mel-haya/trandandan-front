@@ -17,10 +17,10 @@
 		<div id="chatOptions" v-if="enableOptions">
 			<div id="groupOptions" v-if="chatStore.activeChat.type === 'direct'">
 				<p @click="interfaceStore.setActiveProfile(chatStore.activeChat.userId)">Profile</p>
-				<p>Invite to a game</p>
+				<p @click="createInviteLink">Invite to a game</p>
 			</div>
 			<div id="groupOptions" v-else>
-				<p>Add a new user</p>
+				<p @click="showAddMembers = true">Add a new user</p>
 				<p v-if="chatStore.activeChat.role === 'owner'"  @click="chatStore.activeChatSetting = true">Group settings</p>
 				<p @click.stop="enableMembers = true">Members</p>
 				<p @click="leaveGroup">Leave Group</p>
@@ -41,6 +41,7 @@
 		<MessageboxSettingsVue/>
 	</div>
 	<membersListVue v-if="enableMembers"/>
+	<InviteToGroupBox v-if="showAddMembers" @close="showAddMembers = false"/>
 </template>
 
 <script lang="ts" setup>
@@ -50,11 +51,13 @@
 	import membersListVue from './membersList.vue';
 	import MessageBoxItem from '@/components/messageBoxItem.vue'
 	import MessageboxSettingsVue from './MessageboxSettings.vue';
+	import InviteToGroupBox from './InviteToGroupBox.vue';
 	import {nextTick, onMounted, onUnmounted, ref, watch} from 'vue'
 	import type { Ref } from 'vue'
 	import { useToast } from 'vue-toastification';
 	import { Message } from '@/types/message';
 	import { storeToRefs } from 'pinia'
+	import {useRouter} from 'vue-router'
 	
 	let chatMessages:Ref<any> = ref();
 	const interfaceStore = useInterfaceStore();
@@ -66,6 +69,8 @@
 	let messageBody = ref('');
 	const toast = useToast();
 	const { activeChatMessages } = storeToRefs(chatStore)
+	const router = useRouter();
+	const showAddMembers = ref(false);
 
 	let scrollDown = async () => {
 		await nextTick();
@@ -106,11 +111,11 @@
 	}
 
 	function send_direct_message(){
-		chatStore.socket.emit('send_direct_message', { "channelId": chatStore.activeChat.id , "content": messageBody.value}, 
+		chatStore.socket.emit('send_direct_message', { "channelId": chatStore.activeChat.id , "content": messageBody.value, type: 'message'}, 
 		(response:any) => {
 			if(response.success === true){
 				chatStore.activeChatMessages.push( 
-					new Message(userStore.user.id,chatStore.activeChat.id,userStore.user.displayName,messageBody.value, "me")
+					new Message(userStore.user.id,chatStore.activeChat.id,userStore.user.displayName,messageBody.value, "me",'message')
 				);
 				messageBody.value = '';
 				scrollDown()
@@ -133,7 +138,7 @@
 		(response:any) => {
 			if(response.success === true){
 				chatStore.activeChatMessages.push( 
-					new Message(userStore.user.id,chatStore.activeChat.id,userStore.user.displayName,messageBody.value, "me")
+					new Message(userStore.user.id,chatStore.activeChat.id,userStore.user.displayName,messageBody.value, "me",'message')
 				);
 				scrollDown()
 				messageBody.value = '';
@@ -180,6 +185,15 @@
 		enableMembers.value = false;
 		interfaceStore.enableMembersSettings = null;
 	});
+
+	function createInviteLink(){
+		chatStore.gameSocket.emit('generateGameLink',(res:any)=>{
+			let link = `/play?mode=private&id=${res.Token}`
+			chatStore.socket.emit('send_direct_message', { "channelId": chatStore.activeChat.id , "content": link, type: 'invite'},()=>{
+				router.push(link)
+			})
+		})
+	}
 
 </script>
 

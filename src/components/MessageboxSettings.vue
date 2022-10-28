@@ -59,7 +59,7 @@
     }
 
 	function deleteChannel(){
-		$api.delete('channel/'+chatStore.activeChat.id).then(()=>{
+		$api.delete('channel/delete/'+chatStore.activeChat.id).then(()=>{
 			toast.success("Channel deleted")
 			chatStore.updateChat(0);
 			chatStore.updateJoined()
@@ -113,7 +113,7 @@
 		data.append('file', imageInput.value.files[0])
 		$api({
                 method: "patch",
-                url: "channel/" + chatStore.activeChat.id,
+                url: "channel/update/" + chatStore.activeChat.id,
                 data: data,
                 headers: {
                      "Content-Type": "multipart/form-data",

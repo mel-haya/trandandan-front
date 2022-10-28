@@ -42,6 +42,7 @@ onMounted(async()=>{
         router.push('/login');
     }
     $api.get('/game/leaderboard').then(res=>{
+        console.log(res)
         leaderboard.value = res.data
     }).catch(() =>{
         toast.error('Failed to fetch leaderboard')

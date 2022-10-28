@@ -1,12 +1,22 @@
 <template>
-    <div id="message" :class="Props.message.from">
-        <p id="author" v-if="Props.message.author">{{Props.message.author}}</p>
+    <div id="message" class="gameInvite" v-if="Props.message?.type === 'invite'">
+        <h1>Game Invite</h1>
+        <p>{{Props.message.author}} Created a game</p>
+        <div id="joinGameBtn" @click="router.push(Props.message?.content)">Join game</div>
+    </div>
+
+
+    <div id="message" :class="Props.message.from" v-else>
+        <p id="author">{{Props.message.author}}</p>
         <p>{{Props.message?.content}}</p>
     </div>
 </template>
 
 <script lang="ts" setup>
     import {defineProps} from 'vue'
+    import {useRouter} from 'vue-router'
+
+    const router = useRouter()
     let Props = defineProps({
         message: {
             type: Object,
@@ -64,5 +74,39 @@
     .me #author{
         display: none;
     }
+
+    .gameInvite{
+        max-width: 70%;
+        align-self: center;
+        border-radius: 15px;
+        background: rgb(97, 37, 226);
+        color : white;
+    }
+
+    .gameInvite h1{
+        font-size: 24px;
+        font-weight: bolder;
+        margin: 0px;
+    }
+
+    .gameInvite p{
+        font-size: 18px;
+        margin: 0px;
+    }
+
+    #joinGameBtn{
+        background: #248bf5;
+        border-radius: 15px;
+        padding: 10px;
+        margin: 10px 0px;
+        cursor: pointer;
+        text-align: center;
+        
+    }
+
+    #joinGameBtn:active{
+        background: #248bf5b3;
+    }
+
 
 </style>
