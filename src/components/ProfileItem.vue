@@ -18,10 +18,10 @@
                     <div id="watchBtn" v-if="status === 'in-game'" @click="watchGame(profile?.profile.id)">Watch</div>
                     <div id="reqBtn" v-if="friendshipStatus === 'none'" @click="sendRequest">Send friend request</div>
                     <div id="reqBtn" v-if="friendshipStatus === 'pending'">Friend request sent</div>
-                    <div id="reqBtn" v-if="friendshipStatus === 'friend'">Send a message</div>
+                    <div id="reqBtn" v-if="friendshipStatus === 'friend'"> <fa icon="check"></fa> Friends</div>
                     <div id="reqBtn" v-if="friendshipStatus === 'blocked'" @click="unblockUser">Unblock this user</div>
                     <div id="reqBtn" v-if="friendshipStatus === 'pending2'" @click="acceptRequest">Accept friend request</div>
-                    <div id="reqBtn" v-if="friendshipStatus === 'self'" @click="router.push('/settings')">Account settings</div>
+                    <div id="reqBtn" v-if="friendshipStatus === 'self'" @click="closeDiv();router.push('/settings')">Account settings</div>
                     <div id="settings-icon" v-if="friendshipStatus !== 'blocked' && friendshipStatus !== 'self'" @click.stop="enableMenu = true">
                         <fa icon="ellipsis-vertical" />
                     </div>
