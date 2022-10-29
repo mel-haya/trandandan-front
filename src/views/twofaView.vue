@@ -45,7 +45,7 @@
 
     async function validate()
     {   try{
-            const res = await $api.post("http://localhost:3000/2fa/verify", {code: code.value})
+            const res = await $api.post("/2fa/verify", {code: code.value})
             console.log(res.data.accessToken);
             Cookies.set('accessToken', res.data.accessToken);
             updateToken()

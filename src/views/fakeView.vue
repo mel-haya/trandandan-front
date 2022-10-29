@@ -25,7 +25,7 @@
     let toast = useToast();
 
     async function submit(){
-        let p = await axios.post('http://localhost:3000/auth/fake-login', {
+        let p = await axios.post('http://127.0.0.1:3000/auth/fake-login', {
             id: id.value,
             displayName: name.value
         })
@@ -35,14 +35,14 @@
     }
 
     function reset_users(){
-        axios.delete('http://localhost:3000/user/all-users')
+        axios.delete('http://127.0.0.1:3000/user/all-users')
         .then(()=>{
             toast.success('all users deleted')
         })
     }
 
     function reset_channels(){
-        axios.delete('http://localhost:3000/channel/all')
+        axios.delete('http://127.0.0.1:3000/channel/all')
         .then(()=>{
             toast.success('all channels deleted')
         }).catch((err)=>{

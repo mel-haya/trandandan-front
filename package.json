@@ -16,6 +16,8 @@
     "autoprefixer": "^10.4.12",
     "axios": "^0.27.2",
     "core-js": "^3.8.3",
+    "dotenv": "^16.0.3",
+    "env": "^0.0.2",
     "js-cookie": "^3.0.1",
     "node-polyfill-webpack-plugin": "^2.0.1",
     "p5": "^1.4.2",

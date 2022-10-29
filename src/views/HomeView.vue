@@ -78,13 +78,14 @@
 
     onMounted(async () => {
         try{
+            console.log(`http://${process.env.VUE_APP_APP_NAME}:${process.env.VUE_APP_HOST_PORT}`)
             store.user = (await $api.get('/user/me')).data;
         }
         catch(e){
             toast.error('Failed to fetch user data');
             router.push('/login');
         }
-        chatStore.socket = io("http://localhost:3000", {
+        chatStore.socket = io(`http://${process.env.VUE_APP_APP_NAME}:${process.env.VUE_APP_HOST_PORT}`, {
             extraHeaders: {
                 "token": $token
             }

@@ -6,7 +6,7 @@ let $token:string = Cookies.get('accessToken') === undefined ? '' : Cookies.get(
 function updateToken(){
     $token = Cookies.get('accessToken')!
     $api = axios.create({
-        baseURL: 'http://localhost:3000/',
+        baseURL: `http://${process.env.VUE_APP_APP_NAME}:${process.env.VUE_APP_HOST_PORT}`,
         headers: {
             'Content-type': 'application/json',
             'Authorization': 'Bearer ' + $token
@@ -15,7 +15,7 @@ function updateToken(){
 }
 
 let $api = axios.create({
-    baseURL: 'http://localhost:3000/',
+    baseURL: `http://${process.env.VUE_APP_APP_NAME}:${process.env.VUE_APP_HOST_PORT}`,
     headers: {
         'Content-type': 'application/json',
         'Authorization': 'Bearer ' + $token

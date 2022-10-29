@@ -17,7 +17,6 @@ const router = createRouter()
 const pinia = createPinia()
 
 library.add(fas,far)
-
 createApp(App)
 .use(Toast, {
     transition: "Vue-Toastification__fade",
