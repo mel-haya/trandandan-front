@@ -5,10 +5,12 @@
         </div>
         <div id="players">
             <div class="player">
-                <div id="playerName">{{player1}}</div>
+                <div id="playerImg" :v-if="player1.imgPath" :style="`background-image: url('${player1.imgPath}')`"></div>
+                <div id="playerName">{{player1.name}}</div>
             </div>
             <div class="player">
-                <div id="playerName">{{player2}}</div>
+                <div id="playerImg" :v-if="player2.imgPath" :style="`background-image: url('${player2.imgPath}')`"></div>
+                <div id="playerName">{{player2.name}}</div>
             </div>
         </div>
         <div ref="game" id="game"></div>
@@ -30,8 +32,8 @@
     const toast = useToast();
     console.log(route.query.mode);
     const router = useRouter();
-    const player1 = ref('Player1');
-    const player2 = ref('Player2');
+    const player1 = ref({name:1, imgPath:""});
+    const player2 = ref({name:1, imgPath:""});
     
     onMounted(async () => {
         try{
@@ -62,8 +64,8 @@
             setMetadata(route.query.id, route.query.mode)
         
         iio.on("setPlayers", (data:any)=>{
-            player1.value = data.player1Name
-            player2.value = data.player2Name
+            player1.value = {name:data.player1Name, imgPath:data.player1Img};
+            player2.value = {name:data.player2Name, imgPath:data.player2Img};
             // player1.value = data.player1Img  // path of img
             // player2.value = data.player2Img  // path of img
         })
@@ -113,10 +115,15 @@
         height: 150px;
     }
 
-    #gameHeader > img{
+    #playerImg{
         height: 100%;
         margin: 10px auto;
-        cursor: pointer;
+        background-size: cover;
+        background-position: center;
+    }
+
+    #gameHeader > img{
+        height: 100%;
     }
 
 </style>
