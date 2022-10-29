@@ -532,4 +532,4 @@ function setMetadata(_id:any, _mode:string){
   iio.emit('getIDS', {token:$token, id:_id, socket:"", room:"", mode:_mode, pos:0})
 }
 
-export {s,disconnectSocket,setMetadata,connectSocket}
+export {s,disconnectSocket,setMetadata,connectSocket, iio}

@@ -19,7 +19,7 @@
     import {onMounted, onUnmounted, ref, nextTick} from 'vue';
     import { useUserStore } from '@/stores/user'
     import { $api } from '@/axios';
-    import {s,disconnectSocket,setMetadata,connectSocket} from '@/p5game';
+    import {s,disconnectSocket,setMetadata,connectSocket,iio} from '@/p5game';
     import p5 from 'p5';
     import { useRouter, useRoute } from 'vue-router'
     import { useToast } from 'vue-toastification';
@@ -31,7 +31,7 @@
     console.log(route.query.mode);
     const router = useRouter();
     const player1 = ref('Player1');
-    const player2 = ref('Abdo');
+    const player2 = ref('Player2');
     
     onMounted(async () => {
         try{
@@ -45,10 +45,6 @@
         await nextTick()
         connectSocket()
 
-        // Socket.emit("getPlayers", (data:any)=>{
-        //     player1.value = data.player1
-        //     player2.value = data.player2
-        // })
         
         // iio.connect();
         // if (iio.connected == false)
@@ -64,6 +60,13 @@
             setMetadata(route.query.id, route.query.mode)
         else if (route.query.mode === "private")
             setMetadata(route.query.id, route.query.mode)
+        
+        iio.on("setPlayers", (data:any)=>{
+            player1.value = data.player1Name
+            player2.value = data.player2Name
+            // player1.value = data.player1Img  // path of img
+            // player2.value = data.player2Img  // path of img
+        })
 
     });
     onUnmounted(async () => {
