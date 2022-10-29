@@ -78,7 +78,6 @@
 
     onMounted(async () => {
         try{
-            console.log(`http://${process.env.VUE_APP_APP_NAME}:${process.env.VUE_APP_HOST_PORT}`)
             store.user = (await $api.get('/user/me')).data;
         }
         catch(e){

@@ -77,8 +77,14 @@
                     router.push('/')
                 })
                 .catch(function (response) {
-                    toast.error(response.response.data.message)
-                    console.log(response);
+                    if(response.response.data.message instanceof Array){
+                        response.response.data.message.forEach((element:any) => {
+                            toast.error(element);
+                        });
+                    }
+                    else{
+                        toast.error(response.response.data.message); 
+                    }
                 });
     }
 </script>
