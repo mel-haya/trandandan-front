@@ -11,7 +11,8 @@
                 <input ref="imageInput" type="file" name="file" id="file" accept=".jpg,.jpeg,.png,.gif" @change="changeImage">
             </div>
             <input type="text" placeholder="change your name" id="usernameInput" name="username" v-model="newName">
-            <button id="faBtn" @click="redirectHome">activate 2FA</button>
+            <button id="faBtn" @click="redirectHome" v-if="store.user.is2faEnabled === false">activate 2FA</button>
+            <button id="faBtn" v-else><fa icon="check"></fa>2FA activated</button>
             <button @click="submitForm" id="saveBtn">save</button>
         </div>
     </div>

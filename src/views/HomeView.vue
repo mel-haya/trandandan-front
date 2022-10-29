@@ -129,6 +129,10 @@
             chatStore.updateFriendRequests()
             
         })
+
+        chatStore.socket.on("update_joined", ()=>{
+            chatStore.updateJoined()
+        })
     })
 
 </script>

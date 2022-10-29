@@ -56,11 +56,14 @@
 
     function invite(id:string){
         chatStore.socket.emit('add-member', {channelId: chatStore.activeChat.id, targetId: id},(res:any)=>{
-            
             console.log(res)
-            updateMembers();
-            updateFriends();
-            toast.success("Member added")
+            if(res.success === true)
+            {
+                friends.value = friends.value.filter((f:any) => f.id !== id)
+                toast.success("Member added")
+            }
+            else
+                toast.error(res.error)  
         })
     }
 

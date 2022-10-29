@@ -1,8 +1,8 @@
     <template>
-        <img src="../assets/pong-online.png" alt="">
+        <img id="homeLogo" src="../assets/pong-online.png" alt="">
         <br>
         <div id="loginButton">
-            <a @click="submit" href="http://localhost:3000/auth/42">Sign up with 42</a>
+            <a @click="submit" href="http://localhost:3000/auth/42"><img id="ft_logo" :src="require('@/assets/42.png')" alt=""/> Login</a>
         </div>
     
     </template>
@@ -19,10 +19,17 @@
 
 
 <style scoped>
-img{
+#homeLogo{
     width: 35%;
+    min-width: 400px;
     margin: 10px auto;
 }
+
+#ft_logo{
+    width: 50px;
+    display: inline;
+}
+
 #loginButton{
     max-width: 350px;
     width: 40%;

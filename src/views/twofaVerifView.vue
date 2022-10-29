@@ -3,7 +3,6 @@
         <p><fa icon="lock"/> Two-factor authentication</p>
         <div id="twofaForm">
             <input type="text" @keyup.enter="validate" placeholder="enter code" id="usernameInput" name="code" v-model="code">
-            <p v-if="invalid" id="invalidErr">Invalid code</p>
             <div>
                 <button @click="validate">Validate</button>
             </div>
@@ -13,16 +12,14 @@
 
 
 <script lang="ts" setup>
-/* eslint-disable */
     // import {toDataURL} from 'qrcode';
-    import {onMounted, ref} from 'vue'
+    import {ref} from 'vue'
     import { useRouter } from 'vue-router';
     import Cookies from 'js-cookie'
     import {$api,updateToken} from '@/axios'
     import { useToast } from 'vue-toastification';
 
     const toast = useToast();
-    let invalid = ref(false);
     let code = ref('');
     let router = useRouter();
     
@@ -45,7 +42,9 @@
             router.push('/');
 
         })
-        .catch((err) => console.log(err));
+        .catch((err:any) => {
+            toast.error(err.response.data.message);
+        });
         // if(code.value == res)
         // {
         //     invalid.value = false;
