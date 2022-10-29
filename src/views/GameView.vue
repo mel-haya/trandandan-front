@@ -1,7 +1,7 @@
 <template>
     <div id="gameContainer">
-        <div id="gameHeader" @click="router.push('/')">
-            <img src="../assets/pong-online.png" alt=""/>
+        <div id="gameHeader">
+            <img src="../assets/pong-online.png" alt="" @click="router.push('/')"/>
         </div>
         <div id="players">
             <div class="player">
@@ -32,8 +32,8 @@
     const toast = useToast();
     console.log(route.query.mode);
     const router = useRouter();
-    const player1 = ref({name:1, imgPath:""});
-    const player2 = ref({name:1, imgPath:""});
+    const player1 = ref({name:"Player1", imgPath:""});
+    const player2 = ref({name:"Player2", imgPath:""});
     
     onMounted(async () => {
         try{
@@ -66,8 +66,6 @@
         iio.on("setPlayers", (data:any)=>{
             player1.value = {name:data.player1Name, imgPath:data.player1Img};
             player2.value = {name:data.player2Name, imgPath:data.player2Img};
-            // player1.value = data.player1Img  // path of img
-            // player2.value = data.player2Img  // path of img
         })
 
     });
@@ -112,7 +110,7 @@
         display: flex;
         justify-content: center;
         align-items: flex-start;
-        height: 150px;
+        height: 200px;
     }
 
     #playerImg{
@@ -124,6 +122,7 @@
 
     #gameHeader > img{
         height: 100%;
+        cursor: pointer;
     }
 
 </style>

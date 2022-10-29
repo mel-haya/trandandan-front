@@ -21,8 +21,9 @@
                     <div id="reqBtn" v-if="friendshipStatus === 'friend'"> <fa icon="check"></fa> Friends</div>
                     <div id="reqBtn" v-if="friendshipStatus === 'blocked'" @click="unblockUser">Unblock this user</div>
                     <div id="reqBtn" v-if="friendshipStatus === 'pending2'" @click="acceptRequest">Accept friend request</div>
+                    <div id="reqBtn" v-if="friendshipStatus === 'blocked2'">This user blocked you</div>
                     <div id="reqBtn" v-if="friendshipStatus === 'self'" @click="closeDiv();router.push('/settings')">Account settings</div>
-                    <div id="settings-icon" v-if="friendshipStatus !== 'blocked' && friendshipStatus !== 'self'" @click.stop="enableMenu = true">
+                    <div id="settings-icon" v-if="friendshipStatus !== 'blocked' && friendshipStatus !== 'blocked2' && friendshipStatus !== 'self'" @click.stop="enableMenu = true">
                         <fa icon="ellipsis-vertical" />
                     </div>
                 </div>
@@ -45,12 +46,7 @@
                             <span class="statsLabel">Goals  </span>: {{stats.totalGoals}}
                         </div>
                         <div class="achivContain">
-                            <div id="achivHeader">Achievement</div>
-                            <div id="achivList">
-                                <div class="achivItem">bruh</div>
-                                <div class="achivItem">test</div>
-                                <div class="achivItem">test2</div>
-                            </div>
+                            <div id="achivBtn" @click="enableAchiv = true">Achievement</div>
                         </div>
                     </div>
                     <div id="history" v-else>
@@ -64,6 +60,7 @@
             </div>        
         </div>
     </div>
+    <AchivBoxVue v-if="enableAchiv" @close="enableAchiv = false" :player="{...stats, 'twofa':profile.profile.is2faEnabled}"/>
 </template>
 
 <script lang="ts" setup>
@@ -75,12 +72,13 @@
     import { useRouter } from 'vue-router';
     import { useToast } from 'vue-toastification';
     import { useChatStore } from '@/stores/chat';
+    import AchivBoxVue from './AchivBox.vue';
     // import { iio } from '@/p5game';
     //const chatStore = useChatStore()
     // import { iio } from '@/p5game';
     import type { Ref } from 'vue';
 
-    
+    const enableAchiv = ref(false)
     const chat = useChatStore();
     const iio = chat.gameSocket
     const store = useInterfaceStore();
@@ -205,7 +203,6 @@
                     "score": `${item.score.winnerScore} - ${item.score.opponentScore}`
                 }
             })
-            console.log(history.value)
         })
     }
 
@@ -270,7 +267,6 @@
         left: 50%;
         transform: translate(-50%,-50%);
         width: 700px;
-        height: 600px;
         background-color: rgb(149, 60, 152);
         transition: all 0.7s ease;
         border-radius: 10px;
@@ -392,7 +388,7 @@
 
     #bioBody{
         width: 100%;
-        height: 340px;
+        height: 270px;
         overflow-y: auto;
         background-color: rgb(99, 38, 101);
     }
@@ -525,10 +521,28 @@
         gap: 15px;
     }
 
-    .achivItem{
-        width: 100px;
+    #achivBtn{
+        position: relative;
+        padding: 10px 20px;
+        background-color: rgb(237, 126, 7);
+        border-radius: 10px;
+        color: black;
+        font-size: 24px;
+        cursor: pointer;
+        margin-right: 10px;
+        display: inline-block;
+    }
+
+    .achivContain{
+        position: relative;
+        width: 100%;
         height: 100px;
-        background-color: red;
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        cursor: pointer;
+        transition: all 0.5s ease;
+        font-size: 30px;
     }
 
 </style>
