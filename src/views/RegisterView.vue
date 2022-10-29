@@ -38,7 +38,6 @@
     onMounted(async () => {
         try{
             store.user = (await $api.get('/user/me')).data;
-            newName.value = store.user.displayName
         }
         catch(e){
             toast.error('Failed to fetch user data');
@@ -57,14 +56,10 @@
 
     function submitForm()
     {
-        if(newName.value == "")
-        {
-            toast.error('Please enter a username')
-            return;
-        }
         var bodyFormData = new FormData();
         bodyFormData.append('file', imageInput.value.files[0]);
-        bodyFormData.append('displayName', newName.value);
+        if(newName.value !== "")
+            bodyFormData.append('username', newName.value);
         $api({
                 method: "patch",
                 url: "user/update",

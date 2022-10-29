@@ -103,8 +103,15 @@ function createGroup()
             chat.updateJoined()
             chat.socket.emit('join_channel', {"channelId": res.data.id})
             console.log()
-        }).catch((err)=>{
-            toast.error(err.response.data.message)
+        }).catch((response)=>{
+            if(response.response.data.message instanceof Array){
+                response.response.data.message.forEach((element:any) => {
+                    toast.error(element);
+                });
+            }
+            else{
+                toast.error(response.response.data.message); 
+            }
             // toast.error(err.response.data.message)
         })  
     }

@@ -1,7 +1,7 @@
 <template>
     <div id="gameContainer">
-        <div id="gameHeader" @click="router.push('/')">
-            <img src="../assets/pong-online.png" alt=""/>
+        <div id="gameHeader">
+            <img src="../assets/pong-online.png" alt="" @click="router.push('/')"/>
         </div>
         <div id="players">
             <div class="player">
@@ -114,7 +114,7 @@
         display: flex;
         justify-content: center;
         align-items: flex-start;
-        height: 150px;
+        height: 200px;
     }
 
     #playerImg{
@@ -126,6 +126,7 @@
 
     #gameHeader > img{
         height: 100%;
+        cursor: pointer;
     }
 
 </style>

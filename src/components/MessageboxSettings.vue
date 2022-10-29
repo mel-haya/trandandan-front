@@ -87,7 +87,7 @@
 
 	async function submit(){
 		let data = new FormData();
-		if(password.value && passInput.value.value.length == 0){
+		if(chatStore.activeChat.type !== "protected" &&  password.value && passInput.value.value.length == 0){
 			toast.error("Password cannot be empty")
 			return;
 		}
@@ -96,11 +96,11 @@
 			return;
 		}
 
-		
-		
 		if(password.value){
 			data.append("type", "protected")
-			data.append("password", passInput.value.value)
+			if(passInput.value.value.length > 0){
+				data.append("password", passInput.value.value)
+			}
 		}
 		else if(privacy.value){
 			data.append("type", "private")
@@ -108,7 +108,6 @@
 		else{
 			data.append("type", "public")
 		}
-
 		data.append("name", name.value)
 		data.append('file', imageInput.value.files[0])
 		$api({
@@ -126,9 +125,16 @@
 					await chatStore.updateMessages()
 					chatStore.activeChatSetting = false
                 })
-                .catch(function (res) {
-					console.log(res)
-                    toast.error(res.response.data.message[0]);
+                .catch(function (response) {
+					console.log(response)
+                    if(response.response.data.message instanceof Array){
+						response.response.data.message.forEach((element:any) => {
+							toast.error(element);
+						});
+					}
+					else{
+						toast.error(response.response.data.message); 
+            }
         });
 
 	}

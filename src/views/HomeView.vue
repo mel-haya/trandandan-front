@@ -44,8 +44,8 @@
         audio.play();
         if(label.a === "PLAY")
         {
-            label.a = "EASY";
-            label.b = "HARD";
+            label.a = "CLASSIC";
+            label.b = "ULTIMATE";
             label.c = "RETURN";
         }
         else
