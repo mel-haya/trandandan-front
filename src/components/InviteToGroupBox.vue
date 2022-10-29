@@ -2,6 +2,12 @@
     <div id="addmembersBG" @click="emits('close')">
         <div id="addmembersContainer" @click.stop="">
             <h3>Add members</h3>
+            <div id="addMembersBody">
+                <div id="addMemberItem" v-for="f in friends" :key="f.id">
+                    <div id="inviteName">{{f.displayName}}</div>
+                    <div id="inviteBtn" @click="invite(f.id)">Invite</div>
+                </div>
+            </div>
         </div>
     </div>
 </template>
@@ -10,13 +16,14 @@
     import { useChatStore } from '@/stores/chat';
     import { onMounted, onUnmounted, ref } from 'vue';  
     import {$api} from '@/axios';
+    import {useToast} from 'vue-toastification'
     // import {useToast} from 'vue-toastification';
     
     const emits = defineEmits(['close'])
-
-
+    const toast = useToast()
     const chatStore = useChatStore();
     let members:any = ref([]);
+    let friends:any = ref([]);
     // const toast = useToast();
 
     function updateMembers(){
@@ -25,12 +32,37 @@
         })
     }
 
-    onMounted(() => {
-        updateMembers()
+    async function updateFriends(){
+        try{
+        let res = (await $api.get('/user/friends')).data
+        friends.value = res.filter((f:any) => {
+            const isMember = members.value.findIndex((m:any) => m.member.id === f.id)
+            if (isMember === -1)
+                return f
+            return false
+        })
+        }catch(e){
+            console.log(e)
+        }
+    }
+
+    onMounted(async() => {
+        updateMembers();
+        await updateFriends();
     })
 
     onUnmounted(() => {
     });
+
+    function invite(id:string){
+        chatStore.socket.emit('add-member', {channelId: chatStore.activeChat.id, targetId: id},(res:any)=>{
+            
+            console.log(res)
+            updateMembers();
+            updateFriends();
+            toast.success("Member added")
+        })
+    }
 
 
 </script>
@@ -59,7 +91,12 @@
     border-radius: 10px;
 }
 
-#addmembersContainer h3{
+#addMembersBody{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+}
+
+h3{
     margin: 0px;
     padding: 0px;
     font-size: 30px;
@@ -70,5 +107,34 @@
     border-top-right-radius: 10px;
 }
 
+#addMemberItem{
+    position: relative;
+    height: 70px;
+    line-height: 70px;
+    background-color: rgba(122, 51, 125, 0.995);
+    font-size: 24px;
+    border-radius: 10px;
+    padding: 0px 20px;
+    text-align: left;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 15px;
+}
+
+
+#inviteBtn{
+    background-color: rgba(3, 139, 26, 0.995);
+    height: 50px;
+    color: white;
+    font-size: 20px;
+    padding: 5px;
+    border-radius: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0 15px;
+    cursor: pointer;
+}
 
 </style>
