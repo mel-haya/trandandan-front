@@ -1,6 +1,7 @@
 import { io } from "socket.io-client";
 import {$token} from '@/axios';
-const iio = io("http://127.0.0.1:3000/play", {
+
+const socket = io(`http://${process.env.VUE_APP_APP_NAME}:3000/play`, {
   extraHeaders: {
       "token": $token
   }
@@ -89,29 +90,30 @@ const s = (p:any):any => {
   let player1:number = 0;
   let player2:number = 0;
   
-  iio.on('fin', (data:any) => {
+  socket.on('fin', (data:any) => {
     data;
     p.remove();
-    iio.off('connection');
-    iio.off('takePosition');
-    iio.off('mouse');
-    iio.off('ball');
-    iio.off('reset');
-    iio.off('restart');
-    iio.off('fin');
-    iio.off('done');
-    iio.off('won');
-    iio.off('lost');
-    iio.off('watch_wait');
-    iio.off('watch_work');
-    iio.off('watch_modern');
-    iio.off('inGame');
-    iio.off('start_connection');
-    iio.disconnect();
+    socket.off('connection');
+    socket.off('takePosition');
+    socket.off('mouse');
+    socket.off('ball');
+    socket.off('reset');
+    socket.off('restart');
+    socket.off('fin');
+    socket.off('done');
+    socket.off('won');
+    socket.off('lost');
+    socket.off('watch_wait');
+    socket.off('watch_work');
+    socket.off('watch_modern');
+    socket.off('inGame');
+    socket.off('start_connection');
+    socket.off('setScore');
+    socket.disconnect();
   });
   
 
-  iio.on('connection', (data:any) => {
+  socket.on('connection', (data:any) => {
     conProb = false;
     if (data === "wait")
     {
@@ -137,13 +139,13 @@ const s = (p:any):any => {
     }
   });
 
-  iio.on('takePosition', (data:any) => {
+  socket.on('takePosition', (data:any) => {
     DEFAULT.pos = data.yourplace;
     DEFAULT.room = data.room;
     console.log(data.yourplace + " " + data.room);
   });
 
-  iio.on('mouse', (data:any) => {
+  socket.on('mouse', (data:any) => {
     if (data.pos === 1)
     {
       leftmouse = data.mousepos * variationh;
@@ -156,8 +158,7 @@ const s = (p:any):any => {
     }
   });
 
-  iio.on('ball', (data:any) => {
-    // console.log(isModern);
+  socket.on('ball', (data:any) => {
     BALL.ball_data.x = data.x * variationw;
     BALL.ball_data.y = data.y * variationh;
     BALL.ball_data.dx = data.dx;
@@ -166,15 +167,21 @@ const s = (p:any):any => {
       BALL.ball_data.middleY = data.middleY * variationh;
   });
 
-  iio.on('reset', (data:any) => {
+  socket.on('reset', (data:any) => {
     player1 = data.score1;
     player2 = data.score2;
     p.text("score " + player1 + " : " + player2, windw / 2 + 10, 30);
     p.noLoop();
   });
   
-  iio.on('restart', (data:any) => {
-    if (iio.id === data.room)
+  socket.on('setScore', (data:any) => {
+    player1 = data.score1;
+    player2 = data.score2;
+    p.text("score " + player1 + " : " + player2, windw / 2 + 10, 30);
+  });
+  
+  socket.on('restart', (data:any) => {
+    if (socket.id === data.room)
     {
       BALL.ball_data.x = data.x * variationw;
       BALL.ball_data.y = data.y * variationh;
@@ -185,10 +192,9 @@ const s = (p:any):any => {
       p.loop();
   });
   
-  iio.on('won', (data:any) => {
+  socket.on('won', (data:any) => {
     conProb = false;
     data;
-    //iio.emit('gamedone', data);
     if (isLost === false)
     {
       isWon = true;
@@ -197,7 +203,7 @@ const s = (p:any):any => {
     }
   });
 
-  iio.on('lost', (data:any) => {
+  socket.on('lost', (data:any) => {
     conProb = false;
     data;
     isLost = true;
@@ -205,7 +211,7 @@ const s = (p:any):any => {
     p.loop();
   });
   
-  iio.on('done', (data:any) => {
+  socket.on('done', (data:any) => {
     conProb = false;
     data;
     isLoad = false;
@@ -214,7 +220,7 @@ const s = (p:any):any => {
     p.loop();
   });
 
-  iio.on('watch_wait', (data:any) => {
+  socket.on('watch_wait', (data:any) => {
     conProb = false;
     data;
     isLoad = false;
@@ -222,7 +228,7 @@ const s = (p:any):any => {
     p.loop();
   });
   
-  iio.on('watch_work', (data:any) => {
+  socket.on('watch_work', (data:any) => {
     conProb = false;
     data;
     isLoad = false;
@@ -231,14 +237,14 @@ const s = (p:any):any => {
     p.loop();
   });
 
-  iio.on('watch_modern', (data:any) => {
+  socket.on('watch_modern', (data:any) => {
     conProb = false;
     data;
     isModern = true;
     p.loop();
   });
   
-  iio.on('inGame', (data:any) => {
+  socket.on('inGame', (data:any) => {
     conProb = false;
     data;
     inGame = true;
@@ -260,39 +266,33 @@ const s = (p:any):any => {
       inGame = false;
       isBad = true;
     }
-    // isModern = true;
-    // p.loop();
-    //data;
-    //p.remove();
-    // if (data !== 3)
-    // {
-    iio.off('connection');
-    iio.off('takePosition');
-    iio.off('mouse');
-    iio.off('ball');
-    iio.off('reset');
-    iio.off('restart');
-    //iio.off('fin');
-    iio.off('done');
-    iio.off('won');
-    iio.off('lost');
-    iio.off('watch_wait');
-    iio.off('watch_work');
-    iio.off('watch_modern');
-    iio.off('inGame');
-    //iio.disconnect();
-    // }
+    socket.off('connection');
+    socket.off('takePosition');
+    socket.off('mouse');
+    socket.off('ball');
+    socket.off('reset');
+    socket.off('restart');
+    //socket.off('fin');
+    socket.off('done');
+    socket.off('won');
+    socket.off('lost');
+    socket.off('watch_wait');
+    socket.off('watch_work');
+    socket.off('watch_modern');
+    socket.off('inGame');
+    socket.off('setScore');
+    //socket.disconnect();
   });
   
   
   
-  iio.on('start_connection', (data:any) => {
+  socket.on('start_connection', (data:any) => {
     conProb = false;
     data;
     if (inGame === false)
     {
       isconnected = true;
-      iio.emit("connection", "");
+      socket.emit("connection", "");
     }
   });
 
@@ -322,7 +322,7 @@ const s = (p:any):any => {
     //  p.noStroke(23);
     let level:number = Math.abs(ball.dx) - 7;
     level = (level < 0) ? 0 : level;
-    p.text("Difficulty:" + level, windw / 4 - windw / 20, 30);
+    p.text("Difficulty: " + level, windw / 4 - windw / 20, 30);
     p.text(player2 + " : " + player1, (windw * 3) / 4 - windw / 30, 30);
     p.fill('rgba(172,70,130,1)');
   }
@@ -355,8 +355,6 @@ const s = (p:any):any => {
         ball.r = 11;
       else
         ball.r = 15;
-      // p.imageMode(p.CENTER);
-      // p.image(img, 50, 50, 80, 80);
     };
 
     let bmid = windw / (14 * 2)
@@ -367,7 +365,7 @@ const s = (p:any):any => {
       p.strokeWeight(windh / 100);
       DEFAULT.mousepos = p.mouseY / variationh;
       if (isconnected == true)
-        iio.emit("update_mouse", DEFAULT);
+        socket.emit("update_mouse", DEFAULT);
 
       if (window.innerWidth > 1400)
         windw = window.innerWidth - (window.innerWidth - 1400) - 100
@@ -379,14 +377,11 @@ const s = (p:any):any => {
       midline();
       DifficultyLevel();
       
-      
       p.rect(0, 0, 2, windh)
       p.rect(0, windh - 2, windw, 2)
       p.rect(0, 0, windw, 2)
       p.rect(windw - 2, 0, 2, windh)
-//      p.rect((windw / 2) - 2, 0, 3, windh)
-//      p.ellipse((windw / 2), windh / 2, 2 * (windw / 100) + 2);
-      //console.log(15 + (windw / 100))
+
 
       bY = leftmouse;
       bmid = (LeftPaddleHeight - 10) / 2
@@ -401,8 +396,7 @@ const s = (p:any):any => {
       paddle1Y = bY - bmid;
       p.rect(LeftPaddleX, paddle1Y, LeftPaddle, LeftPaddleHeight - 10);
 
-//to be modify //done
-      //opp paddle
+      //second paddle
       bY = rightmouse;
       bmid = (LeftPaddleHeight - 10) / 2
       if (bY > windh - bmid)
@@ -424,8 +418,11 @@ const s = (p:any):any => {
 
       // BALL.ped1 = originleftmouse - 41;
       // BALL.ped2 = originrightmouse - 41;
+      if (isModern == true)
+        p.fill(250,250 - ((Math.abs(ball.dx) - 7) * 15),250 - ((Math.abs(ball.dx) - 7) * 12));
+      else
+        p.fill(250,250,250);
 
-      p.fill(250,250 - ((Math.abs(ball.dx) - 7) * 15),250 - ((Math.abs(ball.dx) - 7) * 12));
       if (gameStart == true)
         p.ellipse(BALL.ball_data.x, BALL.ball_data.y, BALL.ball_data.r, BALL.ball_data.r);
       p.fill(250,250,250);
@@ -457,42 +454,50 @@ const s = (p:any):any => {
      
       // p.cursor(p.CROSS);
       p.noCursor();
+
       if (iscongratulations == true)
       {
         p.imageMode(p.CENTER);
         p.image(imgcongratulations, windw / 2, windh / 2, (windw * 3) / (4 * 2), windw / 4);
+        p.cursor(p.CROSS);
       }
       if (wry == true)
       {
         p.imageMode(p.CENTER);
         p.image(imgwry, windw / 2, windh / 2, (windw * 3) / (4 * 2), windw / 4);
+        p.cursor(p.CROSS);
       }
       else if (isBad == true)
       {
         p.imageMode(p.CENTER);
         p.image(imgbad, windw / 2, windh / 2, (windw * 3) / (4 * 2), windw / 4);
+        p.cursor(p.CROSS);
       }
       else if (noMatch == true && isWon == false && isLost == false)
       {
         p.imageMode(p.CENTER);
         p.image(imgnM, windw / 2, windh / 2, (windw * 3) / (4 * 2), windw / 4);
+        p.cursor(p.CROSS);
       }
       else if (inGame == true)// && isWon == false && isLost == false)
       {
         p.imageMode(p.CENTER);
         p.image(imgingame, windw / 2, windh / 2, (windw * 3) / (4 * 2), windw / 4);
+        p.cursor(p.CROSS);
       }
       if (isWait == true && inGame == false)
       {
         //console.log("hi hih hi");
         p.imageMode(p.CENTER);
         p.image(imgwait, windw / 2, windh / 2, (windw * 3) / (4 * 2), windw / 4);
+        p.cursor(p.CROSS);
       }
       if (isLoad == true && inGame == false)
       {
         // console.log("loading");
         p.imageMode(p.CENTER);
         p.image(imgload, windw / 2, windh / 2, (windw * 3) / (4 * 2), windw / 4);
+        p.cursor(p.CROSS);
         //p.noLoop();
       }
       if (isWon == true && isLost == false && inGame == false)
@@ -501,6 +506,7 @@ const s = (p:any):any => {
         //console.log("Won");
         p.imageMode(p.CENTER);
         p.image(imgwon, windw / 2, windh / 2, windw / 4, windw / 4);
+        p.cursor(p.CROSS);
         // p.noLoop();
       }
       if (isLost == true && inGame == false)
@@ -509,27 +515,29 @@ const s = (p:any):any => {
         //console.log("Lost");
         p.imageMode(p.CENTER);
         p.image(imglost, windw / 2, windh / 2, windw / 4, windw / 4);
+        p.cursor(p.CROSS);
         // p.noLoop();
       }
       if (conProb == true)
       {
         p.imageMode(p.CENTER);
         p.image(imgprob, windw / 2, windh / 2, (windw * 3) / (4 * 2), windw / 4);
+        p.cursor(p.CROSS);
       }
     };
 };
 
 function disconnectSocket(){
-  iio.emit("disc", "");
+  socket.emit("discn", "");
 }
 
 function connectSocket(){
-  if (iio.connected == false)
-    iio.connect();
+  if (socket.connected == false)
+    socket.connect();
 }
 
 function setMetadata(_id:any, _mode:string){
-  iio.emit('getIDS', {token:$token, id:_id, socket:"", room:"", mode:_mode, pos:0})
+  socket.emit('getIDS', {token:$token, id:_id, socket:"", room:"", mode:_mode, pos:0})
 }
 
-export {s,disconnectSocket,setMetadata,connectSocket, iio}
+export {s,disconnectSocket,setMetadata,connectSocket, socket}

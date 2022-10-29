@@ -21,7 +21,7 @@
     import {onMounted, onUnmounted, ref, nextTick} from 'vue';
     import { useUserStore } from '@/stores/user'
     import { $api } from '@/axios';
-    import {s,disconnectSocket,setMetadata,connectSocket,iio} from '@/p5game';
+    import {s,disconnectSocket,setMetadata,connectSocket,socket} from '@/p5game';
     import p5 from 'p5';
     import { useRouter, useRoute } from 'vue-router'
     import { useToast } from 'vue-toastification';
@@ -32,8 +32,8 @@
     const toast = useToast();
     console.log(route.query.mode);
     const router = useRouter();
-    const player1 = ref({name:1, imgPath:""});
-    const player2 = ref({name:1, imgPath:""});
+    const player1 = ref({name:"loading", imgPath:""});
+    const player2 = ref({name:"loading", imgPath:""});
     
     onMounted(async () => {
         try{
@@ -45,30 +45,32 @@
         }
         new p5(s, game.value);
         await nextTick()
-        connectSocket()
 
+        setTimeout(() => {
         
-        // iio.connect();
-        // if (iio.connected == false)
-        // {
-        //     toast.error("Something went wrong")
-        //     router.push('/')
-        // }
-        // console.log(iio.connected);
+            connectSocket()
 
-        if (route.query.mode === "classic" || route.query.mode === "modern")
-            setMetadata(0, route.query.mode)
-        else if (route.query.mode === "watch")
-            setMetadata(route.query.id, route.query.mode)
-        else if (route.query.mode === "private")
-            setMetadata(route.query.id, route.query.mode)
-        
-        iio.on("setPlayers", (data:any)=>{
-            player1.value = {name:data.player1Name, imgPath:data.player1Img};
-            player2.value = {name:data.player2Name, imgPath:data.player2Img};
-            // player1.value = data.player1Img  // path of img
-            // player2.value = data.player2Img  // path of img
-        })
+            // socket.connect();
+            // if (socket.connected == false)
+            // {
+            //     toast.error("Something went wrong")
+            //     router.push('/')
+            // }
+            // console.log(socket.connected);
+
+            if (route.query.mode === "classic" || route.query.mode === "modern")
+                setMetadata(0, route.query.mode)
+            else if (route.query.mode === "watch")
+                setMetadata(route.query.id, route.query.mode)
+            else if (route.query.mode === "private")
+                setMetadata(route.query.id, route.query.mode)
+            
+
+            socket.on("setPlayers", (data:any)=>{
+                player1.value = {name:data.player1Name, imgPath:data.player1Img};
+                player2.value = {name:data.player2Name, imgPath:data.player2Img};
+            })
+        }, 40);
 
     });
     onUnmounted(async () => {
