@@ -1,7 +1,7 @@
 import { io } from "socket.io-client";
 import {$token} from '@/axios';
 
-const socket = io(`http://${process.env.VUE_APP_APP_NAME}:3000/play`, {
+const socket = io(`http://${process.env.VUE_APP_APP_NAME}:${process.env.VUE_APP_HOST_PORT}/play`, {
   extraHeaders: {
       "token": $token
   }
