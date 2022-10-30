@@ -3,8 +3,9 @@
         <p><fa icon="lock"/> Two-factor authentication</p>
         <div id="twofaForm">
             <input type="text" @keyup.enter="validate" placeholder="enter code" id="usernameInput" name="code" v-model="code">
-            <div>
+            <div id="buttons">
                 <button @click="validate">Validate</button>
+                <button @click="cancel">Cancel</button>
             </div>
         </div>
     </div> 
@@ -34,6 +35,13 @@
         .catch((err:any) => {
             toast.error(err.response.data.message);
         });
+    }
+
+    function cancel()
+    {
+        Cookies.remove('accessToken');
+        updateToken()
+        router.push('/');
     }
     
 </script>
@@ -78,12 +86,11 @@
     button{
         background-color: #4CAF50;
         color: white;
-        padding: 14px 20px; 
+        padding: 10px; 
         margin: 8px 8px;
         border: none;
         cursor: pointer;
-        width: 30%;
-        min-width: 200px;
+        min-width: 150px;
         font-size: 0.5em;
     }
     
@@ -103,6 +110,14 @@
         resize: none;
         outline: none;
         color : white;
+    }
+
+    #buttons{
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
     }
 
 
