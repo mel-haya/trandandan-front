@@ -2,7 +2,7 @@
     <div class="sliderItem" @click="chat.updateChatDirect(props.user)">
         <div class="sliderImg" :style="`background-image: url('${props.user?.imgPath}')`">
         </div>
-        <p>{{props.user.displayName}}</p>
+        <p>{{props.user.displayName.slice(0,10)}}</p>
     </div>
 </template>
 

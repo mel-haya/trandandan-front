@@ -20,8 +20,8 @@
             </div>
         </div>
         <div ref="slider" id="slider" @mouseup="sliderLeave" @mouseleave="sliderLeave" @mousedown="sliderClick" @mousemove="sliderMove">
-            <div ref="innerSlider" id="innerSlider">
-                <h2 id="requestEmpty" v-if="!chat.friends.length">No friends yet</h2>
+            <h2 id="requestEmpty" v-if="!chat.friends.length"> <fa icon="users"/> No friends yet</h2>
+            <div v-else ref="innerSlider" id="innerSlider">
                 <FriendSliderItem v-for="friend in chat.friends" :key="friend?.id" :user="friend"/>
             </div>
         </div>
@@ -235,6 +235,11 @@ textarea:focus, input:focus{
 
 #requestEmpty{
     color: grey;
+    height: 50px;
+    line-height: 50px;
+    text-align: center;
+    font-size: 24px;
+    width: 100%;
 }
 
 #notifItem{

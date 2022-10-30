@@ -77,7 +77,6 @@
         border-radius: 20px 0 0 20px;
     }
     
-
     .slide-fade-enter-active {
         transition: all 0.3s ease-out;
     }
@@ -105,10 +104,9 @@
         width: 50%;
         display: inline-block;
         text-align: center;
-        padding: 20px;
+        padding: 10px;
         cursor: pointer;
         font-size: 24px;
-
     }
 
 

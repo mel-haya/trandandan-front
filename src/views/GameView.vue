@@ -107,7 +107,9 @@
 
     #players{
         display: flex;
-        margin-top: -50px;
+        max-width: 1300px;
+        width: calc(100% - 100px);
+        margin: 0 auto;
     }
 
     #gameHeader{
