@@ -88,19 +88,16 @@
 	async function submit(){
 		let data = new FormData();
 		if(chatStore.activeChat.type !== "protected" &&  password.value && passInput.value.value.length == 0){
-			toast.error("Password cannot be empty")
+			toast.error("Password cannot be empty2")
 			return;
 		}
 		if(name.value.length == 0){
 			toast.error("Name cannot be empty")
 			return;
 		}
-
-		if(password.value){
+		if(password.value && passInput.value.value.length > 0){
 			data.append("type", "protected")
-			if(passInput.value.value.length > 0){
-				data.append("password", passInput.value.value)
-			}
+			data.append("password", passInput.value.value)
 		}
 		else if(privacy.value){
 			data.append("type", "private")
@@ -110,6 +107,9 @@
 		}
 		data.append("name", name.value)
 		data.append('file', imageInput.value.files[0])
+		for (var pair of data.entries()) {
+			console.log(pair[0]+ ', ' + pair[1]);
+		}
 		$api({
                 method: "patch",
                 url: "channel/update/" + chatStore.activeChat.id,
