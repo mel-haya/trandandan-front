@@ -102,7 +102,7 @@
 		else if(privacy.value){
 			data.append("type", "private")
 		}
-		else{
+		else if(!(password.value)){
 			data.append("type", "public")
 		}
 		data.append("name", name.value)
