@@ -1,8 +1,8 @@
 <template>
     <div id="messages">
         <div id="msgEmptyState" v-if="!chatStore.joinedRooms.length">
-            <fa id="emptyIcon" :icon="['far','message']" size="3x"/>
-            <p id="emptyText">No messages</p>
+            
+            <p id="emptyText"><fa id="emptyIcon" :icon="['far','message']"/> No messages</p>
         </div>
         <channelPreviewItem v-for="c in chatStore.joinedRooms" :key="c.id" :channel="c"/> 
     </div>  
