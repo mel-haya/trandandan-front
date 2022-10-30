@@ -2,15 +2,17 @@
         <img id="homeLogo" src="../assets/pong-online.png" alt="">
         <br>
         <div id="loginButton">
-            <a @click="submit" href="http://localhost:3000/auth/42"><img id="ft_logo" :src="require('@/assets/42.png')" alt=""/> Login</a>
+            <a @click="submit" :href="backPath + '/auth/42'"><img id="ft_logo" :src="require('@/assets/42.png')" alt=""/> Login</a>
         </div>
     
     </template>
 
 <script lang="ts" setup>
     import axios from 'axios';
+    import {ref} from 'vue';
+    const backPath = ref(`http://${process.env.VUE_APP_APP_NAME}:${process.env.VUE_APP_HOST_PORT}`)
      function submit(){
-        axios.get(`http://${process.env.VUE_APP_APP_NAME}:3000/auth/42`).catch((err) => console.log(err)) 
+        axios.get(`${backPath.value}/auth/42`).catch((err) => console.log(err)) 
     }
     
 </script>

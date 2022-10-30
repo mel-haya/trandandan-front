@@ -2,6 +2,7 @@
     <div id="gameContainer">
         <div id="gameHeader">
             <img src="../assets/pong-online.png" alt="" @click="router.push('/')"/>
+            <p @click="router.push('/')" id="backHome"><fa icon="chevron-left"/>Home</p>
         </div>
         <div id="players">
             <div class="player">
@@ -117,6 +118,10 @@
         justify-content: center;
         align-items: flex-start;
         height: 200px;
+        max-width: 1300px;
+        width: calc(100% - 100px);
+        margin: 0 auto;
+        position: relative;
     }
 
     #playerImg{
@@ -130,5 +135,15 @@
         height: 100%;
         cursor: pointer;
     }
+
+    #backHome{
+        position: absolute;
+        top: 0;
+        left: 0;
+        margin: 20px;
+        font-size: 20px;
+        cursor: pointer;
+    }
+
 
 </style>
