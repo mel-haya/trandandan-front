@@ -2,13 +2,14 @@
         <img id="homeLogo" src="../assets/pong-online.png" alt="">
         <br>
         <div id="loginButton">
-            <a @click="submit" href="http://localhost:3000/auth/42"><img id="ft_logo" :src="require('@/assets/42.png')" alt=""/> Login</a>
+            <a @click="submit" :href="'http://'+ link +':3000/auth/42'"><img id="ft_logo" :src="require('@/assets/42.png')" alt=""/> Login</a>
         </div>
     
     </template>
 
 <script lang="ts" setup>
     import axios from 'axios';
+    const link = process.env.VUE_APP_APP_NAME;
      function submit(){
         axios.get(`http://${process.env.VUE_APP_APP_NAME}:3000/auth/42`).catch((err) => console.log(err)) 
     }

@@ -41,11 +41,6 @@ export default () => createRouter({
       component: () => import('./views/LeaderboardView.vue')
     },
     {
-      name: 'fake',
-      path: '/fake',
-      component: () => import('./views/fakeView.vue')
-    },
-    {
       name: '2fa-verification',
       path: '/2fa-verification',
       component: ()=> import('./views/twofaVerifView.vue')
