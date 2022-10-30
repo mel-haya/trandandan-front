@@ -13,7 +13,7 @@ const userStore = useUserStore();
 export const useChatStore = defineStore('chat', () =>
 {
     const socket:any|null = ref(null);
-    const gameSocket:any = ref( io(`http://${process.env.VUE_APP_APP_NAME}:3000/play`, {
+    const gameSocket:any = ref( io(`http://${process.env.VUE_APP_APP_NAME}:${process.env.VUE_APP_HOST_PORT}/play`, {
         extraHeaders: {
             "token": $token
         }

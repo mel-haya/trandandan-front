@@ -51,13 +51,6 @@
         
             connectSocket()
 
-            // socket.connect();
-            // if (socket.connected == false)
-            // {
-            //     toast.error("Something went wrong")
-            //     router.push('/')
-            // }
-            // console.log(socket.connected);
 
             if (route.query.mode === "classic" || route.query.mode === "modern")
                 setMetadata(0, route.query.mode)
