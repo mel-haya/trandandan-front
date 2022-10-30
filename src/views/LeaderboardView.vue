@@ -2,18 +2,20 @@
     <div id="leaderContainer">
         <div id="logo" @click="router.push('/')"></div>
         <!-- <h2>leaderboard</h2> -->
-        <table>
-            <tr>
-                <th id="rankCell">Rank</th>
-                <th id="nameCell">Name</th>
-                <th>Level</th>
-            </tr>
-            <tr v-for="(member, index) in leaderboard" :key="index">
-                <td id="rankCell">{{index + 1}}</td>
-                <td id="nameCell">{{member.displayName}}</td>
-                <td>{{member.lvl}}</td>
-            </tr>
-        </table>
+        <div id="leaderBoardScroll">
+            <table>
+                <tr>
+                    <th id="rankCell">Rank</th>
+                    <th id="nameCell">Name</th>
+                    <th>Level</th>
+                </tr>
+                <tr v-for="(member, index) in leaderboard" :key="index">
+                    <td id="rankCell">{{index + 1}}</td>
+                    <td id="nameCell">{{member.displayName}}</td>
+                    <td>{{member.lvl}}</td>
+                </tr>
+            </table>
+        </div>
     </div>
 </template>
 
@@ -109,5 +111,17 @@ td{
     margin: 20px auto;
     margin-bottom: 20px;
 }
+
+#leaderBoardScroll{
+    height: calc(100% - 200px);
+    overflow-y: scroll;
+    overflow-x: hidden;
+}
+
+#leaderBoardScroll::-webkit-scrollbar{
+    width: 0px;
+}
+
+
 
 </style>

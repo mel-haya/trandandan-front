@@ -2,7 +2,7 @@
         <img id="homeLogo" src="../assets/pong-online.png" alt="">
         <br>
         <div id="loginButton">
-            <a @click="submit" href="http://10.12.8.9:3000/auth/42"><img id="ft_logo" :src="require('@/assets/42.png')" alt=""/> Login</a>
+            <a @click="submit" href="http://localhost:3000/auth/42"><img id="ft_logo" :src="require('@/assets/42.png')" alt=""/> Login</a>
         </div>
     
     </template>

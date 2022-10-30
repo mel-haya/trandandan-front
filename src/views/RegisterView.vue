@@ -58,8 +58,10 @@
     {
         var bodyFormData = new FormData();
         bodyFormData.append('file', imageInput.value.files[0]);
-        if(newName.value !== "")
-            bodyFormData.append('username', newName.value);
+        if(newName.value !== ""){
+            console.log(newName.value)
+            bodyFormData.append('displayName', newName.value);
+        }
         $api({
                 method: "patch",
                 url: "user/update",
