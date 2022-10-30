@@ -91,9 +91,6 @@ function createGroup()
             name: name.value,
             type: privacy.value,
         }
-        // if(privacy.value == 'public' && password.value != ''){
-        //     privacy.value = 'protected'
-        // }
         if(privacy.value == 'protected'){
             data.password = password.value
         }
@@ -102,7 +99,6 @@ function createGroup()
             store.enableChannelCreate = false
             chat.updateJoined()
             chat.socket.emit('join_channel', {"channelId": res.data.id})
-            console.log()
         }).catch((response)=>{
             if(response.response.data.message instanceof Array){
                 response.response.data.message.forEach((element:any) => {
@@ -112,7 +108,6 @@ function createGroup()
             else{
                 toast.error(response.response.data.message); 
             }
-            // toast.error(err.response.data.message)
         })  
     }
 }

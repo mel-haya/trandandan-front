@@ -29,7 +29,6 @@
     async function joinGroup(){
         try{
             let room:any =  (await $api.get("/channel/find/" + Props.room.id)).data;
-            console.log(room)
             if(room.type === 'protected'){ 
                 emit('selected')
                 return
@@ -46,10 +45,8 @@
             }); 
         }
         catch(err){
-            console.log(err)
+            toast.error("Something went wrong");
         }
-        
-        //TODO: check if channel privacy was changed
     }
 </script>
 

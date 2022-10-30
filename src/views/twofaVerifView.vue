@@ -12,7 +12,6 @@
 
 
 <script lang="ts" setup>
-    // import {toDataURL} from 'qrcode';
     import {ref} from 'vue'
     import { useRouter } from 'vue-router';
     import Cookies from 'js-cookie'
@@ -22,16 +21,6 @@
     const toast = useToast();
     let code = ref('');
     let router = useRouter();
-    
-    // onMounted(async () => {
-    //     try{
-    //         await $api.get('/user/me');
-    //     }
-    //     catch(e){
-    //         toast.error('Failed to fetch user data');
-    //         router.push('/login');
-    //     }
-    // })
 
     async function validate()
     {
@@ -45,16 +34,6 @@
         .catch((err:any) => {
             toast.error(err.response.data.message);
         });
-        // if(code.value == res)
-        // {
-        //     invalid.value = false;
-        //     return true;
-        // }
-        // else
-        // {
-        //     invalid.value = true;
-        //     return false;
-        // }
     }
     
 </script>

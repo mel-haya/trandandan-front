@@ -51,17 +51,12 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted } from 'vue';
-
     const emits = defineEmits(['close'])
     const props = defineProps({
         player: {
             type: Object,
             required: true
         }
-    })
-    onMounted(()=>{
-        console.log(props.player)
     })
 </script>
 

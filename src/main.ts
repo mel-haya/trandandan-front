@@ -1,5 +1,3 @@
-/* eslint-disable */
-
 import { createPinia, storeToRefs } from 'pinia'
 import { createApp } from 'vue'
 import { library } from '@fortawesome/fontawesome-svg-core'
@@ -16,6 +14,24 @@ import "vue-toastification/dist/index.css";
 const router = createRouter()
 const pinia = createPinia()
 
+router.beforeEach( async (to:any, from:any) => {
+    try{
+        const res = await $api.get("/auth/2fa-state")
+        if(to.name !== "2fa-verification" && res.data === "not_confirmed"){
+            router.push("/2fa-verification")
+        }
+        else if(to.name === "login" && res.data){
+            router.push("/")
+        }
+    }
+    catch(err:any){
+        if(to.name !== "login")
+            router.push("/login")
+    }
+    
+})
+
+
 library.add(fas,far)
 createApp(App)
 .use(Toast, {
@@ -31,5 +47,6 @@ createApp(App)
 
 
 import {s} from '@/p5starfield'
+import { $api } from './axios'
 
 new P5(s, document.getElementById("bg")!)

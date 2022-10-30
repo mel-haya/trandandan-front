@@ -48,7 +48,6 @@
             return
         }
         chatStore.socket.emit("join_channel", {"channelId": protectedChannel.value.id, "password": password.value}, async (data:any) => {
-            console.log(data);
             if(data.success){
                 chatStore.updateAvailable();
                 await chatStore.updateChat(protectedChannel.value.id);
@@ -57,7 +56,6 @@
                 password.value = '';
             }
             else{
-                console.log(data)
                 toast.error(data.error)
             }
         });

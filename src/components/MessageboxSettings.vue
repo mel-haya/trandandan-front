@@ -88,7 +88,7 @@
 	async function submit(){
 		let data = new FormData();
 		if(chatStore.activeChat.type !== "protected" &&  password.value && passInput.value.value.length == 0){
-			toast.error("Password cannot be empty2")
+			toast.error("Password cannot be empty")
 			return;
 		}
 		if(name.value.length == 0){
@@ -107,9 +107,6 @@
 		}
 		data.append("name", name.value)
 		data.append('file', imageInput.value.files[0])
-		for (var pair of data.entries()) {
-			console.log(pair[0]+ ', ' + pair[1]);
-		}
 		$api({
                 method: "patch",
                 url: "channel/update/" + chatStore.activeChat.id,
@@ -126,7 +123,6 @@
 					chatStore.activeChatSetting = false
                 })
                 .catch(function (response) {
-					console.log(response)
                     if(response.response.data.message instanceof Array){
 						response.response.data.message.forEach((element:any) => {
 							toast.error(element);

@@ -20,11 +20,9 @@
 </template>
 
 <script lang="ts" setup>
-    /*eslint-disable*/
     import { ref,onMounted } from 'vue'
-    // import Cookies from 'js-cookie'
     import { useRouter } from 'vue-router';
-    import {$api, $token, updateToken} from '@/axios'
+    import {$api} from '@/axios'
     import type { Ref } from 'vue'
     import { useUserStore } from '@/stores/user';
     import { useToast } from 'vue-toastification';
@@ -32,7 +30,6 @@
     const store = useUserStore();
     const newName = ref("");
     const toast = useToast();
-    let img:any;
     let router = useRouter()
     let imageInput:Ref<any> = ref(null);
     onMounted(async () => {
@@ -59,7 +56,6 @@
         var bodyFormData = new FormData();
         bodyFormData.append('file', imageInput.value.files[0]);
         if(newName.value !== ""){
-            console.log(newName.value)
             bodyFormData.append('displayName', newName.value);
         }
         $api({

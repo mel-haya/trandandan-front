@@ -17,14 +17,12 @@
     import { onMounted, onUnmounted, ref } from 'vue';  
     import {$api} from '@/axios';
     import {useToast} from 'vue-toastification'
-    // import {useToast} from 'vue-toastification';
     
     const emits = defineEmits(['close'])
     const toast = useToast()
     const chatStore = useChatStore();
     let members:any = ref([]);
     let friends:any = ref([]);
-    // const toast = useToast();
 
     function updateMembers(){
         $api.get('/channel/members/'+ chatStore.activeChat.id).then((res) => {
@@ -56,7 +54,6 @@
 
     function invite(id:string){
         chatStore.socket.emit('add-member', {channelId: chatStore.activeChat.id, targetId: id},(res:any)=>{
-            console.log(res)
             if(res.success === true)
             {
                 friends.value = friends.value.filter((f:any) => f.id !== id)

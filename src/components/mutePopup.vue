@@ -44,8 +44,8 @@
             else if(Props.message == 'Ban'){
                 toast.success('User Banned successfully')
             }
-        }).catch((err) => {
-            console.log(err);
+        }).catch(() => {
+            toast.error("Something went wrong");
         })
         Emits('close')
     }

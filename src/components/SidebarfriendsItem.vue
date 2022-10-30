@@ -33,11 +33,8 @@
     import FriendSliderItem from './FriendSliderItem.vue'
     import type { Ref } from 'vue'
     import {useInterfaceStore} from '@/stores/interface';
-    // import {$api} from '@/axios'
-    // import {useToast} from 'vue-toastification'
     import {useChatStore} from '@/stores/chat'
 
-    // const toast = useToast();
     let notificationHeight = ref(0);
     let innerSlider = ref("innerSlider");
     let slider:Ref<any|null> = ref(null);
@@ -45,7 +42,6 @@
     let startX:any;
     let scrollLeft:any;
     let interfaceStore = useInterfaceStore();
-    // let friends:Ref<any> = ref([]);
     const chat = useChatStore();
 
     function updateRequests()
@@ -53,15 +49,6 @@
         chat.updateFriendRequests()
         chat.updateFriends()
     }
-
-    // function updateFriends()
-    // {
-    //     $api.get("user/friends")
-    //     .then((response) =>{ 
-    //         friends.value = response.data;
-    //     })
-    //     .catch((err) => console.log(err));
-    // }
 
     onMounted(() => {
         updateRequests()

@@ -3,10 +3,6 @@ import { ref } from "vue"
 import {$api} from "@/axios"
 import { useRouter } from "vue-router";
 
-// ref()s become state properties
-// computed()s become getters
-// function()s become actions
-
 export const useUserStore = defineStore('user', () =>
 {
     const router = useRouter()

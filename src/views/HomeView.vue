@@ -33,7 +33,6 @@
     const router = useRouter();
     const store = useUserStore();
     const toast = useToast();
-    // const {user} = storeToRefs(store)
     let label = reactive({
         a:"PLAY",
         b:"",
@@ -124,7 +123,6 @@
         });
 
         chatStore.socket.on("update-friends", ()=>{
-            console.log("update-friends")
             chatStore.updateFriends()
             chatStore.updateFriendRequests()
             

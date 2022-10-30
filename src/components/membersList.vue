@@ -66,8 +66,8 @@
             toast.success("Member promoted to admin");
             updateMembers()
             store.enableMembersSettings = null
-        }).catch((err) => {
-            console.log(err);
+        }).catch(() => {
+            toast.error("Something went wrong");
         })
     }
 
@@ -77,8 +77,8 @@
             toast.success("Member demoted to member");
             updateMembers()
             store.enableMembersSettings = null
-        }).catch((err) => {
-            console.log(err);
+        }).catch(() => {
+            toast.error("Something went wrong");
         })
     }
 
@@ -89,8 +89,8 @@
             toast.success("Member kicked");
             updateMembers()
             store.enableMembersSettings = null
-        }).catch((err) => {
-            console.log(err);
+        }).catch(() => {
+            toast.error("Something went wrong");
         })
     }
 
@@ -98,24 +98,12 @@
         enableMute.value = "Mute";
         request.value = '/channel/mute-member/'+ chatStore.activeChat.id + '?member_id=' + store.enableMembersSettings.member.id + '&mute_time=';
         store.enableMembersSettings = null;
-        // $api.patch('/channel/mute-member/'+ chatStore.activeChat.id + '?member_id=' + store.enableMembersSettings.member.id + '&mute_time=10000')
-        // .then(() => {
-        //     toast.success("Member muted for 10 seconds");
-        // }).catch((err) => {
-        //     console.log(err);
-        // })
     }
 
     function ban(){
         enableMute.value = "Ban";
         request.value = '/channel/ban-member/'+ chatStore.activeChat.id + '?member_id=' + store.enableMembersSettings.member.id + '&mute_time=';
         store.enableMembersSettings = null;
-        // $api.patch('/channel/ban-member/'+ chatStore.activeChat.id + '?member_id=' + store.enableMembersSettings.member.id + '&mute_time=20000')
-        // .then(() => {
-        //     toast.success("Member banned");
-        // }).catch((err) => {
-        //     console.log(err);
-        // })
     }
 
 
@@ -131,7 +119,6 @@
     height: 100%;
     background-color: rgba(0, 0, 0, 0.5);
     z-index: 100;
-    /* display: none; */
 }
 
 #membersContainer{
@@ -140,7 +127,6 @@
     left: 50%;
     transform: translate(-50%, -50%);
     width: 400px;
-    /* height: 500px; */
     background-color: rgba(123,51,125, 0.8);
     border-radius: 10px;
 }

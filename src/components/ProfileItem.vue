@@ -73,9 +73,6 @@
     import { useToast } from 'vue-toastification';
     import { useChatStore } from '@/stores/chat';
     import AchivBoxVue from './AchivBox.vue';
-    // import { iio } from '@/p5game';
-    //const chatStore = useChatStore()
-    // import { iio } from '@/p5game';
     import type { Ref } from 'vue';
 
     const enableAchiv = ref(false)
@@ -175,15 +172,7 @@
         })
     }
 
-// lvl: 4
-// totalDefeats: 19
-// totalGamesPlayed: 26
-// totalGoals: 19
-// totalWins: 7
-// xp: 2
-
     function loadStats(){
-        // TODO: get stats from api
         activePointer.value = 0;
         $api(`/game/user-profile/${profile.value?.profile.id}`).then((res:any) => {
             stats.value = res.data
@@ -191,7 +180,6 @@
     }
 
     function loadHistory(){
-        // TODO: get history from api
         activePointer.value = 1;
         $api(`/game/user-games/${profile.value?.profile.id}`).then((res:any) => {
             history.value = res.data.map((item:any) => {

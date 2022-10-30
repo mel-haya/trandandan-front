@@ -39,8 +39,6 @@
         store.enableMembersSettings.y = e.clientY;
     }
 
-    // function open 
-
 </script>
 
 <style scoped>

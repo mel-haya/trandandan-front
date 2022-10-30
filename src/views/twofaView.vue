@@ -46,7 +46,6 @@
     async function validate()
     {   try{
             const res = await $api.post("/2fa/verify", {code: code.value})
-            console.log(res.data.accessToken);
             Cookies.set('accessToken', res.data.accessToken);
             updateToken()
             router.go(-1);

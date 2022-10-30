@@ -21,8 +21,6 @@
 
 <script lang="ts" setup>
 
-// TODO :localhost:3000/game/leaderboard
-
 import { useRouter } from 'vue-router'
 import { onMounted, ref } from 'vue'
 import { $api } from '@/axios'
@@ -44,7 +42,6 @@ onMounted(async()=>{
         router.push('/login');
     }
     $api.get('/game/leaderboard').then(res=>{
-        console.log(res)
         leaderboard.value = res.data
     }).catch(() =>{
         toast.error('Failed to fetch leaderboard')

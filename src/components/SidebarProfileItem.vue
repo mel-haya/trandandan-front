@@ -31,6 +31,7 @@
     import Cookies from 'js-cookie';
     import {useChatStore} from '@/stores/chat';
     import { useUserStore } from '@/stores/user';
+    import { updateToken } from '@/axios';
 
     const router = useRouter();
     const store = useInterfaceStore();
@@ -50,24 +51,10 @@
             contextMenu.value.style.display = 'none';
     });
     
-    // try{
-    //         let res = await $api.get('/user/me')
-    //         Profile.value = {
-    //             id: res.data.id,
-    //             username: res.data.displayName,
-    //             imageUrl: res.data.imgPath,
-    //         };
-    //     }
-    // catch (e:any) {
-    //         console.log(e);
-    //         if(e.response.data.statusCode === 401)
-    //             router.push('/login')
-    //     }
-    // }
-
     function logout(){
-        chat.socket.emit("logout", {});
+        chat.socket.emit("logout");
         Cookies.remove("accessToken");
+        updateToken();
         chat.socket.disconnect();
         router.push('/login');
     }
