@@ -27,6 +27,8 @@
     import { io } from "socket.io-client";
     import {Message} from '@/types/message';
     import { useToast } from 'vue-toastification';
+    import { updateToken } from '@/axios';
+    import Cookies from 'js-cookie';
 
     let interfaceStore = useInterfaceStore();
     const chatStore = useChatStore();
@@ -130,6 +132,13 @@
 
         chatStore.socket.on("update_joined", ()=>{
             chatStore.updateJoined()
+        })
+
+        chatStore.socket.on("logout", ()=>{
+            Cookies.remove("accessToken");
+            updateToken();
+            chatStore.socket.disconnect();
+            router.push('/login');
         })
     })
 
