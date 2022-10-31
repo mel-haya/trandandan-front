@@ -10,7 +10,6 @@
             <div id="profileMenu" v-if="enableMenu">
                 <p class="text-red" @click="blockUser">Block</p>
                 <p class="text-red" v-if="friendshipStatus === 'friend'" @click="removeFriend">Unfriend</p>
-                <p v-if="friendshipStatus === 'friend'">Invite to a game</p>
             </div>
             <div id="userInfo">
                 <p>{{profile?.profile.displayName}}</p>

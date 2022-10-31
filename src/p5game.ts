@@ -30,14 +30,10 @@ const s = (p:any):any => {
 
   let variationw = windw / 1300;
   let variationh = windh / 624;
-  console.log(variationw + " " + variationh);
   
 
   let leftmouse = 0;
   let rightmouse = 0;
-  let originleftmouse = 0;
-  let originrightmouse = 0;
-  // console.log(windh)
 
   const ball = {
     x:windw/2,
@@ -61,7 +57,6 @@ const s = (p:any):any => {
   const BALL = {ball_data:ball}
 
   
-  // const gameEnded = false;
   let conProb = true;
   let isconnected = false;
   let gameStart = false;
@@ -82,11 +77,10 @@ const s = (p:any):any => {
   const RightPaddle:number=5;
   const LeftPaddleX:number = 3;
   let RightPaddleX:number = windw - 7;
-  //the length of the paddles
-  // let LeftPaddleHeight = 120;
+  
   let LeftPaddleHeight:number = windw / 14;
   let RightPaddleHeight:number = windw / 14;
-  //Score of the AI. A.k.A the Number of tries
+  
   let player1:number = 0;
   let player2:number = 0;
   
@@ -142,20 +136,13 @@ const s = (p:any):any => {
   socket.on('takePosition', (data:any) => {
     DEFAULT.pos = data.yourplace;
     DEFAULT.room = data.room;
-    console.log(data.yourplace + " " + data.room);
   });
 
   socket.on('mouse', (data:any) => {
     if (data.pos === 1)
-    {
       leftmouse = data.mousepos * variationh;
-      originleftmouse = data.mousepos;
-    }
     else
-    {
       rightmouse = data.mousepos * variationh;
-      originrightmouse = data.mousepos;
-    }
   });
 
   socket.on('ball', (data:any) => {
@@ -272,7 +259,6 @@ const s = (p:any):any => {
     socket.off('ball');
     socket.off('reset');
     socket.off('restart');
-    //socket.off('fin');
     socket.off('done');
     socket.off('won');
     socket.off('lost');
@@ -281,7 +267,6 @@ const s = (p:any):any => {
     socket.off('watch_modern');
     socket.off('inGame');
     socket.off('setScore');
-    //socket.disconnect();
   });
   
   
@@ -301,12 +286,10 @@ const s = (p:any):any => {
   function midline(){
     let i = 0
     for(i = 0; i < windh; i += 45) {
-      //let y = 0;
       p.fill('rgba(172,70,130,1)');
       p.stroke(0);
       p.strokeWeight(0)
       p.rect(windw/2,i,2,30);
-      //fill('rgba(132,51,125,0.5)');
       p.rect(0,0,5,windh);
       p.rect(windw - 5, 0, 5, windw);
     }
@@ -319,7 +302,6 @@ const s = (p:any):any => {
       p.textSize(20);
     else
       p.textSize(15);
-    //  p.noStroke(23);
     let level:number = Math.abs(ball.dx) - 7;
     level = (level < 0) ? 0 : level;
     p.text("Difficulty: " + level, windw / 4 - windw / 20, 30);
@@ -327,7 +309,6 @@ const s = (p:any):any => {
     p.fill('rgba(172,70,130,1)');
   }
 
-    
     function preload() {
       imgwon = p.loadImage('https://media.istockphoto.com/vectors/pixel-art-8bit-you-win-text-with-three-winner-golden-cups-on-black-vector-id1268272329?k=20&m=1268272329&s=170667a&w=0&h=79fO42ChPzO8gcIdzngCuag6_Y9ef2dUh1LWpaOkyXo=');
       imgload = p.loadImage(require('@/assets/waiting.jpg'));
@@ -390,7 +371,6 @@ const s = (p:any):any => {
       else if (bY < bmid)
         bY = bmid
       p.fill(250,250,250);
-     // p.rect(0, bY - bmid, windw / 70, windw / 14)
       p.stroke('rgba(132,51,125,0.5)');
       p.strokeWeight(4);
       paddle1Y = bY - bmid;
@@ -408,16 +388,12 @@ const s = (p:any):any => {
       const RightPaddleY = bY - bmid;
       p.rect(RightPaddleX, RightPaddleY, RightPaddle, RightPaddleHeight - 10);
 
-      // to check
       if (isModern == true)
       {
         p.fill(236,132,236);
         p.rect(windw / 2 - 3, BALL.ball_data.middleY, 6, windw / 9);
       }
 
-
-      // BALL.ped1 = originleftmouse - 41;
-      // BALL.ped2 = originrightmouse - 41;
       if (isModern == true)
         p.fill(250,250 - ((Math.abs(ball.dx) - 7) * 15),250 - ((Math.abs(ball.dx) - 7) * 12));
       else
@@ -435,7 +411,6 @@ const s = (p:any):any => {
         LeftPaddleHeight = windw / 14;
         RightPaddleHeight = windw / 14;
         RightPaddleX = windw - 7;
-        //console.log(windw)
         variationw = windw / 1300;
         variationh = windh / 624;
         if (windw <= 325)
@@ -446,12 +421,10 @@ const s = (p:any):any => {
           ball.r = 11;
         else
           ball.r = 15;
-        //1300 650 325 975 15 7 4 11
       }
       
       p.strokeWeight(windh / 100);
       
-     
       // p.cursor(p.CROSS);
       p.noCursor();
 
@@ -487,36 +460,29 @@ const s = (p:any):any => {
       }
       if (isWait == true && inGame == false)
       {
-        //console.log("hi hih hi");
         p.imageMode(p.CENTER);
         p.image(imgwait, windw / 2, windh / 2, (windw * 3) / (4 * 2), windw / 4);
         p.cursor(p.CROSS);
       }
       if (isLoad == true && inGame == false)
       {
-        // console.log("loading");
         p.imageMode(p.CENTER);
         p.image(imgload, windw / 2, windh / 2, (windw * 3) / (4 * 2), windw / 4);
         p.cursor(p.CROSS);
-        //p.noLoop();
       }
       if (isWon == true && isLost == false && inGame == false)
       {
         iscongratulations = false;
-        //console.log("Won");
         p.imageMode(p.CENTER);
         p.image(imgwon, windw / 2, windh / 2, windw / 4, windw / 4);
         p.cursor(p.CROSS);
-        // p.noLoop();
       }
       if (isLost == true && inGame == false)
       {
         iscongratulations = false;
-        //console.log("Lost");
         p.imageMode(p.CENTER);
         p.image(imglost, windw / 2, windh / 2, windw / 4, windw / 4);
         p.cursor(p.CROSS);
-        // p.noLoop();
       }
       if (conProb == true)
       {
