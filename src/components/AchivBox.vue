@@ -4,7 +4,7 @@
             <h1 id="achivTitle">Achievements</h1>
             <div id="achivBody">
                 <div id="achivItem" v-if="props.player.totalWins >= 1">
-                    <div id="achivImg" style="background-image: url('https://randomuser.me/api/portraits/men/3.jpg');"></div>
+                    <div id="achivImg" :style="`background-image:url('${require('@/assets/1w.jpeg')}')`"></div>
                     <div id="achivDesc">
                         <h2>WELCOME</h2>
                         <p>Win 1 game</p>
@@ -18,28 +18,28 @@
                     </div>
                 </div>
                 <div id="achivItem" v-if="props.player.totalWins >= 10">
-                    <div id="achivImg"></div>
+                    <div id="achivImg" :style="`background-image:url('${require('@/assets/10w.jpeg')}')`"></div>
                     <div id="achivDesc">
                         <h2>GGEZ</h2>
                         <p>Win 10 games</p>
                     </div>
                 </div>
-                <div id="achivItem" v-if="props.player.totalWins >= 50">
-                    <div id="achivImg" :style="`background-image:url('${require('@/assets/50wins.png')}')`"></div>
+                <div id="achivItem" v-if="props.player.totalWins >= 25">
+                    <div id="achivImg" :style="`background-image:url('${require('@/assets/25w.jpeg')}')`"></div>
                     <div id="achivDesc">
                         <h2>On fire</h2>
-                        <p>Win 50 games</p>
+                        <p>Win 25 games</p>
                     </div>
                 </div>
-                <div id="achivItem" v-if="props.player.totalWins >= 100">
-                    <div id="achivImg"></div>
+                <div id="achivItem" v-if="props.player.totalWins >= 50">
+                    <div id="achivImg" :style="`background-image:url('${require('@/assets/50w.jpeg')}')`"></div>
                     <div id="achivDesc">
                         <h2>Champion</h2>
-                        <p>Win 100 game</p>
+                        <p>Win 50 game</p>
                     </div>
                 </div>
                 <div id="achivItem" v-if="props.player.twofa === true">
-                    <div id="achivImg" :style="`background-image:url('${require('@/assets/shield.png')}')`"></div>
+                    <div id="achivImg" :style="`background-image:url('${require('@/assets/shield.jpeg')}')`"></div>
                     <div id="achivDesc">
                         <h2>PROTECTED!</h2>
                         <p>Activate 2FA</p>

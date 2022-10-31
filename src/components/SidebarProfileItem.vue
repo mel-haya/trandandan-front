@@ -28,10 +28,10 @@
     import { ref } from 'vue';
     import { useInterfaceStore } from '../stores/interface';
     import { useRouter } from 'vue-router';
-    import Cookies from 'js-cookie';
+    // import Cookies from 'js-cookie';
     import {useChatStore} from '@/stores/chat';
     import { useUserStore } from '@/stores/user';
-    import { updateToken } from '@/axios';
+    // import { updateToken } from '@/axios';
 
     const router = useRouter();
     const store = useInterfaceStore();
@@ -53,10 +53,6 @@
     
     function logout(){
         chat.socket.emit("logout");
-        Cookies.remove("accessToken");
-        updateToken();
-        chat.socket.disconnect();
-        router.push('/login');
     }
 
 </script>
@@ -74,7 +70,6 @@
         height: 150px;
         border-radius: 150px;
         margin: 10px auto;
-        background-image: url('../assets/bruh.jpg');
         background-size: cover;
         background-repeat: no-repeat;
         background-position: center;
