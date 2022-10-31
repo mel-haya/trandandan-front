@@ -17,7 +17,7 @@
     import SidebareItem from '@/components/SidebarItem.vue'
     import {$api, $token} from '@/axios';
     import ProfileItem from '@/components/ProfileItem.vue';
-    import { onMounted, reactive , onUnmounted } from 'vue';
+    import { onMounted, reactive  } from 'vue';
     import { useRouter } from 'vue-router';
     import MessageBox from '@/components/MessageBox.vue';
     import {useInterfaceStore} from '@/stores/interface';
@@ -72,10 +72,6 @@
             router.push('/leaderboard')
         }
     }
-
-    onUnmounted(() => {
-        chatStore.socket.disconnect();
-    })
 
     onMounted(async () => {
         try{
